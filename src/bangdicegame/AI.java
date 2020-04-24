@@ -80,7 +80,7 @@ public class AI {
 		//if two gatling:
 			//keeps with willingToKeepShots + random(willingToKeepShots, 1-willingToKeepShots) probability
 		//if three 
-			//keeps with max(1, (willingToKeepShots + 2*random(willingToKeepShots, 1-willingToKeepShots)) probability
+			//keeps with min(1, (willingToKeepShots + 1.5*random(willingToKeepShots, 1-willingToKeepShots)) probability
 	//Case: Dynamite
 		//needs to keep
 	//Case: Arrow

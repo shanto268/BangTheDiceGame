@@ -1,0 +1,8 @@
+Meeting Agenda:
+1) Discuss validity of AI algorithm
+2) Discuss implementation of AI algorithm
+3) Discuss changes to present code base to include the proposed AI model
+4) Discuss compatibility of current program to GUI
+    -> what inputs he needs and what changes should we make?
+5) Discuss scalability of current program to include expansion packages
+6) Discuss delagation of work and project timeline
