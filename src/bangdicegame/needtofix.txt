@@ -1,0 +1,2 @@
+boolean for isPlayer needs to be set
+
