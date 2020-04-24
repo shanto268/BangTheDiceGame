@@ -32,31 +32,34 @@ public class AI {
 	
 	//=========== Methods =============================
 	
-	/*_____Method to update Probability vector______*/
+	/* 1) _____Method to track which players shot sheriff______*/
+	
+	/* 2) _____Method to track which players gave beers to sheriff______*/
+	
+	/* 3) _____Method to update Probability vector______*/
 	//Update the vector for each player as follows:
 	//While (no one died):
 		//if player is sheriff
 		//	vector = [1,0,0,0] fixed
 		//  all other players = [0,R,O,D]
 		//if player gave health to sheriff:
-		//	increase the R and D probability in the vector and decrease D by SkepticProbability
+		//	increase the R and D probability in the vector and decrease O by SkepticProbability
 		//if player shot sheriff:
 		//	increase the O probability in the vector and decrease R and D by SkepticProbability
 	//After someone died:
 	//Update the vector to new initialization based on new information with Stubbornness probability
+        // e.g. 5 players =  1S, 1R, 2O, 1D = [1,1/5,2/5,6/7]
+        // e.g. 4 players = 1S, 1R, 1O, 1D = [1,1/3,1/3,1/3]
 	//else disregard new information
 	//if player previously gave beer to sheriff now shoots at him, then increase R with SkepticProbability
 	//if player previously gave beer to sheriff still provide beers, then increase D with SkepticProbability
 	//Constraint all probabilities in the vector to 0 and 1
 	//Update previous record of Probability Vector
 	
-	/*_____Method to track which players shot sheriff______*/
-	
-	/*_____Method to track which players gave beers to sheriff______*/
-	
-	/*_____Dice Interactions______*/
+	/* 4) _____Dice Interactions______*/
 	//Predict the roles of each player using the Probability Vector associated with that player
-		//role is allocated by matching the max probability to the role 
+		//role is allocated by matching the max probability to the roles
+                // [0,1/3,2/3,0.8]
 	//After dices are rolled:
 	//Case: Beers
 		//Keep beers with willingToKeepBeers probability
@@ -64,10 +67,10 @@ public class AI {
 				//help sheriff is role=deputy
 				//help sheriff is role=renegade or someone else at random with willingToTrick probability
 				//help who gave you health if role=sheriff 
-				//help who is shooting sheriff if role=outlaw
+				//help who shot the sheriff if role=outlaw
 			//else:
 				//keep health
-	//Case: Shot
+	//Case: Shot 
 		//Keep shots if target coincides with shot range or with willingToKeepShots probabilty
 				//shoot who shot sheriff if role=deputy
 				//shoot who shot sheriff if role=renegade or someone else at random with willingToTrick probability
@@ -79,6 +82,7 @@ public class AI {
 			//keeps with willingToKeepGatling probability
 		//if two gatling:
 			//keeps with willingToKeepShots + random(willingToKeepShots, 1-willingToKeepShots) probability
+                        // 0.3 + random(0.3, 0.7) = 0.3 + 0.35 = 0.65
 		//if three 
 			//keeps with min(1, (willingToKeepShots + 1.5*random(willingToKeepShots, 1-willingToKeepShots)) probability
 	//Case: Dynamite

@@ -14,6 +14,7 @@ import java.util.Scanner;
  */
 public class Dice {
     public String roll;
+    public boolean isAI;
     
     public Dice (){
         this.roll = "";

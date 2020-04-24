@@ -1,8 +1,17 @@
 Meeting Agenda:
-1) Discuss validity of AI algorithm
 2) Discuss implementation of AI algorithm
+    -> changes needed to BangDiceGame class
 3) Discuss changes to present code base to include the proposed AI model
 4) Discuss compatibility of current program to GUI
     -> what inputs he needs and what changes should we make?
+    -> inputs: health, character, role of user is shown, sheriff
 5) Discuss scalability of current program to include expansion packages
 6) Discuss delagation of work and project timeline
+
+Plan:
+April 25th: Console version working
+April 30th: Expansion pack console version
+April 31st: Basic Model GUI
+May 2nd: Presentation
+
+Inputs: numberOfPlayers, array of players
