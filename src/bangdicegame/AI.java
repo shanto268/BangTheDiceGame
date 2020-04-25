@@ -10,13 +10,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-/**
+/*
  *new functionality needed:
- *include arrowpile shit
- *need to create one method that does one turn
  *need to include game termination check
  *need to include dice shit
- *need to normalize probabilities
+ *include arrowpile shit
+ *eliminate players needs to be added
+ *check stats after each round
  */
 
 public class AI {
@@ -33,7 +33,8 @@ public class AI {
 	private final double SkepticProbability;
 	
 	private final String name;
-	private final String role;      
+	private final String role;     
+	private ArrayList<String> targetRole;
 	private int health;
 	private final int subtractHealth = 5;
 	private final int thresholdHealth;  
@@ -72,6 +73,7 @@ public class AI {
         this.thresholdHealth = this.health - this.subtractHealth;
         this.name = players[pos].name;
         this.totalPlayers = numPlayers;
+        this.targetRole = new ArrayList<String>(); 
      }
 	
 //==================  Getters =======================================	
@@ -259,16 +261,104 @@ public class AI {
 	        		if (this.playerOrder[i].ProbabilityVector.get(j) < 0.0)
 	        			this.playerOrder[i].ProbabilityVector.set(j, 0.0);
 	        	}
-			}
+			}//end of for loop (players)
 		} //end of conditional	
+	}//end of method
+	
+	public void assignOpponents(){
+		//Assign enemy to AI
+		if (this.role == "Sheriff") {
+			this.targetRole.add("Outlaw");
+			this.targetRole.add("Renegade");
+		}
+		else if (this.role == "Outlaw") {
+			this.targetRole.add("Sheriff");
+		}
+		else if (this.role == "Renegade") {
+			if (EveryoneIsAlive()) {
+				this.targetRole.add("Outlaw");
+				this.targetRole.add("Deputy");
+			}
+			else {
+				this.targetRole.clear();
+				this.targetRole.add("Sheriff");
+			}
+		}
+		else { //Deputy
+			this.targetRole.add("Outlaw");
+			this.targetRole.add("Renegade");
+		}
 	}
 	
+	public void guessRoles() {
+		if (EveryoneIsAlive()) {
+			for (int i=0;i<this.totalPlayers;i++){
+				if ( i!=this.position ) { //not the present AI
+					Double maxProb = Collections.max(this.playerOrder[i].ProbabilityVector);
+					Integer maxIdx = this.playerOrder[i].ProbabilityVector.indexOf(maxProb);
+					switch(maxIdx) {
+					case 0: //S
+						this.playerOrder[i].aiGuessRole = "Sheriff";
+						break;
+					case 1: //R
+						this.playerOrder[i].aiGuessRole = "Renegade";
+						break;
+					case 2: //O
+						this.playerOrder[i].aiGuessRole = "Outlaw";
+						break;
+					case 3: //D
+						this.playerOrder[i].aiGuessRole = "Deputy";
+						break;
+					default:
+						break;
+					}
+				}				
+			} 
+		} 
+		else {
+			for (int i=0;i<this.playersAlive;i++){
+				if ( i!=this.position ) { //not the present AI
+					Double maxProb = Collections.max(this.playerOrder[i].ProbabilityVector);
+					Integer maxIdx = this.playerOrder[i].ProbabilityVector.indexOf(maxProb);
+					switch(maxIdx) {
+					case 0: //S
+						this.playerOrder[i].aiGuessRole = "Sheriff";
+						break;
+					case 1: //R
+						this.playerOrder[i].aiGuessRole = "Renegade";
+						break;
+					case 2: //O
+						this.playerOrder[i].aiGuessRole = "Outlaw";
+						break;
+					case 3: //D
+						this.playerOrder[i].aiGuessRole = "Deputy";
+						break;
+					default:
+						break;
+					}
+				}	
+			}
+		}
+	}
 	
-	
+	public void getGuessRole(){
+		for (int i=0;i<this.totalPlayers;i++){
+			if ( i!=this.position ) { 
+				System.out.println("guessed role of " + this.playerOrder[i].role + " is " + this.playerOrder[i].aiGuessRole);
+			}
+		}
+	}
 	/* 4) _____Dice Interactions______*/
+	public void rollDice() {
 	//Predict the roles of each player using the Probability Vector associated with that player
-		//role is allocated by matching the max probability to the roles
-                // [0,1./3,2./3,0.8]
+		assignOpponents();
+	//role is allocated by matching the max probability to the roles
+		guessRoles();
+		getGuessRole();
+	//roll the dice 
+	//evaluate each face as follows
+	//priority: dynamite, arrow, beer, shot1, shot2, gatling (can be randomized)
+	//
 	//After dices are rolled:
 	//Case: Beers
 		//Keep beers with willingToKeepBeers probability
@@ -298,5 +388,7 @@ public class AI {
 		//needs to keep
 	//Case: Arrow
 		//keeps with willingToKeepArrow probability
-	
+	}
+
+	//method to simulate one AI turn
 }

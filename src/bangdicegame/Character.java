@@ -19,7 +19,7 @@ import java.util.Scanner;
 
 public class Character {
     public int lifePoints, arrows, maxLife, numShotSheriff, numHelpSheriff;
-    public String name, role;
+    public String name, role, aiGuessRole;
     public boolean isAi;
     public ArrayList<Double> ProbabilityVector;
     
