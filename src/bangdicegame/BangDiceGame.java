@@ -85,12 +85,9 @@ public class BangDiceGame {
         
         /*
          * Need to do: 
-         * 		Table class creation general class to which User and AI will communicate
-         * 		only let GameFunctions control user defined class
-         * 		let AI control all other players
-         * 		change GameFunctions so that AI can access vital information that is needed
-         * 		change Dice so that AI can work on it without messing stuff up
-         * 		Need to change all user inputs to include decisions from AI
+         * 		game condition start needs to change
+         * 		game termination condition needs to be added to AI class as well
+         * 		game initialization needs to change as well
          */
         
         

@@ -4,6 +4,8 @@
  */
 package bangdicegame;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -12,13 +14,14 @@ import java.util.Scanner;
  *included isAi boolean in attributes and constructor
  *included shotSheriff
  *included helpedSheriff
+ *gave each player a ProbabilityVector attribute (arraylist)
  */
 
 public class Character {
     public int lifePoints, arrows, maxLife, numShotSheriff, numHelpSheriff;
     public String name, role;
     public boolean isAi;
-    
+    public ArrayList<Double> ProbabilityVector;
     
     public Character(int selection, boolean isAI){
         this.arrows = 0;
@@ -26,6 +29,8 @@ public class Character {
         this.isAi = isAI;
         this.numShotSheriff = 0;
         this.numHelpSheriff = 0;
+        this.ProbabilityVector =  new ArrayList<Double>();
+        this.ProbabilityVector.addAll(Arrays.asList(0.0,0.0,0.0,0.0));
         
         switch (selection){
             case 1:
@@ -108,6 +113,10 @@ public class Character {
                 this.lifePoints = 8;
                 this.maxLife = 8;
        }
+    }
+    
+    public void setname(String name) {
+    	this.name = name;
     }
     
     public static int [] shuffle_character (int [] randomSelection){
