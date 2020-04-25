@@ -23,6 +23,8 @@ public class Character {
         this.arrows = 0;
         this.role = "";
         this.isAi = isAI;
+        this.numShotSheriff = 0;
+        this.numHelpSheriff = 0;
         
         switch (selection){
             case 1:
