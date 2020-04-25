@@ -197,6 +197,16 @@ public class Character {
         }
     }
     
+    //for ai
+    public void lose_life() {
+    	this.lifePoints --;
+    }
+    
+    //for ai
+    public void lose_life(int numArrows) {
+    	this.lifePoints = this.lifePoints - numArrows;
+    }
+    
     public void lose_life(GameFunctions playerOrder, ArrowPile arrowPile, Boolean arrowOrDynamite){
         String choice;
         
@@ -241,4 +251,6 @@ public class Character {
             playerOrder.eliminate_player(this, arrowPile, !arrowOrDynamite);
         }
     }
+    
+  
 }

@@ -96,7 +96,7 @@ public class BangDiceGame {
         //
       //  Table table = new Table(players, totalPlayers);
         GameFunctions Game = new GameFunctions (players, totalPlayers);
-        SimulateAI AI = new SimulateAI(players, totalPlayers);
+        SimulateAI AI = new SimulateAI(players, totalPlayers, arrowPile);
         i = 0;
         //SAS added
 //        AI ai = new AI(totalPlayers, players);

@@ -16,20 +16,23 @@ import java.util.Arrays;
 
 public class SimulateAI {
     public Character [] playerOrder;
+    public ArrowPile arrowPile;
     int totalPlayers;
     		
-    public SimulateAI (Character [] players, int totalPlayers){
+    public SimulateAI (Character [] players, int totalPlayers, ArrowPile arrowPile){
         this.playerOrder = players;
         this.totalPlayers = totalPlayers;
+        this.arrowPile = arrowPile;
         for(int i=0;i<totalPlayers;i++) {
         	players[i].ProbabilityVector = createProbabilityVector(totalPlayers);
         }
+        
     }
 
 	public void AITurn() {
 		
 		for(int i=1;i<this.totalPlayers;i++) {
-			AI aiPlayer = new AI(this.playerOrder, this.totalPlayers, i);
+			AI aiPlayer = new AI(this.playerOrder, this.totalPlayers, i, this.arrowPile);
 			//aiPlayer.getPlayerName();
 		//	aiPlayer.getPlayerProbabilityVector();
 		//	aiPlayer.updateProbabilityVector();

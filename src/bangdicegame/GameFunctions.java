@@ -23,11 +23,7 @@ public class GameFunctions {
         this.originalNumOfPlayers = totalPlayers;
         this.game_over = false;
     }
- /*   
-    public boolean isUser() {
-    	return 
-    }
- */   
+  
     public Character next_turn (){
         this.currentPlayer = (this.currentPlayer + 1)%(this.numOfPlayers);
         return this.playerOrder[this.currentPlayer];
@@ -293,6 +289,7 @@ public class GameFunctions {
         }
     }
     
+  
     public boolean determine_game_over (GameFunctions playerOrder, Character deadPlayer, Boolean killedByPlayer){
         if (playerOrder.originalNumOfPlayers == 3){
             if (killedByPlayer){

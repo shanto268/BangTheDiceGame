@@ -35,23 +35,27 @@ public class AI {
 	private final String name;
 	private final String role;     
 	private ArrayList<String> targetRole;
+	private ArrayList<String> diceResults;
+	private ArrayList<String> keptDice;
 	private int health;
 	private final int subtractHealth = 5;
 	private final int thresholdHealth;  
 	private int position;
 	private final int totalPlayers;
 	private int playersAlive;
+	private int maxRolls = 3;
 	
 	private ArrayList<Double> ProbabilityVector;
 	public Character [] playerOrder;
 	public Character currentPlayer;
-	
+	public ArrowPile arrowPile;
+	public int remainingArrows;
 	public AI() {
 	}
 	
 //=================  Constructor =====================================
 	@SuppressWarnings("unchecked")
-	public AI(Character [] players, int numPlayers, int pos) {
+	public AI(Character [] players, int numPlayers, int pos, ArrowPile arrowPile) {
 		//this.ProbabilityVector = createProbabilityVector(numPlayers);
 		this.SkepticProbability = getProbability(0.0,0.4);
         this.Aggressiveness = getProbability(0.0,0.4);
@@ -74,6 +78,8 @@ public class AI {
         this.name = players[pos].name;
         this.totalPlayers = numPlayers;
         this.targetRole = new ArrayList<String>(); 
+        this.arrowPile = arrowPile;
+        this.remainingArrows = this.arrowPile.remaining;
      }
 	
 //==================  Getters =======================================	
@@ -112,10 +118,7 @@ public class AI {
 	public void getPlayerProbabilityVector() {
 		System.out.println("AI " + this.role + " P(vector) " + this.currentPlayer.ProbabilityVector);
 	}
-	
-	/* Method to create the initial probability vector*/
-	
-	
+		
 	/*Probability Generator*/
 	public double getProbability(double minnum, double maxnum) {
 	    Random rand = new Random();
@@ -348,6 +351,92 @@ public class AI {
 			}
 		}
 	}
+	
+	//decision to keep dice
+	public void keepDice(ArrayList<String> diceResults) {
+		this.keptDice = new ArrayList<String>();
+		int maxRolls = this.maxRolls;
+		int numDynamites = 0;
+		while(maxRolls!=0) {
+			//keep all the dynamite
+			for(int i=0;i<diceResults.size();i++){
+				if (diceResults.get(i)=="D") {
+					this.keptDice.add(diceResults.get(i));
+					numDynamites++;
+				}
+				//resolve all arrows
+				if (diceResults.get(i)=="A") {
+                    System.out.println("You rolled an arrow. You must pick up an arrow before continuing.");
+                    this.arrowPile.remove_arrow(this.currentPlayer, this.playerOrder);
+				}
+			}
+			//check how many dices can be turned
+			int dicesThatcanBeReRolled = 5 - this.keptDice.size();
+			//if 3+ dynamites
+			if (numDynamites >= 3) {
+				//self health --
+				this.currentPlayer.lifePoints--;
+				//other dices resolved 
+			}
+				
+			maxRolls--;
+		}
+				
+				//else
+					//assess willing to keep each of the dice
+						//beer -> always willing if health < threshold
+						//beer -> else if nice then give to whoever the role demands
+							//help sheriff is role=deputy
+							//help sheriff is role=renegade or someone else at random with willingToTrick probability
+							//help who gave you health if role=sheriff 
+							//help who shot the sheriff if role=outlaw
+						//beer ->else keep with willing to trickProbability 
+							//help whoever
+						//if kept numRolls --
+						//shot1 -> always willing if target on pos++ or pos-- 
+							//shoot who shot sheriff if role=deputy
+							//shoot who shot sheriff if role=renegade 
+							//shoot who shot you if role=sheriff 
+							//shoot sheriff if role=outlaw	
+						//shot1 -> else keep with willing to trickProbability 
+							//shoot whoever
+						//if kept numRolls --
+						//shot2 -> always willing if target on 2*pos++ or 2*pos-- 
+							//shoot who shot sheriff if role=deputy
+							//shoot who shot sheriff if role=renegade 
+							//shoot who shot you if role=sheriff 
+							//shoot sheriff if role=outlaw	
+						//shot2 -> else keep with willing to trickProbability 
+							//shoot whoever
+						//if kept numRolls --
+						//gatling-> determinewilling Probability depended on number of gatling
+							//if one gatling: 
+							//keeps with willingToKeepGatling probability
+							//if two gatling:
+							//keeps with willingToKeepShots + random(willingToKeepShots, 1-willingToKeepShots) probability
+							//if three:
+							//keeps with min(1, (willingToKeepShots + 1.5*random(willingToKeepShots, 1-willingToKeepShots)) probability
+						//
+						//if kept numRolls --
+						//arrow-> keep with willing probability
+					//stop whenever numRolls == 0
+					//look at all the dice kept and resolve them
+						//gatling -> if 3 or more (all other players health-- and all arrows current player removed)
+						//arrow-> resolved on roll
+
+	}
+	
+	
+			
+	/*
+	 * 		for(int i=0;i<this.diceResults.size();i++){
+			if (this.diceResults[i]=="D") {
+				this.keptDice.add(this.diceResults[i]);
+			}
+		}
+	 */
+	
+	
 	/* 4) _____Dice Interactions______*/
 	public void rollDice() {
 	//Predict the roles of each player using the Probability Vector associated with that player
@@ -355,40 +444,13 @@ public class AI {
 	//role is allocated by matching the max probability to the roles
 		guessRoles();
 		getGuessRole();
-	//roll the dice 
-	//evaluate each face as follows
-	//priority: dynamite, arrow, beer, shot1, shot2, gatling (can be randomized)
-	//
-	//After dices are rolled:
-	//Case: Beers
-		//Keep beers with willingToKeepBeers probability
-			//if own health >= thresholdHealth and with Niceness probability
-				//help sheriff is role=deputy
-				//help sheriff is role=renegade or someone else at random with willingToTrick probability
-				//help who gave you health if role=sheriff 
-				//help who shot the sheriff if role=outlaw
-			//else:
-				//keep health
-	//Case: Shot 
-		//Keep shots if target coincides with shot range or with willingToKeepShots probabilty
-				//shoot who shot sheriff if role=deputy
-				//shoot who shot sheriff if role=renegade or someone else at random with willingToTrick probability
-				//shoot who shot you if role=sheriff 
-				//shoot sheriff if role=outlaw	
-				//shoots whoever with Aggressive probability
-	//Case: Gatling
-		//if one gatling: 
-			//keeps with willingToKeepGatling probability
-		//if two gatling:
-			//keeps with willingToKeepShots + random(willingToKeepShots, 1-willingToKeepShots) probability
-                        // 0.3 + random(0.3, 0.7) = 0.3 + 0.35 = 0.65
-		//if three 
-			//keeps with min(1, (willingToKeepShots + 1.5*random(willingToKeepShots, 1-willingToKeepShots)) probability
-	//Case: Dynamite
-		//needs to keep
-	//Case: Arrow
-		//keeps with willingToKeepArrow probability
+	//roll the dice  "A", "D", "S1", "S2", "B", "G
+		AIDice d = new AIDice();
+		this.diceResults = d.rollThemDice(5);
+		keepDice(this.diceResults);
 	}
 
+	//method to evaluate dice roll
+	
 	//method to simulate one AI turn
 }
