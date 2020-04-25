@@ -1,0 +1,61 @@
+Character Class:
+  ((player)).lifePoints = current amount of health left (int)
+  ((player)).maxLife = maximum amount of health the character can have (int)
+  ((player)).arrows = amount of arrows the character has (int)
+  ((player)).role = character role (String, ex. "Sheriff" or "Deputy")
+  ((player)).name = character name (String, ex. "Bart Cassidy")
+  
+  ((player)).gain_arrow() = add 1 to player arrow count (the arrowPile method remove_arrow performs this automatically)
+  ((player)).lose_arrow() = sub 1 from player arrow count (the arrowPile method add_arrow performs this automatically)
+  ((player)).gain_life() = add 1 to player life point if current health is not max
+  ((player)).lose_life(playerOrder, arrowPile, Boolean arrowOrDynamite) = sub 1 from life points, eliminates them if they reach 0, takes 
+            user input
+                      arrowOrDynamite = if they were killed by arrow or dynamite, it is true
+  
+  
+Dice Class:
+  ((dice)).roll = type of role (String, ex "Arrow" or "Bull's Eye 1"
+            all options: "Arrow", "Dynamite", "Bull's Eye 1", "Bull's Eye 2", "Beer", "Gatling"
+  
+  ((dice)).roll_dice() = assigns one of the six options randomly to the roll variable
+  Dice.reroll_dice(Dice array of all 6 dice, int rollsRemaining, arrowpile, playerOrder) = rerolls all dice up to three times, takes  
+            user input
+  Dice.arrow_roll (current player, arrowpile, playerOrder) = if the player rolled an arrow
+  Dice.dynamite_roll (dice array, current player, playerOrder) = if player rolled a dynamite
+  Dice.bullsEye1_roll (playerOrder, arrow pile, doubleDamage) = if player rolls bulls eye 1, takes user input
+            doubleDamage = boolean for special character ability to do double damage
+  Dice.bullsEye2_roll (playerOrder, arrow pile, doubleDamage) = if player rolls bulls eye 2, takes user input
+            doubleDamage = boolean for special character ability to do double damage
+  Dice.beer_roll (playerOrder) = rolled a beer, takes user input
+  Dice.gatling_roll (dice array, current player, playerOrder) = if user rolls gatling, checks if there are 3 gatling rolls in total and 
+            executes
+                      takes user input for special character ability
+  
+
+ArrowPile Class:
+  ((pile)).remaining = how many arrows in pile (int)
+  
+  ((pile)).remove_arrow (playerOrder) = sub 1 from remaining in pile, also adds arrow to current player
+  ((pile)).add_arrow (current player) = add 1 to remaining, also takes arrow from current player
+  ((pile)).pileIsEmpty() = determines if pile is empty (Boolean, true if empty)
+  ((pile)).empty_pile(playerOrder, number of players) = deals damage due to empty pile, clears characters of their arrows and adds back 
+            to pile
+  
+  
+  
+GameFunctions Class:
+    ((players)).playerOrder = array of all players in turn order (array)
+    ((players)).currentPlayer = the player whos turn it is (int)
+    ((players)).numOfPlayers = current number of ALIVE players (int)
+    ((players)).originalNumOfPlayers = number of players who started the game (int)
+    ((players)).game_over = if the game is over or not (Boolean, true if game is over)
+    
+    ((players)).next_turn() = makes the next player in line the "current player"
+    ((players)).get_current_player() = returns the current player
+    ((players)).get_next_player() = returns the player one space to the right of current player
+    ((players)).get_previous_player() = returns the player one space to the left of current player
+    ((players)).get_two_away_player() = returns the player two spaces to the right
+    ((players)).get_two_before_player() = returns the player two spaces to the left
+    ((players)).eliminate_player (current player, arrowpile, boolean killedByPlayer) = eliminates player from the game
+              KilledByPlayer determines if the player was killed by another player
+    ((players)).determine_game_over (playerOrder, player who died, boolean killedByPlayer) = determines if the game has ended

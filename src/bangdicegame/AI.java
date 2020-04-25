@@ -6,6 +6,12 @@
 package bangdicegame;
 import java.util.Random;
 
+/**
+ *new functionality needed:
+ *include arrowpile shit
+ *method: AI_turn()
+ */
+
 public class AI {
 	//Behavior defining parameters
 	private double willingToTrick;
@@ -24,10 +30,14 @@ public class AI {
 	
 	private double [] ProbabilityVector;
 	public Character [] playerOrder;
+	public Character currentPlayer;
+	
+	public AI() {
+	}
 	//============  Constructor =======================
 	//Assign all other players this vector 
 	
-	public AI(int numPlayers,  Character [] players) {
+	public AI(Character [] players, int numPlayers) {
 		this.ProbabilityVector = createProbabilityVector(numPlayers);
 		this.willingToTrick = getProbability(0.0,0.2);
 		this.SkepticProbability = getProbability(0.0,0.4);
@@ -46,6 +56,26 @@ public class AI {
       //  System.out.println("\nsafety: " + this.Safetiness + " gatling" + this.willingToKeepGatling);
 	}
 	
+
+	public void getPlayer(int pos) {
+		this.currentPlayer = this.playerOrder[pos];
+		System.out.println("AI " + pos + " is " + this.currentPlayer);
+	}
+	
+	public void getPlayerName(int pos) {
+		this.currentPlayer = this.playerOrder[pos];
+		System.out.println("AI " + pos + " is " + this.currentPlayer.name);
+	}
+	
+	public void getPlayerHealth(int pos) {
+		this.currentPlayer = this.playerOrder[pos];
+		System.out.println("AI " + pos + " is " + this.currentPlayer.name);
+	}
+	
+	public void getPlayerRole(int pos) {
+		this.currentPlayer = this.playerOrder[pos];
+		System.out.println("AI " + pos + " is " + this.currentPlayer.role);
+	}
 	
 	/* Method to create the initial probability vector*/
 	public double[] createProbabilityVector(int numPlayers) {

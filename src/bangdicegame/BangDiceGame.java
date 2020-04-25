@@ -85,45 +85,50 @@ public class BangDiceGame {
         
         /*
          * Need to do: 
+         * 		Table class creation general class to which User and AI will communicate
          * 		only let GameFunctions control user defined class
          * 		let AI control all other players
          * 		change GameFunctions so that AI can access vital information that is needed
          * 		change Dice so that AI can work on it without messing stuff up
+         * 		Need to change all user inputs to include decisions from AI
          */
         
         
         //
         //START OF GAME
         //
-        GameFunctions playerOrder = new GameFunctions (players, totalPlayers);
+      //  Table table = new Table(players, totalPlayers);
+        GameFunctions Game = new GameFunctions (players, totalPlayers);
+        SimulateAI AI = new SimulateAI(players, totalPlayers);
         i = 0;
         //SAS added
-        AI ai = new AI(totalPlayers, players);
+//        AI ai = new AI(totalPlayers, players);
         
         //Making the sheriff the first player to go
-        if (playerOrder.numOfPlayers > 3){
+        if (Game.numOfPlayers > 3){
             while (!"Sheriff".equals(players[i].role)){
-                playerOrder.next_turn();
+                Game.next_turn();
                 i++;
             }
         }
         
         System.out.println();
         
-        while (!playerOrder.game_over){
+        while (!Game.game_over){
             System.out.println();
             
             //Prints players current turn
-            System.out.println("It is currently " + playerOrder.get_current_player().name + "'s turn\n");
+            System.out.println("It is currently " + Game.get_current_player().name + "'s turn\n");
             //players[0] is the user controlled player
-            if (playerOrder.get_current_player() == players[0]){
-                GameFunctions.player_turn(playerOrder, allDice, arrowPile);
+            if (Game.get_current_player() == players[0]){
+                GameFunctions.player_turn(Game, allDice, arrowPile);
             }
             else{
                 // AI turn goes here
                 // 
                 //
                 //
+            	AI.AITurn();
             	System.out.println("AI turn");
             	
             }
@@ -131,12 +136,12 @@ public class BangDiceGame {
             System.out.println("\nThe current standings are: ");
             
             //Shows standing of life points and arrows at end of round
-            for (i = 0; i < playerOrder.numOfPlayers; i++){
+            for (i = 0; i < Game.numOfPlayers; i++){
                 System.out.println(players[i].name + " has " + players[i].lifePoints + " life and " + players[i].arrows + " arrow(s)");
             }
             
             //Goes to next player
-            playerOrder.next_turn();
+            Game.next_turn();
             input.nextLine();
             System.out.println("\n*** Press enter to progress to the next turn. ***");
             input.nextLine();

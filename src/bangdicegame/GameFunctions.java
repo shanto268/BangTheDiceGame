@@ -7,8 +7,9 @@ package bangdicegame;
 import java.util.Scanner;
 
 /**
- *
- * @author cmdma
+ *purpose:
+ *lets user control a player
+ *must communicate with table
  */
 public class GameFunctions {
     public Character [] playerOrder;
@@ -22,7 +23,11 @@ public class GameFunctions {
         this.originalNumOfPlayers = totalPlayers;
         this.game_over = false;
     }
-    
+ /*   
+    public boolean isUser() {
+    	return 
+    }
+ */   
     public Character next_turn (){
         this.currentPlayer = (this.currentPlayer + 1)%(this.numOfPlayers);
         return this.playerOrder[this.currentPlayer];
@@ -94,7 +99,7 @@ public class GameFunctions {
         }
     }
     
-    public static void player_turn (GameFunctions playerOrder, Dice allDice[], ArrowPile arrowPile){
+    public static void player_turn(GameFunctions playerOrder, Dice allDice[], ArrowPile arrowPile){
         int i;
         boolean dynamiteExecuted, gatlingExecuted, doubleDamage;
         int numBullsEye1, numBullsEye2, numBeer, numGatling, rollsRemaining;
