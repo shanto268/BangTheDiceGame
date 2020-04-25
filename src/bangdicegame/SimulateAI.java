@@ -31,8 +31,8 @@ public class SimulateAI {
 		for(int i=1;i<this.totalPlayers;i++) {
 			AI aiPlayer = new AI(this.playerOrder, this.totalPlayers, i);
 			//aiPlayer.getPlayerName();
-			aiPlayer.getPlayerProbabilityVector();
-			aiPlayer.updateProbabilityVector();
+			//aiPlayer.getPlayerProbabilityVector();
+			//aiPlayer.updateProbabilityVector();
 			//aiPlayer.getPlayerBehavior();
 		}
 	}

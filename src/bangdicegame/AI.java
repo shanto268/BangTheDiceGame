@@ -192,6 +192,15 @@ public class AI {
 					this.playerOrder[i].ProbabilityVector.set(2, O);
 					this.playerOrder[i].ProbabilityVector.set(3, D);
 				}
+				
+				//Constraint all probabilities in the vector to 0 and 1
+	        	for (int j=0;j<4;j++) {
+	        		if (this.playerOrder[i].ProbabilityVector.get(j) > 1.0)
+	        			this.playerOrder[i].ProbabilityVector.set(j, 1.0);
+	        		if (this.playerOrder[i].ProbabilityVector.get(j) < 0.0)
+	        			this.playerOrder[i].ProbabilityVector.set(j, 0.0);
+	        	}
+				
 			} //end of for loop
 		}//end of if condition
 		//After someone died:
@@ -242,10 +251,16 @@ public class AI {
 					this.playerOrder[i].ProbabilityVector.set(2, (O/total + this.SkepticProbability));
 					this.playerOrder[i].ProbabilityVector.set(3, (D/total - this.SkepticProbability));
 				}
+				
+				//Constraint all probabilities in the vector to 0 and 1
+				for (int j=0;j<4;j++) {
+	        		if (this.playerOrder[i].ProbabilityVector.get(j) > 1.0)
+	        			this.playerOrder[i].ProbabilityVector.set(j, 1.0);
+	        		if (this.playerOrder[i].ProbabilityVector.get(j) < 0.0)
+	        			this.playerOrder[i].ProbabilityVector.set(j, 0.0);
+	        	}
 			}
-		} //end of conditional
-		//Constraint all probabilities in the vector to 0 and 1
-		//Update previous record of Probability Vector
+		} //end of conditional	
 	}
 	
 	
