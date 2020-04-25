@@ -25,8 +25,14 @@ public class AI {
 	private double willingToKeepGatling;
 	private double SkepticProbability;
 	private double Stubbornness;
-	private String role;      //left to assign
-	private int thresholdHealth;  //left to assign
+	
+	private String name;
+	private String role;      
+	private int health;
+	private int subtractHealth = 5;
+	private int thresholdHealth;  
+	private int position;
+
 	
 	private double [] ProbabilityVector;
 	public Character [] playerOrder;
@@ -37,7 +43,7 @@ public class AI {
 	//============  Constructor =======================
 	//Assign all other players this vector 
 	
-	public AI(Character [] players, int numPlayers) {
+	public AI(Character [] players, int numPlayers, int pos) {
 		this.ProbabilityVector = createProbabilityVector(numPlayers);
 		this.willingToTrick = getProbability(0.0,0.2);
 		this.SkepticProbability = getProbability(0.0,0.4);
@@ -51,30 +57,29 @@ public class AI {
         this.willingToKeepShots = getProbability(0.3,1.0);
         this.Stubbornness = getProbability(0.0,0.4);
         this.playerOrder = players;
-      //  this.thresholdHealth 
-      //  this.role  
-      //  System.out.println("\nsafety: " + this.Safetiness + " gatling" + this.willingToKeepGatling);
+        this.position = pos;
+        this.currentPlayer = players[pos];
+        this.role = players[pos].role;
+        this.health = players[pos].lifePoints;
+        this.thresholdHealth = this.health - this.subtractHealth;
+        this.name = players[pos].name;
 	}
 	
-
-	public void getPlayer(int pos) {
-		this.currentPlayer = this.playerOrder[pos];
-		System.out.println("AI " + pos + " is " + this.currentPlayer);
+	//getters
+	public void getPlayer() {
+		System.out.println("AI " + this.position + " is " + this.currentPlayer);
 	}
 	
-	public void getPlayerName(int pos) {
-		this.currentPlayer = this.playerOrder[pos];
-		System.out.println("AI " + pos + " is " + this.currentPlayer.name);
+	public void getPlayerName() {
+		System.out.println("AI " + this.position + " is " + this.currentPlayer.name);
 	}
 	
-	public void getPlayerHealth(int pos) {
-		this.currentPlayer = this.playerOrder[pos];
-		System.out.println("AI " + pos + " is " + this.currentPlayer.name);
+	public void getPlayerHealth() {
+		System.out.println("AI " + this.position + " is " + this.currentPlayer.lifePoints);
 	}
 	
-	public void getPlayerRole(int pos) {
-		this.currentPlayer = this.playerOrder[pos];
-		System.out.println("AI " + pos + " is " + this.currentPlayer.role);
+	public void getPlayerRole() {
+		System.out.println("AI " + this.position + " is " + this.currentPlayer.role + " with stubborness " + this.Stubbornness);
 	}
 	
 	/* Method to create the initial probability vector*/
@@ -112,8 +117,13 @@ public class AI {
 	}
 	
 	/* 1) _____Method to track which players shot sheriff______*/
+	//returns array of position of players that shot sheriff
+	//public int[] SheriffShooters()
+	
 	
 	/* 2) _____Method to track which players gave beers to sheriff______*/
+	//returns array of position of players that helped sheriff
+	//public int[] SheriffHelpers()
 	
 	/* 3) _____Method to update Probability vector______*/
 	//Update the vector for each player as follows:

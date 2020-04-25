@@ -14,18 +14,16 @@ package bangdicegame;
 public class SimulateAI {
     public Character [] playerOrder;
     int totalPlayers;
-    AI aiPlayer;
     		
     public SimulateAI (Character [] players, int totalPlayers){
         this.playerOrder = players;
-        aiPlayer = new AI(players, totalPlayers);
         this.totalPlayers = totalPlayers;
-        
     }
 
 	public void AITurn() {
 		for(int i=1;i<this.totalPlayers;i++) {
-			aiPlayer.getPlayerRole(i);
+			AI aiPlayer = new AI(this.playerOrder, this.totalPlayers, i);
+			aiPlayer.getPlayerRole();
 		}
 	}
 }

@@ -125,11 +125,8 @@ public class BangDiceGame {
             }
             else{
                 // AI turn goes here
-                // 
-                //
-                //
             	AI.AITurn();
-            	System.out.println("AI turn");
+          //  	System.out.println("AI turn");
             	
             }
             

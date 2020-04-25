@@ -10,7 +10,8 @@ import java.util.Scanner;
 /**
  *Changes made by SAS:
  *included isAi boolean in attributes and constructor
- * 
+ *included shotSheriff
+ *included helpedSheriff
  */
 
 public class Character {
@@ -122,9 +123,6 @@ public class Character {
     public static String [] shuffle_roles (String [] roles, int num){
         Random rand = new Random();
         int random;
-        
-        
-        
         for (int i = 0; i <= num; i++){
             random = rand.nextInt(num);
             String temp1 = roles[random];
@@ -187,7 +185,7 @@ public class Character {
         }
     }
     
-    public void lose_life (GameFunctions playerOrder, ArrowPile arrowPile, Boolean arrowOrDynamite){
+    public void lose_life(GameFunctions playerOrder, ArrowPile arrowPile, Boolean arrowOrDynamite){
         String choice;
         
         Scanner input = new Scanner(System.in);
