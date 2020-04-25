@@ -24,6 +24,7 @@ public class SimulateAI {
 		for(int i=1;i<this.totalPlayers;i++) {
 			AI aiPlayer = new AI(this.playerOrder, this.totalPlayers, i);
 			aiPlayer.getPlayerRole();
+			aiPlayer.getPlayerBehavior();
 		}
 	}
 }

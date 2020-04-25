@@ -9,7 +9,7 @@ import java.util.Random;
 /**
  *new functionality needed:
  *include arrowpile shit
- *method: AI_turn()
+ *
  */
 
 public class AI {
@@ -45,16 +45,18 @@ public class AI {
 	
 	public AI(Character [] players, int numPlayers, int pos) {
 		this.ProbabilityVector = createProbabilityVector(numPlayers);
-		this.willingToTrick = getProbability(0.0,0.2);
 		this.SkepticProbability = getProbability(0.0,0.4);
         this.Aggressiveness = getProbability(0.0,0.4);
         this.Safetiness = getProbability(0.0,0.4);
         this.Niceness  = getProbability(0.0,0.5);
+        
+		this.willingToTrick = getProbability(0.0,0.2);
         this.willingToKeepDice  = getProbability(0.0,1.0);
         this.willingToKeepHealth  = getProbability(0.3,1.0);
         this.willingToKeepArrow = getProbability(0.0,1.0);
         this.willingToKeepGatling = getProbability(0.3,1.0);
         this.willingToKeepShots = getProbability(0.3,1.0);
+        
         this.Stubbornness = getProbability(0.0,0.4);
         this.playerOrder = players;
         this.position = pos;
@@ -79,7 +81,23 @@ public class AI {
 	}
 	
 	public void getPlayerRole() {
-		System.out.println("AI " + this.position + " is " + this.currentPlayer.role + " with stubborness " + this.Stubbornness);
+		System.out.println("AI " + this.position + " is " + this.currentPlayer.role);
+	}
+	
+	public void getPlayerBehavior() {
+		System.out.println("AI " + this.position);
+		System.out.println("Willing to trick: " + this.willingToTrick);
+		System.out.println("Willing to keep dice: " + this.willingToKeepDice);
+		System.out.println("Willing to keep beer: " + this.willingToKeepHealth);
+		System.out.println("Willing to keep arrow: " + this.willingToKeepArrow);
+		System.out.println("Willing to keep Gatling: " + this.willingToKeepGatling);
+		System.out.println("Willing to keep gun: " + this.willingToKeepShots);		
+		System.out.println("Willing to be skeptic: " +this.SkepticProbability); 
+		System.out.println("Willing to be aggressive: " +this.Aggressiveness); 
+		System.out.println("Willing to safe: " +this.Safetiness);
+		System.out.println("Willing to nice: " +this.Niceness); 
+//		System.out.println("Probability Vector: " +this.ProbabilityVector);
+
 	}
 	
 	/* Method to create the initial probability vector*/
