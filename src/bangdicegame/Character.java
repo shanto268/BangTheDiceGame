@@ -15,9 +15,10 @@ import java.util.Scanner;
  */
 
 public class Character {
-    public int lifePoints, arrows, maxLife;
+    public int lifePoints, arrows, maxLife, numShotSheriff, numHelpSheriff;
     public String name, role;
     public boolean isAi;
+    
     
     public Character(int selection, boolean isAI){
         this.arrows = 0;

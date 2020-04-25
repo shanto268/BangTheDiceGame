@@ -4,12 +4,15 @@
  */
 
 package bangdicegame;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
  *new functionality needed:
  *include arrowpile shit
- *
+ *need to create one method that does one turn
  */
 
 public class AI {
@@ -32,7 +35,8 @@ public class AI {
 	private int subtractHealth = 5;
 	private int thresholdHealth;  
 	private int position;
-
+	private final int totalPlayers;
+	private int playersAlive;
 	
 	private double [] ProbabilityVector;
 	public Character [] playerOrder;
@@ -65,6 +69,7 @@ public class AI {
         this.health = players[pos].lifePoints;
         this.thresholdHealth = this.health - this.subtractHealth;
         this.name = players[pos].name;
+        this.totalPlayers = numPlayers;
 	}
 	
 	//getters
@@ -136,32 +141,56 @@ public class AI {
 	
 	/* 1) _____Method to track which players shot sheriff______*/
 	//returns array of position of players that shot sheriff
-	//public int[] SheriffShooters()
+	public ArrayList<Integer> SheriffShooters(){
+		ArrayList<Integer> positionOfSheriffShooters = new ArrayList<>();
+		for (int i=0;i<this.totalPlayers;i++) {
+			//System.out.println(this.playerOrder[i].numShotSheriff); 
+			if ((this.playerOrder[i].numShotSheriff > 0) && i!=this.position)
+				positionOfSheriffShooters.add(i);
+		}
+		return positionOfSheriffShooters;
+	}
 	
 	
 	/* 2) _____Method to track which players gave beers to sheriff______*/
 	//returns array of position of players that helped sheriff
-	//public int[] SheriffHelpers()
+	public ArrayList<Integer> SheriffHelpers(){
+		ArrayList<Integer> positionOfSheriffHelpers = new ArrayList<>();
+		for (int i=0;i<this.totalPlayers;i++) {
+			if ((this.playerOrder[i].numHelpSheriff > 0) && i!=this.position)
+				positionOfSheriffHelpers.add(i);
+		}
+		return positionOfSheriffHelpers;
+	}
 	
 	/* 3) _____Method to update Probability vector______*/
-	//Update the vector for each player as follows:
-	//While (no one died):
-		//if player is sheriff
-		//	vector = [1,0,0,0] fixed
-		//  all other players = [0,R,O,D]
-		//if player gave health to sheriff:
-		//	increase the R and D probability in the vector and decrease O by SkepticProbability
-		//if player shot sheriff:
-		//	increase the O probability in the vector and decrease R and D by SkepticProbability
-	//After someone died:
-	//Update the vector to new initialization based on new information with Stubbornness probability
-        // e.g. 5 players =  1S, 1R, 2O, 1D = [1,1./5,2./5,6/7]
-        // e.g. 4 players = 1S, 1R, 1O, 1D = [1,1./3,1/3,1/3]
-	//else disregard new information
-	//if player previously gave beer to sheriff now shoots at him, then increase R with SkepticProbability
-	//if player previously gave beer to sheriff still provide beers, then increase D with SkepticProbability
-	//Constraint all probabilities in the vector to 0 and 1
-	//Update previous record of Probability Vector
+	public void updateProbabilityVector() {
+		//While (no one died):
+		this.playersAlive = this.playerOrder.length; 
+		if (this.playersAlive == this.totalPlayers) {
+			//if player is sheriff
+			//	vector = [1,0,0,0] fixed
+			//  all other players = [0,R,O,D]
+			//if player gave health to sheriff:
+			//	increase the R and D probability in the vector and decrease O by SkepticProbability
+			//if player shot sheriff:
+			//	increase the O probability in the vector and decrease R and D by SkepticProbability	
+		}
+		//After someone died:
+		else {
+			//Update the vector to new initialization based on new information with Stubbornness probability
+		        // e.g. 5 players =  1S, 1R, 2O, 1D = [1,1./5,2./5,6/7]
+		        // e.g. 4 players = 1S, 1R, 1O, 1D = [1,1./3,1/3,1/3]
+			//else disregard new information
+			//if player previously gave beer to sheriff now shoots at him, then increase R with SkepticProbability
+			//if player previously gave beer to sheriff still provide beers, then increase D with SkepticProbability
+			//Constraint all probabilities in the vector to 0 and 1
+			//Update previous record of Probability Vector
+		}
+
+	}
+	
+	
 	
 	/* 4) _____Dice Interactions______*/
 	//Predict the roles of each player using the Probability Vector associated with that player

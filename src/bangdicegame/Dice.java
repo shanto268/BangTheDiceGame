@@ -193,7 +193,7 @@ public class Dice {
                 
                 //NEW CODE
                 if ("Sheriff".equals(nextPlayer.role)){
-                    playerOrder.get_current_player().numShotSheriff += 1;
+                    playerOrder.get_current_player().numShotSheriff+= 1;
                 }
                 
                 if (doubleDamage){
