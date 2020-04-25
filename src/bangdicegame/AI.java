@@ -413,10 +413,19 @@ public class AI {
 		}
 		else if (Math.random() <= this.willingToTrick) {
 			//help whoever
+			int maxi = 0;
+			for (int i=0;i<this.totalPlayers;i++) {
+				if (this.playerOrder[i] != null)
+					maxi++;
+			}
+			int rand = AIDice.randInt(0, maxi);
+			this.playerOrder[rand].lifePoints++;
 			return true;
 		}
 		else
 			return false;
+		
+		return true; //dummy
 	}
 	
 	public boolean keepShot1() {
