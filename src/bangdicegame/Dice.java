@@ -14,7 +14,6 @@ import java.util.Scanner;
  */
 public class Dice {
     public String roll;
-    public boolean isAI;
     
     public Dice (){
         this.roll = "";
@@ -124,7 +123,6 @@ public class Dice {
     
     
     public static void arrow_roll(Character player, ArrowPile pile, GameFunctions playerOrder){
-        player.gain_arrow();
         pile.remove_arrow(playerOrder);
     }
     
@@ -166,7 +164,6 @@ public class Dice {
             }
             
             if ("El Gringo".equals(nextPlayer.name)){
-                playerOrder.get_current_player().gain_arrow();
                 arrowPile.remove_arrow(playerOrder);
                 System.out.println(playerOrder.get_current_player().name + " made El Gringo lose a life point, so they have taken an arrow.");
             }
@@ -208,7 +205,6 @@ public class Dice {
         }
         
         if ("El Gringo".equals(enteredPlayer)){
-            playerOrder.get_current_player().gain_arrow();
             arrowPile.remove_arrow(playerOrder);
             System.out.println(playerOrder.get_current_player().name + " made El Gringo lose a life point, so they have taken an arrow.");
         }
@@ -231,7 +227,6 @@ public class Dice {
                 }
             
             if ("El Gringo".equals(nextPlayer.name)){
-                playerOrder.get_current_player().gain_arrow();
                 arrowPile.remove_arrow(playerOrder);
                 System.out.println(playerOrder.get_current_player().name + " made El Gringo lose a life point, so they have taken an arrow.");
             }
@@ -274,7 +269,6 @@ public class Dice {
         }
         
         if ("El Gringo".equals(enteredPlayer)){
-            playerOrder.get_current_player().gain_arrow();
             arrowPile.remove_arrow(playerOrder);
             System.out.println(playerOrder.get_current_player().name + " made El Gringo lose a life point, so they have taken an arrow.");
         }
@@ -331,7 +325,6 @@ public class Dice {
         }
         
         if ("El Gringo".equals(enteredPlayer)){
-            playerOrder.get_current_player().gain_arrow();
             arrowPile.remove_arrow(playerOrder);
             System.out.println(playerOrder.get_current_player().name + " made El Gringo lose a life point, so they have taken an arrow.");
         }
@@ -388,7 +381,6 @@ public class Dice {
         }
         
         if ("El Gringo".equals(enteredPlayer)){
-            playerOrder.get_current_player().gain_arrow();
             arrowPile.remove_arrow(playerOrder);
             System.out.println(playerOrder.get_current_player().name + " made El Gringo lose a life point, so they have taken an arrow.");
         }
@@ -436,20 +428,43 @@ public class Dice {
         }
         
         if ("Kit Carlson".equals(player.name)){
-            while (tempCount > 0){
+            int playersWithArrows = 0;
+            
+            for (i = 0; i < playerOrder.numOfPlayers; i++){
+                if (playerOrder.playerOrder[i].arrows > 0){
+                    playersWithArrows += 1;
+                }
+            }
+            
+            while (tempCount > 0 && playersWithArrows > 0){
                 System.out.print("Kit Carlson, you rolled a gatling, which player would you like to remove an arrow from? (You may enter your own name): ");
                 enteredPlayer = input.nextLine();
                 
                 while (!removedArrow){
                     for (i = 0; i < playerOrder.numOfPlayers; i ++){
                         if (enteredPlayer.equals(playerOrder.playerOrder[i].name)){
-                            playerOrder.playerOrder[i].lose_arrow();
-                            removedArrow = true;
+                            if (playerOrder.playerOrder[i].arrows > 0){
+                               playerOrder.playerOrder[i].lose_arrow();
+                               removedArrow = true;
+                               tempCount -= 1;
+                            }
+                            else{
+                                System.out.print("Entered character does not have any arrows to remove");
+                                removedArrow = true;
+                            }
                         }
                     }
-                    while (!removedArrow){
+                    if (!removedArrow){
                         System.out.print("Could not find character name. Please try again: ");
                         enteredPlayer = input.nextLine();
+                    }
+                }
+                
+                playersWithArrows = 0;
+                
+                for (i = 0; i < playerOrder.numOfPlayers; i++){
+                    if (playerOrder.playerOrder[i].arrows > 0){
+                        playersWithArrows += 1;
                     }
                 }
                 removedArrow = false;
@@ -468,7 +483,6 @@ public class Dice {
                     playerOrder.playerOrder[i].lose_life(playerOrder, arrowPile, false);
                     
                     if ("El Gringo".equals(playerOrder.playerOrder[i].name)){
-                        playerOrder.get_current_player().gain_arrow();
                         arrowPile.remove_arrow(playerOrder);
                         System.out.println(playerOrder.get_current_player().name + " made El Gringo lose a life point, so they have taken an arrow.");
                     }

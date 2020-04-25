@@ -1,12 +1,12 @@
 /*
- * Meghan Engert
+ * Cierra Ditmore
  * CS 2365
  */
 package bangdicegame;
 
 /**
  *
- * @author
+ * @author cmdma
  */
 public class ArrowPile {
     public int remaining;
@@ -18,6 +18,7 @@ public class ArrowPile {
     public void remove_arrow (GameFunctions playerOrder){
         if (this.remaining > 0){
             this.remaining -= 1;
+            playerOrder.get_current_player().gain_arrow();
             if (this.pileIsEmpty()){
                 this.empty_pile(playerOrder, playerOrder.numOfPlayers);
             }

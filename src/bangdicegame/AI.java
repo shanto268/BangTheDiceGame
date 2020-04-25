@@ -4,6 +4,7 @@
  */
 
 package bangdicegame;
+import java.util.Random;
 
 public class AI {
 	//Behavior defining parameters
@@ -18,19 +19,67 @@ public class AI {
 	private double willingToKeepGatling;
 	private double SkepticProbability;
 	private double Stubbornness;
-	private String role;
-	private int thresholdHealth;
+	private String role;      //left to assign
+	private int thresholdHealth;  //left to assign
 	
 	private double [] ProbabilityVector;
-	
+	public Character [] playerOrder;
 	//============  Constructor =======================
-	//Create probability vector from number of players =  [S, R, O, D]
-	//Initialize the vector with input probability
-	//e.g. if 5 players, the initial vector = [1/5, 1/5, 2/5, 1/5]
 	//Assign all other players this vector 
-	//Set the private probability values stochastically for each AI (bounded uniform distribution)
 	
-	//=========== Methods =============================
+	public AI(int numPlayers,  Character [] players) {
+		this.ProbabilityVector = createProbabilityVector(numPlayers);
+		this.willingToTrick = getProbability(0.0,0.2);
+		this.SkepticProbability = getProbability(0.0,0.4);
+        this.Aggressiveness = getProbability(0.0,0.4);
+        this.Safetiness = getProbability(0.0,0.4);
+        this.Niceness  = getProbability(0.0,0.5);
+        this.willingToKeepDice  = getProbability(0.0,1.0);
+        this.willingToKeepHealth  = getProbability(0.3,1.0);
+        this.willingToKeepArrow = getProbability(0.0,1.0);
+        this.willingToKeepGatling = getProbability(0.3,1.0);
+        this.willingToKeepShots = getProbability(0.3,1.0);
+        this.Stubbornness = getProbability(0.0,0.4);
+        this.playerOrder = players;
+      //  this.thresholdHealth 
+      //  this.role  
+      //  System.out.println("\nsafety: " + this.Safetiness + " gatling" + this.willingToKeepGatling);
+	}
+	
+	
+	/* Method to create the initial probability vector*/
+	public double[] createProbabilityVector(int numPlayers) {
+		double[] vector = null;
+
+		switch(numPlayers) {
+		case 4:
+			vector = new double[] {1./4.,1./4.,1./2.,0.0}; //[sheriff,renegade,outlaws,deputy]
+			break;
+		case 5:
+			vector = new double[] {1./5, 1/5, 2./5, 1/5};//[sheriff,renegade,outlaws,deputy]
+			break;
+		case 6:
+			vector = new double[] {1./6, 1/6, 1/2, 1/6}; //[sheriff,renegade,outlaws,deputy]
+			break;
+		case 7:
+			vector = new double[] {1./7, 1/7, 3./7, 2./7}; //[sheriff,renegade,outlaws,deputy]
+			break;
+		case 8:
+			vector = new double[] {1./8, 2./8, 3./8, 2/8}; //[sheriff,renegade,outlaws,deputy]
+			break;
+		default:
+			System.out.println("Invalid Number of Players!");
+			break;
+		}
+
+		return vector;
+	}
+	
+	/*Probability Generator*/
+	public double getProbability(double minnum, double maxnum) {
+	    Random rand = new Random();
+	    return rand.nextFloat() * (maxnum - minnum) + minnum;
+	}
 	
 	/* 1) _____Method to track which players shot sheriff______*/
 	
@@ -48,8 +97,8 @@ public class AI {
 		//	increase the O probability in the vector and decrease R and D by SkepticProbability
 	//After someone died:
 	//Update the vector to new initialization based on new information with Stubbornness probability
-        // e.g. 5 players =  1S, 1R, 2O, 1D = [1,1/5,2/5,6/7]
-        // e.g. 4 players = 1S, 1R, 1O, 1D = [1,1/3,1/3,1/3]
+        // e.g. 5 players =  1S, 1R, 2O, 1D = [1,1./5,2./5,6/7]
+        // e.g. 4 players = 1S, 1R, 1O, 1D = [1,1./3,1/3,1/3]
 	//else disregard new information
 	//if player previously gave beer to sheriff now shoots at him, then increase R with SkepticProbability
 	//if player previously gave beer to sheriff still provide beers, then increase D with SkepticProbability
@@ -59,7 +108,7 @@ public class AI {
 	/* 4) _____Dice Interactions______*/
 	//Predict the roles of each player using the Probability Vector associated with that player
 		//role is allocated by matching the max probability to the roles
-                // [0,1/3,2/3,0.8]
+                // [0,1./3,2./3,0.8]
 	//After dices are rolled:
 	//Case: Beers
 		//Keep beers with willingToKeepBeers probability

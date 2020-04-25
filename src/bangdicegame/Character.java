@@ -8,19 +8,20 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- *
+ *Changes made by SAS:
+ *included isAi boolean in attributes and constructor
  * 
  */
 
 public class Character {
     public int lifePoints, arrows, maxLife;
     public String name, role;
+    public boolean isAi;
     
-    
-    public Character(int selection){
+    public Character(int selection, boolean isAI){
         this.arrows = 0;
         this.role = "";
-        
+        this.isAi = isAI;
         
         switch (selection){
             case 1:
@@ -205,7 +206,6 @@ public class Character {
                 }
                 
                 if ("arrow".equals(choice)){
-                    this.gain_arrow();
                     arrowPile.remove_arrow(playerOrder);
                 }
                 else {
