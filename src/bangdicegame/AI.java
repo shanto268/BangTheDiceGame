@@ -11,16 +11,18 @@ import java.util.List;
 import java.util.Random;
 
 /*
- *new functionality needed:
- *turn function
+ *new functionality needed: 
+ *one step turn function (update probabilities)
+ *initialization of the game
+ *NEED TO MAKE SHERIFF GO FIRST
+ *each turn of the game is player then AI 
+ *game termination loop
+ *check mechanics of when someone dies
+ * update totalPlayer number and EveryoneAlive function
 	 *need to include game termination check
 	 *eliminate players needs to be added
 	 *check stats after each round
-	 *reset all arraylists that use add after turn
- * update totalPlayer number and EveryoneAlive function
- * randomize the number of turns
- * double check all random numbers
- * NEED TO MAKE SHERIFF GO FIRST
+	 *reset all arraylists that use add after turn?
  */
 
 public class AI {
@@ -362,80 +364,6 @@ public class AI {
 			return true;
 		else
 			return false;
-	}
-	
-	public boolean keepBeer1() {
-		//beer -> always willing if health < threshold
-		if (this.currentPlayer.lifePoints < this.thresholdHealth) {
-			//apply to itself
-			this.currentPlayer.lifePoints++;
-			return true;
-		}
-		else if (Math.random() <= this.willingToKeepHealth){	
-			
-			if (this.currentPlayer.role=="Outlaw") {
-				//help who shot the sheriff if role=outlaw
-				for (int i=0;i<this.totalPlayers;i++) {
-					if (this.playerOrder[i].numShotSheriff>0) {
-						this.playerOrder[i].lifePoints++;
-						return true;
-					}
-				}
-			}
-			else if (this.currentPlayer.role=="Renegade") {
-			 //help sheriff is role=renegade or someone else at random if everyone is alive
-			 //else help who shot sheriff
-				if (EveryoneIsAlive()) {
-					for (int i=0;i<this.totalPlayers;i++) {
-						if (this.playerOrder[i].role=="Sheriff") {
-							this.playerOrder[i].lifePoints++;
-							return true;
-						}
-					}	
-				}
-				else {
-					for (int i=0;i<this.totalPlayers;i++) {
-						if (this.playerOrder[i].numShotSheriff>0) {
-							this.playerOrder[i].lifePoints++;
-							return true;
-						}
-					}
-				}
-			}
-			else if (this.currentPlayer.role=="Deputy") {
-				//help sheriff is role=deputy
-				for (int i=0;i<this.totalPlayers;i++) {
-					if (this.playerOrder[i].role=="Sheriff") {
-						this.playerOrder[i].lifePoints++;
-						return true;
-					}
-				}
-			}
-			else if (this.currentPlayer.role=="Sheriff") {
-				//help who gave you health if role=sheriff 
-				for (int i=0;i<this.totalPlayers;i++) {
-					if (this.playerOrder[i].numHelpSheriff>0) {
-						this.playerOrder[i].lifePoints++;
-						return true;
-					}
-				}
-			}
-					
-		}//willingtokeep ends....
-		else if (Math.random() <= this.willingToTrick) {
-			//help whoever
-			int maxi = 0;
-			for (int i=0;i<this.totalPlayers;i++) {
-				if (this.playerOrder[i] != null)
-					maxi++;
-			}
-			int rand = AIDice.randInt(0, maxi+1);
-			this.playerOrder[rand].lifePoints++;
-			return true;
-		}
-		else
-			return false;
-		return false;
 	}
 	
 	public boolean toLeft(int i) {
@@ -828,6 +756,41 @@ public class AI {
 		}
 	}
 	
+	public void shootRandomly1() {
+		Random r = new Random();
+		int chance = r.nextInt(2); //0 or 1
+		if (chance == 1) {
+			int j = Math.floorMod(this.position+1, this.totalPlayers);
+			this.playerOrder[j].lifePoints--; //right
+			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is one position"
+					+ " to the right." );
+		}
+		else {
+			int j = Math.floorMod(this.position-1, this.totalPlayers);
+			this.playerOrder[j].lifePoints--; //left
+			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is one position"
+					+ " to the left." );
+		}
+	}
+	
+	public void shootRandomly2() {
+		Random r = new Random();
+		int chance = r.nextInt(2); //0 or 1
+		if (chance == 1) {
+			int j = Math.floorMod(this.position+2, this.totalPlayers);
+			this.playerOrder[j].lifePoints--; //right
+			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is two positions"
+					+ " to the right." );
+		}
+		else {
+			int j = Math.floorMod(this.position-2, this.totalPlayers);
+			this.playerOrder[j].lifePoints--; //left
+			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is two positions"
+					+ " to the left." );
+		}
+	}
+	
+	
 	//decision to keep dice -> "A", "D", "S1", "S2", "B", "G"
 	public void keepDice(ArrayList<String> diceResults) {
 		this.keptDice = new ArrayList<String>();
@@ -872,10 +835,10 @@ public class AI {
 					}
 				}
 				else if(diceResults.get(i)=="S1") {
-					resolveBullsEye1();
+					resolveShot1();
 				}
 				else if(diceResults.get(i)=="S2") {
-					resolveBullsEye2();
+					resolveShot2();
 				}
 			}//end of for loop
 			System.out.println(this.name+"'s final dices are " + this.keptDice); //need to replace DiceResults with keptDices
@@ -928,7 +891,7 @@ public class AI {
 		resolveGatling(numGatling);
 		for(int i=0;i<keptDice.size();i++) {
 			if (keptDice.get(i)=="B") {
-				resolveHealth();
+				resolveBeers();
 			}
 			else if (keptDice.get(i)=="S1") {
 				resolveShot1();
@@ -941,17 +904,41 @@ public class AI {
 	}
 	
 	public void resolveShot2() {
-		System.out.println("shot2");
+		int toLeft = Math.floorMod(this.position-2, this.totalPlayers);
+		int toRight = Math.floorMod(this.position+2, this.totalPlayers);
+		
+		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)) {
+			this.playerOrder[toLeft].lifePoints--;
+			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toLeft].name + " who is two position"
+					+ " to the left." );
+		}
+		else if (this.targetRole.contains(this.playerOrder[toRight].aiGuessRole) ) {
+			this.playerOrder[toRight].lifePoints--;
+			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toRight].name + " who is two position"
+					+ " to the right." );
+		}
+		else 
+			shootRandomly2();
 	}
 	
-	public void resolveShot1() {
-		System.out.println("shot1");
+	public void resolveShot1() {		
+		int toLeft = Math.floorMod(this.position-1, this.totalPlayers);
+		int toRight = Math.floorMod(this.position+1, this.totalPlayers);
+		
+		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)) {
+			this.playerOrder[toLeft].lifePoints--;
+			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toLeft].name + " who is one position"
+					+ " to the left." );
+		}
+		else if (this.targetRole.contains(this.playerOrder[toRight].aiGuessRole) ) {
+			this.playerOrder[toRight].lifePoints--;
+			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toRight].name + " who is one position"
+					+ " to the right." );
+		}
+		else 
+			shootRandomly1();
 	}
-	
-	public void resolveHealth() {
-		System.out.println("beers");
-	}
-	
+		
 	public void resolveGatling(int numGatling) {
 		if(numGatling>= 3) {
 			for(int i=0;i<this.totalPlayers;i++) {
