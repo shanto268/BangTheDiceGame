@@ -38,9 +38,11 @@ public class ArrowPile {
         else if (this.pileIsEmpty()){
                //everyone loses as many lives as many arrows that they had and loses all their arrows
             	for (int i=0;i<playerOrder.length;i++) {
-            		int numArrow = playerOrder[i].arrows;
-            		playerOrder[i].lose_life(numArrow);
-            		playerOrder[i].arrows = 0;
+            		if (playerOrder[i]!=null) {
+	            		int numArrow = playerOrder[i].arrows;
+	            		playerOrder[i].lose_life(numArrow);
+	            		playerOrder[i].arrows = 0;
+            		}
             	}  
             	this.remaining = 9; //set pile back to normal again
        } 

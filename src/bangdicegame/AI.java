@@ -650,8 +650,40 @@ public class AI {
 		int maxRolls = this.maxRolls; 
 		int numDynamites = 0;
 		int numGatling = 0;
-		System.out.println("Rolled dice: " + diceResults);
-		
+		System.out.println("Dices rolled: " + diceResults);
+		/*
+		 * resolve arrows
+		 * resolve dynamites
+			 	*if dynamites > 3
+			 	*turn ends 
+			 	*resolve all dices
+		 	 *else
+		 	 	*put dynamites to keptDice
+		 	 	*re-roll dices (max 3 times) 
+		 * 
+		 */
+		for(int i=0;i<diceResults.size();i++){
+			//resolve all arrows
+			if (diceResults.get(i)=="A") {
+                System.out.println("You rolled an arrow. You must pick up an arrow before continuing.");
+                this.arrowPile.remove_arrow(this.currentPlayer, this.playerOrder);
+                System.out.println("AI " + this.position + " (" + this.name + ") has " + this.currentPlayer.arrows + " arrow(s).");
+                System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
+			}
+			
+			else if (diceResults.get(i)=="D") {
+				System.out.println("You rolled a dynamite. It cannot be re-rolled.");
+				this.keptDice.add(diceResults.get(i));
+				diceResults.remove(i);
+				numDynamites++;
+			}
+			else if (diceResults.get(i)=="G") {
+				numGatling++;
+			}
+		}
+		System.out.println("You rolled " + numGatling + " Gatlings. You rolled " + numDynamites + " Dynamites.");
+	}
+		/*
 		while(maxRolls!=0) {
 			//keep all the dynamite
 			System.out.println("Roll number: " + maxRolls);
@@ -720,7 +752,8 @@ public class AI {
 			//gatling -> if 3 or more (all other players health-- and all arrows current player removed)
 			//arrow-> resolved on roll
 		//reset keptDice after turn
-	}
+		 */
+	
 		
 	/* 4) _____Dice Interactions______*/
 	public void rollDice() {
