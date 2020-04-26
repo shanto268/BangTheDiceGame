@@ -801,18 +801,6 @@ public class AI {
 		int numDynamites = 0;
 		int numGatling = 0;
 		System.out.println("Dices rolled: " + diceResults);
-		/*
-		 * resolve arrows <done>
-		 * resolve dynamites <wip>
-			 	*if dynamites > 3 <done>
-			 	*turn ends <done>
-			 	*resolve all dices <wip>
-			 		*shots left	
-		 	 *else
-		 	 	*put dynamites to keptDice
-		 	 	*re-roll dices (max 3 times) 
-		 * 
-		 */
 		for(int i=0;i<diceResults.size();i++){
 			//resolve all arrows
 			if (diceResults.get(i)=="A") {
@@ -838,6 +826,7 @@ public class AI {
 			System.out.println("Since, " + this.name + " rolled " + numDynamites + " dynamites. " + this.name + "'s turn is over.");
 			this.currentPlayer.lifePoints--;
 			for(int i=0;i<diceResults.size();i++) {
+				this.keptDice.add(diceResults.get(i));
 				if(diceResults.get(i)=="B") {
 					if (this.currentPlayer.lifePoints < this.thresholdHealth) {
 						this.currentPlayer.lifePoints++; //apply to itself
@@ -857,83 +846,16 @@ public class AI {
 					resolveBullsEye2();
 				}
 			}//end of for loop
-			System.out.println(this.name+"'s final dices are " + diceResults); //need to replace DiceResults with keptDices
+			System.out.println(this.name+"'s final dices are " + this.keptDice); //need to replace DiceResults with keptDices
 		}//end of 3+ dynamite condition
 		else { //if not 3 dynamites
-			
+			/*
+			 * 
+			 */
 		}
 	}//end of method
 	
-		/*
-		while(maxRolls!=0) {
-			//keep all the dynamite
-			System.out.println("Roll number: " + maxRolls);
-			for(int i=0;i<diceResults.size();i++){
-				if (diceResults.get(i)=="D") {
-					this.keptDice.add(diceResults.get(i));
-					diceResults.remove(i);
-					numDynamites++;
-				}
-				//resolve all arrows
-				if (diceResults.get(i)=="A") {
-                    System.out.println("You rolled an arrow. You must pick up an arrow before continuing.");
-                    this.arrowPile.remove_arrow(this.currentPlayer, this.playerOrder);
-                    System.out.println("AI " + this.position + " (" + this.name + ") has " + this.currentPlayer.arrows + " arrow(s).");
-                    System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
-				}
-				if (diceResults.get(i)=="G") {
-					numGatling++;
-				}
-				
-			}
-			System.out.println("Dynamite number: " + numDynamites);
-			System.out.println("Gatling number: " + numGatling);
-			System.out.println("Resolved dice " + this.keptDice);
-			//if 3+ dynamites
-			if (numDynamites >= 3) {
-				//self health --
-				this.currentPlayer.lifePoints--;
-				//other dices resolved 
-				maxRolls = 0;
-			}
-			else {
-				//assess willing to keep each of the dice
-				for(int i=0;i<diceResults.size();i++) {
-					
-					if ((diceResults.get(i)=="B") && keepBeer()) {
-						this.keptDice.add(diceResults.get(i));
-						maxRolls--;
-					}
-					else if ((diceResults.get(i)=="S1") && keepShot1()) {
-						this.keptDice.add(diceResults.get(i));
-						maxRolls--;
-					}
-					else if ((diceResults.get(i)=="S2") && keepShot2()){
-						this.keptDice.add(diceResults.get(i));
-						maxRolls--;
-					}
-					else if ((diceResults.get(i)=="G") && keepGatling(numGatling)){
-						this.keptDice.add(diceResults.get(i));
-						maxRolls--;
-					}
-					else {
-						if (keepArrow())
-							this.keptDice.add(diceResults.get(i));
-							maxRolls--;
-					}
-				}
 
-			}
-			System.out.println("Resolved dice " + this.keptDice);
-		}
-		
-		//determine if game is over after turn is over
-		//stop whenever numRolls == 0
-		//look at all the dice kept and resolve them
-			//gatling -> if 3 or more (all other players health-- and all arrows current player removed)
-			//arrow-> resolved on roll
-		//reset keptDice after turn
-		 */
 	
 		
 	/* 4) _____Dice Interactions______*/
@@ -965,3 +887,75 @@ public class AI {
 	
 	//method to simulate one AI turn
 }
+
+
+/*
+while(maxRolls!=0) {
+	//keep all the dynamite
+	System.out.println("Roll number: " + maxRolls);
+	for(int i=0;i<diceResults.size();i++){
+		if (diceResults.get(i)=="D") {
+			this.keptDice.add(diceResults.get(i));
+			diceResults.remove(i);
+			numDynamites++;
+		}
+		//resolve all arrows
+		if (diceResults.get(i)=="A") {
+            System.out.println("You rolled an arrow. You must pick up an arrow before continuing.");
+            this.arrowPile.remove_arrow(this.currentPlayer, this.playerOrder);
+            System.out.println("AI " + this.position + " (" + this.name + ") has " + this.currentPlayer.arrows + " arrow(s).");
+            System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
+		}
+		if (diceResults.get(i)=="G") {
+			numGatling++;
+		}
+		
+	}
+	System.out.println("Dynamite number: " + numDynamites);
+	System.out.println("Gatling number: " + numGatling);
+	System.out.println("Resolved dice " + this.keptDice);
+	//if 3+ dynamites
+	if (numDynamites >= 3) {
+		//self health --
+		this.currentPlayer.lifePoints--;
+		//other dices resolved 
+		maxRolls = 0;
+	}
+	else {
+		//assess willing to keep each of the dice
+		for(int i=0;i<diceResults.size();i++) {
+			
+			if ((diceResults.get(i)=="B") && keepBeer()) {
+				this.keptDice.add(diceResults.get(i));
+				maxRolls--;
+			}
+			else if ((diceResults.get(i)=="S1") && keepShot1()) {
+				this.keptDice.add(diceResults.get(i));
+				maxRolls--;
+			}
+			else if ((diceResults.get(i)=="S2") && keepShot2()){
+				this.keptDice.add(diceResults.get(i));
+				maxRolls--;
+			}
+			else if ((diceResults.get(i)=="G") && keepGatling(numGatling)){
+				this.keptDice.add(diceResults.get(i));
+				maxRolls--;
+			}
+			else {
+				if (keepArrow())
+					this.keptDice.add(diceResults.get(i));
+					maxRolls--;
+			}
+		}
+
+	}
+	System.out.println("Resolved dice " + this.keptDice);
+}
+
+//determine if game is over after turn is over
+//stop whenever numRolls == 0
+//look at all the dice kept and resolve them
+	//gatling -> if 3 or more (all other players health-- and all arrows current player removed)
+	//arrow-> resolved on roll
+//reset keptDice after turn
+ */
