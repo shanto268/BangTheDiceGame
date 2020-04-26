@@ -354,6 +354,15 @@ public class AI {
 		}
 	}
 	
+	public boolean keepBeer1() {
+		if (this.currentPlayer.lifePoints < this.thresholdHealth)
+			return true;
+		else if (Math.random() <= this.willingToKeepHealth)
+			return true;
+		else
+			return false;
+	}
+	
 	public boolean keepBeer() {
 		//beer -> always willing if health < threshold
 		if (this.currentPlayer.lifePoints < this.thresholdHealth) {
@@ -447,6 +456,31 @@ public class AI {
 		else
 			return false;
 	}
+	
+	public boolean keepShot11() {
+		int toLeft = Math.floorMod(this.position-1, this.totalPlayers);
+		int toRight = Math.floorMod(this.position+1, this.totalPlayers);
+		
+		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)  ||  this.targetRole.contains(this.playerOrder[toRight].aiGuessRole) )
+			return true;
+		else if (Math.random() <= this.willingToKeepShots)
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean keepShot21() {
+		int toLeft = Math.floorMod(this.position-2, this.totalPlayers);
+		int toRight = Math.floorMod(this.position+2, this.totalPlayers);
+		
+		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)  ||  this.targetRole.contains(this.playerOrder[toRight].aiGuessRole) )
+			return true;
+		else if (Math.random() <= this.willingToKeepShots)
+			return true;
+		else
+			return false;
+	}
+	
 	
 	public boolean twoLeft(int i) {
 	//	System.out.println("player 2 left role: " + this.playerOrder[(i-2)%this.totalPlayers].aiGuessRole);
@@ -801,6 +835,7 @@ public class AI {
 		int numDynamites = 0;
 		int numGatling = 0;
 		System.out.println("Dices rolled: " + diceResults);
+		
 		for(int i=0;i<diceResults.size();i++){
 			//resolve all arrows
 			if (diceResults.get(i)=="A") {
@@ -822,7 +857,7 @@ public class AI {
 		
 		System.out.println(this.name + " rolled " + numGatling + " Gatling(s). " + this.name +   " rolled " + numDynamites + " Dynamite(s).");
 		//more than 3 dynamites
-		if (numDynamites>=1) {
+		if (numDynamites>=5) {
 			System.out.println("Since, " + this.name + " rolled " + numDynamites + " dynamites. " + this.name + "'s turn is over.");
 			this.currentPlayer.lifePoints--;
 			for(int i=0;i<diceResults.size();i++) {
@@ -850,9 +885,49 @@ public class AI {
 		}//end of 3+ dynamite condition
 		else { //if not 3 dynamites
 			/*
-			 * 
+			 * rollnum = 0
+			 *loop over all dice that is not dynamite
+				 *keep beer with wtkb probability
+				 *keep s1 with wtks probability
+				 *keep s2 with wtks probability
+				 *keep arrow with wtksa probability
+				 *keep gatling with wtkg probability
+			 *update keptDice with each added dice
+			 *while keptDice.size() != 5 and rollnum!=3 
+			 	*reroll dice and rollnum++
+			 	*break out of loop if keptDice.size = 5 
+			 	*print
+			 *one all rolls are over or keptDice.size==5
+			 	*loop over kept dice
+			 		*resolve each die with strategy and print
+		 		*print out final die
 			 */
-		}
+			System.out.println("Not 3 dynamites case!");
+			int numRolls = 0;
+			for(int i=0;i<diceResults.size();i++) {
+				if ((diceResults.get(i)=="B") && keepBeer1()) {
+					System.out.println(this.currentPlayer.name + " kept the beer." );
+					this.keptDice.add(diceResults.get(i));
+				}
+				else if ((diceResults.get(i)=="S1") && keepShot11()) {
+					System.out.println(this.currentPlayer.name + " kept the Bulls' Eye 1." );
+					this.keptDice.add(diceResults.get(i));
+				}
+				else if ((diceResults.get(i)=="S2") && keepShot21()) {
+					System.out.println(this.currentPlayer.name + " kept the Bulls' Eye 2." );
+					this.keptDice.add(diceResults.get(i));
+				}
+				else if ((diceResults.get(i)=="A") && keepArrow()) {
+					System.out.println(this.currentPlayer.name + " kept the Arrow." );
+					this.keptDice.add(diceResults.get(i));
+				}
+				else if ((diceResults.get(i)=="G") && keepGatling(numGatling)){
+					System.out.println(this.currentPlayer.name + " kept the Gatling." );
+					this.keptDice.add(diceResults.get(i));
+				}
+			}//end of for loop
+			System.out.println(this.name+" kept the following dice " + this.keptDice); 
+		} //end of not 3 dynamites conditiotion
 	}//end of method
 	
 
@@ -864,7 +939,7 @@ public class AI {
 		assignOpponents();
 	//role is allocated by matching the max probability to the roles
 		guessRoles();
-		//getGuessRole();
+	//	getGuessRole();
 	//roll the dice  "A", "D", "S1", "S2", "B", "G
 		AIDice d = new AIDice();
 		this.diceResults = d.rollThemDice(5);
@@ -872,14 +947,15 @@ public class AI {
 	}
 
 	public void test() {
+		assignOpponents();
+	//role is allocated by matching the max probability to the roles
+		guessRoles();
+	//	getGuessRole();
 		for(int i=0;i<this.totalPlayers;i++) {
 	//		System.out.println(this.currentPlayer.name + " is at pos: " + this.position + " and " + this.playerOrder[(this.position+2)%this.totalPlayers].name + " is at 2 pos away at " +  (this.position+2)%this.totalPlayers);
 			//System.out.println(this.name + " is at pos: " + i + " and " + this.playerOrder[(i+2)].name + " is at pos: " +  (i+2));
-			int j = i-2;
-			System.out.println("i-2: " + j  + " t: 5");
-			System.out.println("math: " + Math.floorMod(i-2, this.totalPlayers));
-			System.out.println("trad: " + (i-2)%this.totalPlayers);
-			System.out.println();
+			System.out.println("target of " + this.currentPlayer.name + " is " + this.targetRole + 
+					" and player " + this.playerOrder[i].name + " is " + this.playerOrder[i].aiGuessRole);
 		}
 		
 	}
@@ -887,6 +963,10 @@ public class AI {
 	
 	//method to simulate one AI turn
 }
+
+
+
+
 
 
 /*

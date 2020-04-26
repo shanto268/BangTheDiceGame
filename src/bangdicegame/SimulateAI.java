@@ -40,9 +40,10 @@ public class SimulateAI {
 		//	aiPlayer.getPlayerBehavior();
 		//	aiPlayer.getPlayerName();
 			aiPlayer.rollDice();
+		//	aiPlayer.test();
 			System.out.println();
 
-		//	aiPlayer.test();
+
 		}
 	}
 	
