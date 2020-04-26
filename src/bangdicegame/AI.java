@@ -20,6 +20,7 @@ import java.util.Random;
  * update totalPlayer number and EveryoneAlive function
  * randomize the number of turns
  * double check all random numbers
+ * NEED TO MAKE SHERIFF GO FIRST
  */
 
 public class AI {
@@ -913,13 +914,33 @@ public class AI {
 			}
 			else {
 				while (numRolls!=maxRolls) {
-					System.out.println(this.currentPlayer.name + " re-rolled " + (5-this.keptDice.size() + " dice(s)."));
-					System.out.println("Rolled " + (numRolls+1) + " times!");
-					numRolls++;
+					int diceLeft = 5-this.keptDice.size();
+					System.out.println(this.currentPlayer.name + " re-rolled " + diceLeft + " dice(s).");
+					//get diceLeft number of dice
+					AIDice d2 = new AIDice();
+					ArrayList<String> newDice = d2.rollThemDice(diceLeft);
+					System.out.println("Newly rolled dices " + newDice);
+					//update number of Gatling
+					for(int i=0;i<newDice.size();i++) {
+						if (newDice.get(i)=="G") {
+							numGatling++;
+						}
+					}
+					//keep using keepDices and add to keptDice
+					for(int i=0;i<newDice.size();i++) {
+						keepDices(i, numGatling, newDice);
+					}
+					System.out.println(this.currentPlayer.name + " rolled " + (numRolls+1) + " times this round!");
+					if ( (this.keptDice.size() == 5))
+						numRolls = maxRolls;
+					else
+						numRolls++;
 				}
 			}
+			System.out.println(this.name+" kept the following dice " + this.keptDice); 
+			System.out.println("Resolving the 5 kept dices!");
 			
-		} //end of not 3 dynamites conditiotion
+		} //end of not 3 dynamites condition
 	}//end of method
 	
 	public void keepDices(int i, int numGatling, ArrayList<String> diceResults) {

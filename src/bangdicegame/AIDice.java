@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class AIDice {
-	private ArrayList<String> faces;
+	public ArrayList<String> faces;
 	
 	private int numDice;
 	
