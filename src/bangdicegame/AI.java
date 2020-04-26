@@ -857,7 +857,7 @@ public class AI {
 		
 		System.out.println(this.name + " rolled " + numGatling + " Gatling(s). " + this.name +   " rolled " + numDynamites + " Dynamite(s).");
 		//more than 3 dynamites
-		if (numDynamites>=5) {
+		if (numDynamites>=3) {
 			System.out.println("Since, " + this.name + " rolled " + numDynamites + " dynamites. " + this.name + "'s turn is over.");
 			this.currentPlayer.lifePoints--;
 			for(int i=0;i<diceResults.size();i++) {
@@ -868,41 +868,19 @@ public class AI {
 						System.out.println(this.name + " drank the beer!");
 					}
 					else {
-						//resolve giving beers to others
 						resolveBeers();
 					}
 				}
 				else if(diceResults.get(i)=="S1") {
-					//resolve S1
 					resolveBullsEye1();
 				}
 				else if(diceResults.get(i)=="S2") {
-					//resolve S2
 					resolveBullsEye2();
 				}
 			}//end of for loop
 			System.out.println(this.name+"'s final dices are " + this.keptDice); //need to replace DiceResults with keptDices
 		}//end of 3+ dynamite condition
 		else { //if not 3 dynamites
-			/*
-			 * rollnum = 0
-			 *loop over all dice that is not dynamite
-				 *keep beer with wtkb probability
-				 *keep s1 with wtks probability
-				 *keep s2 with wtks probability
-				 *keep arrow with wtksa probability
-				 *keep gatling with wtkg probability
-			 *update keptDice with each added dice
-			 *while keptDice.size() != 5 and rollnum!=3 
-			 	*reroll dice and rollnum++
-			 	*break out of loop if keptDice.size = 5 
-			 	*print
-			 *one all rolls are over or keptDice.size==5
-			 	*loop over kept dice
-			 		*resolve each die with strategy and print
-		 		*print out final die
-			 */
-			System.out.println("Not 3 dynamites case!");
 			int numRolls = 0;
 			for(int i=0;i<diceResults.size();i++) {
 				keepDices(i, numGatling, diceResults);
@@ -910,7 +888,7 @@ public class AI {
 			System.out.println(this.name+" kept the following dice " + this.keptDice); 
 			if (this.keptDice.size()==5) {
 				//resolve the dices
-				System.out.println("Resolving the 5 kept dices!");
+				resolveKeptDice(this.keptDice);
 			}
 			else {
 				while (numRolls!=maxRolls) {
@@ -936,12 +914,25 @@ public class AI {
 					else
 						numRolls++;
 				}
+				System.out.println(this.name+" kept the following dice " + this.keptDice); 
+				resolveKeptDice(this.keptDice);
 			}
-			System.out.println(this.name+" kept the following dice " + this.keptDice); 
-			System.out.println("Resolving the 5 kept dices!");
+			
 			
 		} //end of not 3 dynamites condition
 	}//end of method
+	
+	public void resolveKeptDice(ArrayList<String> keptDice){
+		System.out.println("Resolving the 5 kept dices!");
+	}
+	
+	public void decideShot2() {
+		
+	}
+	
+	public void resolveGatling() {
+		
+	}
 	
 	public void keepDices(int i, int numGatling, ArrayList<String> diceResults) {
 		if ((diceResults.get(i)=="B") && keepBeer()) {
@@ -966,7 +957,6 @@ public class AI {
 		}
 	}
 	
-		
 	/* 4) _____Dice Interactions______*/
 	public void rollDice() {
 	//Predict the roles of each player using the Probability Vector associated with that player
