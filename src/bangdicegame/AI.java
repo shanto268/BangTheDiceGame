@@ -888,7 +888,7 @@ public class AI {
 			System.out.println(this.name+" kept the following dice " + this.keptDice); 
 			if (this.keptDice.size()==5) {
 				//resolve the dices
-				resolveKeptDice(this.keptDice);
+				resolveKeptDice(this.keptDice, numGatling);
 			}
 			else {
 				while (numRolls!=maxRolls) {
@@ -915,23 +915,54 @@ public class AI {
 						numRolls++;
 				}
 				System.out.println(this.name+" kept the following dice " + this.keptDice); 
-				resolveKeptDice(this.keptDice);
+				resolveKeptDice(this.keptDice, numGatling);
 			}
 			
 			
 		} //end of not 3 dynamites condition
 	}//end of method
 	
-	public void resolveKeptDice(ArrayList<String> keptDice){
+	public void resolveKeptDice(ArrayList<String> keptDice,int numGatling){
 		System.out.println("Resolving the 5 kept dices!");
+		//Gatlings
+		resolveGatling(numGatling);
+		for(int i=0;i<keptDice.size();i++) {
+			if (keptDice.get(i)=="B") {
+				resolveHealth();
+			}
+			else if (keptDice.get(i)=="S1") {
+				resolveShot1();
+			}
+			else if (keptDice.get(i)=="S2") {
+				resolveShot2();
+			}
+			
+		}
 	}
 	
-	public void decideShot2() {
-		
+	public void resolveShot2() {
+		System.out.println("shot2");
 	}
 	
-	public void resolveGatling() {
-		
+	public void resolveShot1() {
+		System.out.println("shot1");
+	}
+	
+	public void resolveHealth() {
+		System.out.println("beers");
+	}
+	
+	public void resolveGatling(int numGatling) {
+		if(numGatling>= 3) {
+			for(int i=0;i<this.totalPlayers;i++) {
+				if(i!=this.position)
+					this.playerOrder[i].lifePoints--;
+				else {
+					this.arrowPile.remaining = this.arrowPile.remaining + this.playerOrder[i].arrows;
+					this.playerOrder[i].arrows=0;
+				}
+			}
+		}
 	}
 	
 	public void keepDices(int i, int numGatling, ArrayList<String> diceResults) {
