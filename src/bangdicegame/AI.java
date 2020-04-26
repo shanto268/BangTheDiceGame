@@ -354,7 +354,7 @@ public class AI {
 		}
 	}
 	
-	public boolean keepBeer1() {
+	public boolean keepBeer() {
 		if (this.currentPlayer.lifePoints < this.thresholdHealth)
 			return true;
 		else if (Math.random() <= this.willingToKeepHealth)
@@ -363,7 +363,7 @@ public class AI {
 			return false;
 	}
 	
-	public boolean keepBeer() {
+	public boolean keepBeer1() {
 		//beer -> always willing if health < threshold
 		if (this.currentPlayer.lifePoints < this.thresholdHealth) {
 			//apply to itself
@@ -457,7 +457,7 @@ public class AI {
 			return false;
 	}
 	
-	public boolean keepShot11() {
+	public boolean keepShot1() {
 		int toLeft = Math.floorMod(this.position-1, this.totalPlayers);
 		int toRight = Math.floorMod(this.position+1, this.totalPlayers);
 		
@@ -469,7 +469,7 @@ public class AI {
 			return false;
 	}
 	
-	public boolean keepShot21() {
+	public boolean keepShot2() {
 		int toLeft = Math.floorMod(this.position-2, this.totalPlayers);
 		int toRight = Math.floorMod(this.position+2, this.totalPlayers);
 		
@@ -480,7 +480,6 @@ public class AI {
 		else
 			return false;
 	}
-	
 	
 	public boolean twoLeft(int i) {
 	//	System.out.println("player 2 left role: " + this.playerOrder[(i-2)%this.totalPlayers].aiGuessRole);
@@ -502,7 +501,7 @@ public class AI {
 			return false;
 	}
 	
-	public boolean keepShot1() {
+	public boolean keepShot11() {
 		//shot1 -> always willing if target on pos++ or pos-- 
 		int i = this.position;
 		//shoot who shot sheriff if role=deputy
@@ -575,7 +574,7 @@ public class AI {
 			return false;
 	}
 	
-	public boolean keepShot2() {
+	public boolean keepShot21() {
 		//shot1 -> always willing if target on pos++ or pos-- 
 		int i = this.position;
 		//shoot who shot sheriff if role=deputy
@@ -905,15 +904,15 @@ public class AI {
 			System.out.println("Not 3 dynamites case!");
 			int numRolls = 0;
 			for(int i=0;i<diceResults.size();i++) {
-				if ((diceResults.get(i)=="B") && keepBeer1()) {
+				if ((diceResults.get(i)=="B") && keepBeer()) {
 					System.out.println(this.currentPlayer.name + " kept the beer." );
 					this.keptDice.add(diceResults.get(i));
 				}
-				else if ((diceResults.get(i)=="S1") && keepShot11()) {
+				else if ((diceResults.get(i)=="S1") && keepShot1()) {
 					System.out.println(this.currentPlayer.name + " kept the Bulls' Eye 1." );
 					this.keptDice.add(diceResults.get(i));
 				}
-				else if ((diceResults.get(i)=="S2") && keepShot21()) {
+				else if ((diceResults.get(i)=="S2") && keepShot2()) {
 					System.out.println(this.currentPlayer.name + " kept the Bulls' Eye 2." );
 					this.keptDice.add(diceResults.get(i));
 				}
