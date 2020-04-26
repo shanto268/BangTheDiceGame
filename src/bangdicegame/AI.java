@@ -19,6 +19,7 @@ import java.util.Random;
 	 *reset all arraylists that use add after turn
  * update totalPlayer number and EveryoneAlive function
  * randomize the number of turns
+ * double check all random numbers
  */
 
 public class AI {
@@ -410,7 +411,7 @@ public class AI {
 				}
 			}
 					
-		}
+		}//willingtokeep ends....
 		else if (Math.random() <= this.willingToTrick) {
 			//help whoever
 			int maxi = 0;
@@ -418,7 +419,7 @@ public class AI {
 				if (this.playerOrder[i] != null)
 					maxi++;
 			}
-			int rand = AIDice.randInt(0, maxi-1);
+			int rand = AIDice.randInt(0, maxi+1);
 			this.playerOrder[rand].lifePoints++;
 			return true;
 		}
@@ -644,6 +645,121 @@ public class AI {
 			return false;
 	}
 	
+	public void resolveBeers() { //cannot give beer if max life 
+		boolean sheriffHelper = false;
+		boolean sheriffShooter = false;
+		boolean helped = false;
+		
+		for (int i=0;i<this.totalPlayers;i++) {
+			if (this.playerOrder[i].numShotSheriff>0)
+				sheriffShooter = true;
+			}
+		
+		for (int i=0;i<this.totalPlayers;i++) {
+			if (this.playerOrder[i].numHelpSheriff>0)
+				sheriffHelper = true;
+			}
+		
+		if (sheriffShooter && !helped) {
+			if (this.currentPlayer.role=="Outlaw") {
+				//help who shot the sheriff if role=outlaw
+				for (int i=0;i<this.totalPlayers;i++) {
+					if (this.playerOrder[i].numShotSheriff>0) {
+						this.playerOrder[i].lifePoints++;
+						System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
+						helped = true;
+						break;
+					}
+				}
+			}
+			
+			else if (this.currentPlayer.role=="Renegade") {
+				 //help sheriff is role=renegade or someone else at random if everyone is alive
+				 //else help who shot sheriff
+					if (EveryoneIsAlive()) {
+						for (int i=0;i<this.totalPlayers;i++) {
+							if (this.playerOrder[i].role=="Sheriff") {
+								this.playerOrder[i].lifePoints++;
+								System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
+								helped = true;
+								break;
+							}
+						}	
+					}
+					else {
+						for (int i=0;i<this.totalPlayers;i++) {
+							if (this.playerOrder[i].numShotSheriff>0) {
+								this.playerOrder[i].lifePoints++;
+								System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
+								helped = true;
+								break;
+							}
+						}
+					}
+				}	
+		
+		}
+		
+		else if (!sheriffShooter && !helped) {
+				//randomly give help	
+				int maxi = 0;
+				for (int i=0;i<this.totalPlayers;i++) {
+					if (this.playerOrder[i] != null)
+						maxi++;
+				}
+				int rand = (int)(Math.random()*(maxi));
+				System.out.println("random number " + rand);
+				System.out.println("random player name " + this.playerOrder[rand].name);
+				this.playerOrder[rand].lifePoints++;
+				System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
+				helped = true;
+				}
+		
+		if (sheriffHelper && !helped) {
+			 if (this.currentPlayer.role=="Sheriff") {
+				//help who gave you health if role=sheriff 
+				for (int i=0;i<this.totalPlayers;i++) {
+					if (this.playerOrder[i].numHelpSheriff>0) {
+						this.playerOrder[i].lifePoints++;
+						System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
+						helped = true;
+						break;
+					}
+				}
+			}
+		}
+		
+		else if (!sheriffHelper && !helped) {
+			//randomly give help	
+			int maxi = 0;
+			for (int i=0;i<this.totalPlayers;i++) {
+				if (this.playerOrder[i] != null)
+					maxi++;
+			}
+			int rand = (int)(Math.random()*(maxi));
+			System.out.println("random number " + rand);
+			System.out.println("random player name " + this.playerOrder[rand].name);
+			this.playerOrder[rand].lifePoints++;
+			System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
+			helped = true;
+			}
+		
+		if (this.currentPlayer.role=="Deputy" && !helped) {
+			//help sheriff is role=deputy
+			for (int i=0;i<this.totalPlayers;i++) {
+				if (this.playerOrder[i].role=="Sheriff") {
+					this.playerOrder[i].lifePoints++;
+					System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
+					helped = true;
+					break;
+				}
+			}
+		}
+		
+		
+		
+	}
+	
 	//decision to keep dice -> "A", "D", "S1", "S2", "B", "G"
 	public void keepDice(ArrayList<String> diceResults) {
 		this.keptDice = new ArrayList<String>();
@@ -652,11 +768,11 @@ public class AI {
 		int numGatling = 0;
 		System.out.println("Dices rolled: " + diceResults);
 		/*
-		 * resolve arrows
-		 * resolve dynamites
-			 	*if dynamites > 3
-			 	*turn ends 
-			 	*resolve all dices
+		 * resolve arrows <done>
+		 * resolve dynamites <started>
+			 	*if dynamites > 3 <wip>
+			 	*turn ends <done>
+			 	*resolve all dices <wip>
 		 	 *else
 		 	 	*put dynamites to keptDice
 		 	 	*re-roll dices (max 3 times) 
@@ -670,7 +786,6 @@ public class AI {
                 System.out.println(this.name + " has " + this.currentPlayer.arrows + " arrow(s).");
                 System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
 			}
-			
 			else if (diceResults.get(i)=="D") {
 				System.out.println(this.name + " rolled a dynamite. It cannot be re-rolled.");
 				this.keptDice.add(diceResults.get(i));
@@ -681,8 +796,39 @@ public class AI {
 				numGatling++;
 			}
 		}
+		
 		System.out.println(this.name + " rolled " + numGatling + " Gatlings. " + this.name +   " rolled " + numDynamites + " Dynamites.");
-	}
+		//more than 3 dynamites
+		if (numDynamites>=1) {
+			System.out.println("Since, " + this.name + " rolled " + numDynamites + " dynamites. " + this.name + "'s turn is over.");
+			this.currentPlayer.lifePoints--;
+			for(int i=0;i<diceResults.size();i++) {
+				if(diceResults.get(i)=="B") {
+					if (this.currentPlayer.lifePoints < this.thresholdHealth) {
+						this.currentPlayer.lifePoints++; //apply to itself
+						System.out.println(this.name + " drank the beer!");
+					}
+					else {
+						//resolve giving beers to others
+						resolveBeers();
+					}
+				}
+				else if(diceResults.get(i)=="S1") {
+					//resolve S1
+					System.out.println(this.name + " shot someone 1 place away");
+				}
+				else if(diceResults.get(i)=="S2") {
+					//resolve S2
+					System.out.println(this.name + " shot someone 2 place away");
+				}
+			}//end of for loop
+			System.out.println(this.name+"'s final dices are " + diceResults); //need to replace DiceResults with keptDices
+		}//end of 3+ dynamite condition
+		else { //if not 3 dynamites
+			
+		}
+	}//end of method
+	
 		/*
 		while(maxRolls!=0) {
 			//keep all the dynamite
