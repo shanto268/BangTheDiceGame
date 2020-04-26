@@ -13,6 +13,7 @@ import java.util.Random;
 /*
  *new functionality needed: 
  *one step turn function (update probabilities)
+ *fix life factor
  *initialization of the game
  *NEED TO MAKE SHERIFF GO FIRST
  *each turn of the game is player then AI 
@@ -121,6 +122,12 @@ public class AI {
 
 	}
 
+	public void trackProbabilityVector() {
+		for (int i=0;i<this.totalPlayers;i++) {
+			System.out.println(this.playerOrder[i].name + " P Vector is " + this.playerOrder[i].ProbabilityVector);
+		}
+	}
+	
 	public void getPlayerProbabilityVector() {
 		System.out.println("AI " + this.role + " P(vector) " + this.currentPlayer.ProbabilityVector);
 	}
@@ -436,6 +443,14 @@ public class AI {
 				sheriffHelper = true;
 			}
 		
+		if (this.currentPlayer.lifePoints <= this.thresholdHealth) {
+			this.currentPlayer.lifePoints++;
+			System.out.println(this.name + " drank the beer!" );
+			helped = true;
+			return;
+		}
+		
+		
 		if (sheriffShooter && !helped) {
 			if (this.currentPlayer.role=="Outlaw") {
 				//help who shot the sheriff if role=outlaw
@@ -444,7 +459,7 @@ public class AI {
 						this.playerOrder[i].lifePoints++;
 						System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 						helped = true;
-						break;
+						return;
 					}
 				}
 			}
@@ -456,9 +471,10 @@ public class AI {
 						for (int i=0;i<this.totalPlayers;i++) {
 							if (this.playerOrder[i].role=="Sheriff") {
 								this.playerOrder[i].lifePoints++;
+								this.currentPlayer.numHelpSheriff++;
 								System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 								helped = true;
-								break;
+								return;
 							}
 						}	
 					}
@@ -468,7 +484,7 @@ public class AI {
 								this.playerOrder[i].lifePoints++;
 								System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 								helped = true;
-								break;
+								return;
 							}
 						}
 					}
@@ -484,11 +500,14 @@ public class AI {
 						maxi++;
 				}
 				int rand = (int)(Math.random()*(maxi));
+				if (this.playerOrder[rand].role=="Sheriff")
+					this.currentPlayer.numHelpSheriff++;
 			//	System.out.println("random number " + rand);
 			//	System.out.println("random player name " + this.playerOrder[rand].name);
 				this.playerOrder[rand].lifePoints++;
 				System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
 				helped = true;
+				return;
 				}
 		
 		if (sheriffHelper && !helped) {
@@ -499,7 +518,7 @@ public class AI {
 						this.playerOrder[i].lifePoints++;
 						System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 						helped = true;
-						break;
+						return;
 					}
 				}
 			}
@@ -516,8 +535,11 @@ public class AI {
 		//	System.out.println("random number " + rand);
 		//	System.out.println("random player name " + this.playerOrder[rand].name);
 			this.playerOrder[rand].lifePoints++;
+			if (this.playerOrder[rand].role=="Sheriff")
+				this.currentPlayer.numHelpSheriff++;
 			System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
 			helped = true;
+			return;
 			}
 		
 		if (this.currentPlayer.role=="Deputy" && !helped) {
@@ -525,9 +547,10 @@ public class AI {
 			for (int i=0;i<this.totalPlayers;i++) {
 				if (this.playerOrder[i].role=="Sheriff") {
 					this.playerOrder[i].lifePoints++;
+					this.currentPlayer.numHelpSheriff++;
 					System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 					helped = true;
-					break;
+					return;
 				}
 			}
 		}
@@ -576,12 +599,16 @@ public class AI {
 		if (chance == 1) {
 			int j = Math.floorMod(this.position+1, this.totalPlayers);
 			this.playerOrder[j].lifePoints--; //right
+			if (this.playerOrder[j].aiGuessRole=="Sheriff")
+				this.currentPlayer.numShotSheriff++;
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is one position"
 					+ " to the right." );
 		}
 		else {
 			int j = Math.floorMod(this.position-1, this.totalPlayers);
 			this.playerOrder[j].lifePoints--; //left
+			if (this.playerOrder[j].aiGuessRole=="Sheriff")
+				this.currentPlayer.numShotSheriff++;
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is one position"
 					+ " to the left." );
 		}
@@ -628,11 +655,15 @@ public class AI {
 		
 		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)) {
 			this.playerOrder[toLeft].lifePoints--;
+			if (this.playerOrder[toLeft].aiGuessRole=="Sheriff")
+				this.currentPlayer.numShotSheriff++;
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toLeft].name + " who is two position"
 					+ " to the left." );
 		}
 		else if (this.targetRole.contains(this.playerOrder[toRight].aiGuessRole) ) {
 			this.playerOrder[toRight].lifePoints--;
+			if (this.playerOrder[toRight].aiGuessRole=="Sheriff")
+				this.currentPlayer.numShotSheriff++;
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toRight].name + " who is two position"
 					+ " to the right." );
 		}
@@ -646,11 +677,15 @@ public class AI {
 		
 		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)) {
 			this.playerOrder[toLeft].lifePoints--;
+			if (this.playerOrder[toLeft].aiGuessRole=="Sheriff")
+				this.currentPlayer.numShotSheriff++;
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toLeft].name + " who is one position"
 					+ " to the left." );
 		}
 		else if (this.targetRole.contains(this.playerOrder[toRight].aiGuessRole) ) {
 			this.playerOrder[toRight].lifePoints--;
+			if (this.playerOrder[toRight].aiGuessRole=="Sheriff")
+				this.currentPlayer.numShotSheriff++;
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toRight].name + " who is one position"
 					+ " to the right." );
 		}
@@ -793,12 +828,12 @@ public class AI {
 	//Predict the roles of each player using the Probability Vector associated with that player
 		assignOpponents();
 	//role is allocated by matching the max probability to the roles
+		updateProbabilityVector();
 		guessRoles();
-	//	getGuessRole();
-	//roll the dice  "A", "D", "S1", "S2", "B", "G
 		AIDice d = new AIDice();
 		this.diceResults = d.rollThemDice(5);
 		keepDice(this.diceResults);
+		trackProbabilityVector();
 	}
 
 	public void test() {
