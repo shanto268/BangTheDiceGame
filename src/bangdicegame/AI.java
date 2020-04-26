@@ -761,11 +761,37 @@ public class AI {
 	}
 	
 	public void resolveBullsEye1() {
-		System.out.println();
+		Random r = new Random();
+		int chance = r.nextInt(2); //0 or 1
+		if (chance == 1) {
+			int j = Math.floorMod(this.position+1, this.totalPlayers);
+			this.playerOrder[j].lifePoints--; //right
+			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is one position"
+					+ " to the right." );
+		}
+		else {
+			int j = Math.floorMod(this.position-1, this.totalPlayers);
+			this.playerOrder[j].lifePoints--; //left
+			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is one position"
+					+ " to the left." );
+		}
 	}
 	
 	public void resolveBullsEye2() {
-		System.out.println();
+		Random r = new Random();
+		int chance = r.nextInt(2); //0 or 1
+		if (chance == 1) {
+			int j = Math.floorMod(this.position+2, this.totalPlayers);
+			this.playerOrder[j].lifePoints--; //right
+			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is two positions"
+					+ " to the right." );
+		}
+		else {
+			int j = Math.floorMod(this.position-2, this.totalPlayers);
+			this.playerOrder[j].lifePoints--; //left
+			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is two positions"
+					+ " to the left." );
+		}
 	}
 	
 	//decision to keep dice -> "A", "D", "S1", "S2", "B", "G"
@@ -777,10 +803,11 @@ public class AI {
 		System.out.println("Dices rolled: " + diceResults);
 		/*
 		 * resolve arrows <done>
-		 * resolve dynamites <started>
-			 	*if dynamites > 3 <wip>
+		 * resolve dynamites <wip>
+			 	*if dynamites > 3 <done>
 			 	*turn ends <done>
 			 	*resolve all dices <wip>
+			 		*shots left	
 		 	 *else
 		 	 	*put dynamites to keptDice
 		 	 	*re-roll dices (max 3 times) 
@@ -805,7 +832,7 @@ public class AI {
 			}
 		}
 		
-		System.out.println(this.name + " rolled " + numGatling + " Gatlings. " + this.name +   " rolled " + numDynamites + " Dynamites.");
+		System.out.println(this.name + " rolled " + numGatling + " Gatling(s). " + this.name +   " rolled " + numDynamites + " Dynamite(s).");
 		//more than 3 dynamites
 		if (numDynamites>=1) {
 			System.out.println("Since, " + this.name + " rolled " + numDynamites + " dynamites. " + this.name + "'s turn is over.");
@@ -824,12 +851,10 @@ public class AI {
 				else if(diceResults.get(i)=="S1") {
 					//resolve S1
 					resolveBullsEye1();
-					System.out.println(this.name + " shot someone 1 place away");
 				}
 				else if(diceResults.get(i)=="S2") {
 					//resolve S2
 					resolveBullsEye2();
-					System.out.println(this.name + " shot someone 2 place away");
 				}
 			}//end of for loop
 			System.out.println(this.name+"'s final dices are " + diceResults); //need to replace DiceResults with keptDices
@@ -925,9 +950,16 @@ public class AI {
 	}
 
 	public void test() {
-		for(int i=0;i<this.totalPlayers;i++)
-			System.out.println("self pos: " + i + " next 2 pos: " + (i+2)%this.totalPlayers);
-		System.out.println();
+		for(int i=0;i<this.totalPlayers;i++) {
+	//		System.out.println(this.currentPlayer.name + " is at pos: " + this.position + " and " + this.playerOrder[(this.position+2)%this.totalPlayers].name + " is at 2 pos away at " +  (this.position+2)%this.totalPlayers);
+			//System.out.println(this.name + " is at pos: " + i + " and " + this.playerOrder[(i+2)].name + " is at pos: " +  (i+2));
+			int j = i-2;
+			System.out.println("i-2: " + j  + " t: 5");
+			System.out.println("math: " + Math.floorMod(i-2, this.totalPlayers));
+			System.out.println("trad: " + (i-2)%this.totalPlayers);
+			System.out.println();
+		}
+		
 	}
 	//method to evaluate dice roll
 	
