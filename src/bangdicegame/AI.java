@@ -665,14 +665,14 @@ public class AI {
 		for(int i=0;i<diceResults.size();i++){
 			//resolve all arrows
 			if (diceResults.get(i)=="A") {
-                System.out.println("You rolled an arrow. You must pick up an arrow before continuing.");
+                System.out.println(this.name + " rolled an arrow. " + this.name + " must pick up an arrow before continuing.");
                 this.arrowPile.remove_arrow(this.currentPlayer, this.playerOrder);
-                System.out.println("AI " + this.position + " (" + this.name + ") has " + this.currentPlayer.arrows + " arrow(s).");
+                System.out.println(this.name + " has " + this.currentPlayer.arrows + " arrow(s).");
                 System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
 			}
 			
 			else if (diceResults.get(i)=="D") {
-				System.out.println("You rolled a dynamite. It cannot be re-rolled.");
+				System.out.println(this.name + " rolled a dynamite. It cannot be re-rolled.");
 				this.keptDice.add(diceResults.get(i));
 				diceResults.remove(i);
 				numDynamites++;
@@ -681,7 +681,7 @@ public class AI {
 				numGatling++;
 			}
 		}
-		System.out.println("You rolled " + numGatling + " Gatlings. You rolled " + numDynamites + " Dynamites.");
+		System.out.println(this.name + " rolled " + numGatling + " Gatlings. " + this.name +   " rolled " + numDynamites + " Dynamites.");
 	}
 		/*
 		while(maxRolls!=0) {

@@ -33,11 +33,12 @@ public class SimulateAI {
 		
 		for(int i=1;i<this.totalPlayers;i++) {
 			AI aiPlayer = new AI(this.playerOrder, this.totalPlayers, i, this.arrowPile);
-			aiPlayer.getPlayerRole();
+		//	aiPlayer.getPlayerRole();
 		//	aiPlayer.getPlayerProbabilityVector();
 		//	aiPlayer.updateProbabilityVector();
 		//	System.out.println();
 		//	aiPlayer.getPlayerBehavior();
+			aiPlayer.getPlayerName();
 			aiPlayer.rollDice();
 			System.out.println();
 
