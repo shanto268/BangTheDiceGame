@@ -760,6 +760,14 @@ public class AI {
 		
 	}
 	
+	public void resolveBullsEye1() {
+		System.out.println();
+	}
+	
+	public void resolveBullsEye2() {
+		System.out.println();
+	}
+	
 	//decision to keep dice -> "A", "D", "S1", "S2", "B", "G"
 	public void keepDice(ArrayList<String> diceResults) {
 		this.keptDice = new ArrayList<String>();
@@ -815,10 +823,12 @@ public class AI {
 				}
 				else if(diceResults.get(i)=="S1") {
 					//resolve S1
+					resolveBullsEye1();
 					System.out.println(this.name + " shot someone 1 place away");
 				}
 				else if(diceResults.get(i)=="S2") {
 					//resolve S2
+					resolveBullsEye2();
 					System.out.println(this.name + " shot someone 2 place away");
 				}
 			}//end of for loop
