@@ -708,8 +708,8 @@ public class AI {
 						maxi++;
 				}
 				int rand = (int)(Math.random()*(maxi));
-				System.out.println("random number " + rand);
-				System.out.println("random player name " + this.playerOrder[rand].name);
+			//	System.out.println("random number " + rand);
+			//	System.out.println("random player name " + this.playerOrder[rand].name);
 				this.playerOrder[rand].lifePoints++;
 				System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
 				helped = true;
@@ -737,8 +737,8 @@ public class AI {
 					maxi++;
 			}
 			int rand = (int)(Math.random()*(maxi));
-			System.out.println("random number " + rand);
-			System.out.println("random player name " + this.playerOrder[rand].name);
+		//	System.out.println("random number " + rand);
+		//	System.out.println("random player name " + this.playerOrder[rand].name);
 			this.playerOrder[rand].lifePoints++;
 			System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
 			helped = true;
