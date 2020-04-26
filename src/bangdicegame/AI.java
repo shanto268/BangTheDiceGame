@@ -904,32 +904,46 @@ public class AI {
 			System.out.println("Not 3 dynamites case!");
 			int numRolls = 0;
 			for(int i=0;i<diceResults.size();i++) {
-				if ((diceResults.get(i)=="B") && keepBeer()) {
-					System.out.println(this.currentPlayer.name + " kept the beer." );
-					this.keptDice.add(diceResults.get(i));
-				}
-				else if ((diceResults.get(i)=="S1") && keepShot1()) {
-					System.out.println(this.currentPlayer.name + " kept the Bulls' Eye 1." );
-					this.keptDice.add(diceResults.get(i));
-				}
-				else if ((diceResults.get(i)=="S2") && keepShot2()) {
-					System.out.println(this.currentPlayer.name + " kept the Bulls' Eye 2." );
-					this.keptDice.add(diceResults.get(i));
-				}
-				else if ((diceResults.get(i)=="A") && keepArrow()) {
-					System.out.println(this.currentPlayer.name + " kept the Arrow." );
-					this.keptDice.add(diceResults.get(i));
-				}
-				else if ((diceResults.get(i)=="G") && keepGatling(numGatling)){
-					System.out.println(this.currentPlayer.name + " kept the Gatling." );
-					this.keptDice.add(diceResults.get(i));
-				}
+				keepDices(i, numGatling, diceResults);
 			}//end of for loop
 			System.out.println(this.name+" kept the following dice " + this.keptDice); 
+			if (this.keptDice.size()==5) {
+				//resolve the dices
+				System.out.println("Resolving the 5 kept dices!");
+			}
+			else {
+				while (numRolls!=maxRolls) {
+					System.out.println(this.currentPlayer.name + " re-rolled " + (5-this.keptDice.size() + " dice(s)."));
+					System.out.println("Rolled " + (numRolls+1) + " times!");
+					numRolls++;
+				}
+			}
+			
 		} //end of not 3 dynamites conditiotion
 	}//end of method
 	
-
+	public void keepDices(int i, int numGatling, ArrayList<String> diceResults) {
+		if ((diceResults.get(i)=="B") && keepBeer()) {
+			System.out.println(this.currentPlayer.name + " kept the beer." );
+			this.keptDice.add(diceResults.get(i));
+		}
+		else if ((diceResults.get(i)=="S1") && keepShot1()) {
+			System.out.println(this.currentPlayer.name + " kept the Bulls' Eye 1." );
+			this.keptDice.add(diceResults.get(i));
+		}
+		else if ((diceResults.get(i)=="S2") && keepShot2()) {
+			System.out.println(this.currentPlayer.name + " kept the Bulls' Eye 2." );
+			this.keptDice.add(diceResults.get(i));
+		}
+		else if ((diceResults.get(i)=="A") && keepArrow()) {
+			System.out.println(this.currentPlayer.name + " kept the Arrow." );
+			this.keptDice.add(diceResults.get(i));
+		}
+		else if ((diceResults.get(i)=="G") && keepGatling(numGatling)){
+			System.out.println(this.currentPlayer.name + " kept the Gatling." );
+			this.keptDice.add(diceResults.get(i));
+		}
+	}
 	
 		
 	/* 4) _____Dice Interactions______*/
