@@ -17,6 +17,7 @@ import java.util.Random;
  *include arrowpile shit
  *eliminate players needs to be added
  *check stats after each round
+ *need to fix cyclic condition of playerOrder
  */
 
 public class AI {
@@ -359,8 +360,7 @@ public class AI {
 			this.currentPlayer.lifePoints++;
 			return true;
 		}
-		else if (Math.random() <= this.willingToKeepHealth)
-		{	
+		else if (Math.random() <= this.willingToKeepHealth){	
 			
 			if (this.currentPlayer.role=="Outlaw") {
 				//help who shot the sheriff if role=outlaw
@@ -424,31 +424,181 @@ public class AI {
 		}
 		else
 			return false;
-		
-		return true; //dummy
+		return false;
+	}
+	
+	public boolean toLeft(int i) {
+		if (this.targetRole.contains(this.playerOrder[i-1].role))
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean toRight(int i) {
+		if (this.targetRole.contains(this.playerOrder[i+1].role) )
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean twoLeft(int i) {
+		if (this.targetRole.contains(this.playerOrder[i-2].role))
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean twoRight(int i) {
+		if (this.targetRole.contains(this.playerOrder[i+2].role) )
+			return true;
+		else
+			return false;
 	}
 	
 	public boolean keepShot1() {
 		//shot1 -> always willing if target on pos++ or pos-- 
+		int i = this.position;
 		//shoot who shot sheriff if role=deputy
-		//shoot who shot sheriff if role=renegade 
-		//shoot who shot you if role=sheriff 
-		//shoot sheriff if role=outlaw	
-	//shot1 -> else keep with willing to trickProbability 
-		//shoot whoever
-	//if kept numRolls --
-
+		if (this.currentPlayer.role=="Outlaw") {
+			//shoot sheriff if role=outlaw	
+			if (toLeft(i)) {
+				this.playerOrder[i-1].lifePoints--;
+				return true;
+			}
+			else if (toRight(i)) {
+				this.playerOrder[i+1].lifePoints--;
+				return true;
+			}	
+			else
+				return false;
+		}
+		else if (this.currentPlayer.role=="Sheriff") {
+			//shoot who shot you if role=sheriff 
+			if (toLeft(i)) {
+				this.playerOrder[i-1].lifePoints--;
+				return true;
+			}
+			else if (toRight(i)) {
+				this.playerOrder[i+1].lifePoints--;
+				return true;
+			}
+			else 
+				return false;
+		}
+		else if (this.currentPlayer.role=="Deputy") {
+			//shoot who shot sheriff if role=deputy 
+			if (toLeft(i)) {
+				this.playerOrder[i-1].lifePoints--;
+				return true;
+			}
+			else if (toRight(i)) {
+				this.playerOrder[i+1].lifePoints--;
+				return true;
+			}
+			else 
+				return false;
+		}
+		else if (this.currentPlayer.role=="Renagade") {
+			//shoot who shot sheriff if role=renegade 
+			if (toLeft(i)) {
+				this.playerOrder[i-1].lifePoints--;
+				return true;
+			}
+			else if (toRight(i)) {
+				this.playerOrder[i+1].lifePoints--;
+				return true;
+			}
+			else
+				return false;
+		}
+		//shot1 -> else keep with willing to trickProbability 
+		else if (Math.random() <= this.willingToTrick){
+			//shoot whoever
+			int rand = AIDice.randInt(0, 1);
+			if (rand==1) {
+				this.playerOrder[i-1].lifePoints--;
+				return true;
+				}
+			else {
+				this.playerOrder[i+1].lifePoints--;
+				return true;
+			}
+		}
+		else
+			return false;
 	}
 	
 	public boolean keepShot2() {
-		//shot2 -> always willing if target on 2*pos++ or 2*pos-- 
+		//shot1 -> always willing if target on pos++ or pos-- 
+		int i = this.position;
 		//shoot who shot sheriff if role=deputy
-		//shoot who shot sheriff if role=renegade 
-		//shoot who shot you if role=sheriff 
-		//shoot sheriff if role=outlaw	
-	//shot2 -> else keep with willing to trickProbability 
-		//shoot whoever
-	//if kept numRolls --
+		if (this.currentPlayer.role=="Outlaw") {
+			//shoot sheriff if role=outlaw	
+			if (twoLeft(i)) {
+				this.playerOrder[i-2].lifePoints--;
+				return true;
+			}
+			else if (twoRight(i)) {
+				this.playerOrder[i+2].lifePoints--;
+				return true;
+			}	
+			else
+				return false;
+		}
+		else if (this.currentPlayer.role=="Sheriff") {
+			//shoot who shot you if role=sheriff 
+			if (twoLeft(i)) {
+				this.playerOrder[i-2].lifePoints--;
+				return true;
+			}
+			else if (twoRight(i)) {
+				this.playerOrder[i+2].lifePoints--;
+				return true;
+			}
+			else 
+				return false;
+		}
+		else if (this.currentPlayer.role=="Deputy") {
+			//shoot who shot sheriff if role=deputy 
+			if (twoLeft(i)) {
+				this.playerOrder[i-2].lifePoints--;
+				return true;
+			}
+			else if (twoRight(i)) {
+				this.playerOrder[i+2].lifePoints--;
+				return true;
+			}
+			else 
+				return false;
+		}
+		else if (this.currentPlayer.role=="Renagade") {
+			//shoot who shot sheriff if role=renegade 
+			if (twoLeft(i)) {
+				this.playerOrder[i-2].lifePoints--;
+				return true;
+			}
+			else if (twoRight(i)) {
+				this.playerOrder[i+2].lifePoints--;
+				return true;
+			}
+			else
+				return false;
+		}
+		//shot1 -> else keep with willing to trickProbability 
+		else if (Math.random() <= this.willingToTrick){
+			//shoot whoever
+			int rand = AIDice.randInt(0, 1);
+			if (rand==1) {
+				this.playerOrder[i-2].lifePoints--;
+				return true;
+				}
+			else {
+				this.playerOrder[i+2].lifePoints--;
+				return true;
+			}
+		}
+		else
+			return false;
 	}
 	
 	public boolean keepGatling() {
