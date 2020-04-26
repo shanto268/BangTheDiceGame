@@ -366,26 +366,6 @@ public class AI {
 			return false;
 	}
 	
-	public boolean toLeft(int i) {
-	//	System.out.println("player 1 left role: " + this.playerOrder[(i-1)%this.totalPlayers].aiGuessRole);
-		System.out.println("player pos " + i);
-		System.out.println("player 1 left pos: " + (i-1)%this.totalPlayers);
-		if (this.targetRole.contains(this.playerOrder[(i-1)%this.totalPlayers].aiGuessRole))
-			return true;
-		else
-			return false;
-	}
-	
-	public boolean toRight(int i) {
-	//	System.out.println("player 1 right role: " + this.playerOrder[(i+1)%this.totalPlayers].aiGuessRole);
-		System.out.println("player pos " + i);
-		System.out.println("player 1 right pos: " + (i+1)%this.totalPlayers);
-		if (this.targetRole.contains(this.playerOrder[(i+1)%this.totalPlayers].aiGuessRole) )
-			return true;
-		else
-			return false;
-	}
-	
 	public boolean keepShot1() {
 		int toLeft = Math.floorMod(this.position-1, this.totalPlayers);
 		int toRight = Math.floorMod(this.position+1, this.totalPlayers);
@@ -409,173 +389,7 @@ public class AI {
 		else
 			return false;
 	}
-	
-	public boolean twoLeft(int i) {
-	//	System.out.println("player 2 left role: " + this.playerOrder[(i-2)%this.totalPlayers].aiGuessRole);
-		System.out.println("player pos " + i);
-		System.out.println("player 2 left pos: " + (i-2)%this.totalPlayers);
-		if (this.targetRole.contains(this.playerOrder[(i-2)%this.totalPlayers].aiGuessRole))
-			return true;
-		else
-			return false;
-	}
-	
-	public boolean twoRight(int i) {
-	//	System.out.println("player 2 right role: " + this.playerOrder[(i+2)%this.totalPlayers].aiGuessRole);
-		System.out.println("player pos " + i);
-		System.out.println("player 2 right pos: " + (i+2)%this.totalPlayers);
-		if (this.targetRole.contains(this.playerOrder[(i+2)%this.totalPlayers].aiGuessRole) )
-			return true;
-		else
-			return false;
-	}
-	
-	public boolean keepShot11() {
-		//shot1 -> always willing if target on pos++ or pos-- 
-		int i = this.position;
-		//shoot who shot sheriff if role=deputy
-		if (this.currentPlayer.role=="Outlaw") {
-			//shoot sheriff if role=outlaw	
-			if (toLeft(i)) {
-				this.playerOrder[(i-1)%this.totalPlayers].lifePoints--;
-				return true;
-			}
-			else if (toRight(i)) {
-				this.playerOrder[(i+1)%this.totalPlayers].lifePoints--;
-				return true;
-			}	
-			else
-				return false;
-		}
-		else if (this.currentPlayer.role=="Sheriff") {
-			//shoot who shot you if role=sheriff 
-			if (toLeft(i)) {
-				this.playerOrder[(i-1)%this.totalPlayers].lifePoints--;
-				return true;
-			}
-			else if (toRight(i)) {
-				this.playerOrder[(i+1)%this.totalPlayers].lifePoints--;
-				return true;
-			}
-			else 
-				return false;
-		}
-		else if (this.currentPlayer.role=="Deputy") {
-			//shoot who shot sheriff if role=deputy 
-			if (toLeft(i)) {
-				this.playerOrder[(i-1)%this.totalPlayers].lifePoints--;
-				return true;
-			}
-			else if (toRight(i)) {
-				this.playerOrder[(i+1)%this.totalPlayers].lifePoints--;
-				return true;
-			}
-			else 
-				return false;
-		}
-		else if (this.currentPlayer.role=="Renagade") {
-			//shoot who shot sheriff if role=renegade 
-			if (toLeft(i)) {
-				this.playerOrder[(i-1)%this.totalPlayers].lifePoints--;
-				return true;
-			}
-			else if (toRight(i)) {
-				this.playerOrder[(i+1)%this.totalPlayers].lifePoints--;
-				return true;
-			}
-			else
-				return false;
-		}
-		//shot1 -> else keep with willing to trickProbability 
-		else if (Math.random() <= this.willingToTrick){
-			//shoot whoever
-			int rand = AIDice.randInt(0, 1);
-			if (rand==1) {
-				this.playerOrder[(i-1)%this.totalPlayers].lifePoints--;
-				return true;
-				}
-			else {
-				this.playerOrder[(i+1)%this.totalPlayers].lifePoints--;
-				return true;
-			}
-		}
-		else
-			return false;
-	}
-	
-	public boolean keepShot21() {
-		//shot1 -> always willing if target on pos++ or pos-- 
-		int i = this.position;
-		//shoot who shot sheriff if role=deputy
-		if (this.currentPlayer.role=="Outlaw") {
-			//shoot sheriff if role=outlaw	
-			if (twoLeft(i)) {
-				this.playerOrder[(i-2)%this.totalPlayers].lifePoints--;
-				return true;
-			}
-			else if (twoRight(i)) {
-				this.playerOrder[(i+2)%this.totalPlayers].lifePoints--;
-				return true;
-			}	
-			else
-				return false;
-		}
-		else if (this.currentPlayer.role=="Sheriff") {
-			//shoot who shot you if role=sheriff 
-			if (twoLeft(i)) {
-				this.playerOrder[(i-2)%this.totalPlayers].lifePoints--;
-				return true;
-			}
-			else if (twoRight(i)) {
-				this.playerOrder[(i+2)%this.totalPlayers].lifePoints--;
-				return true;
-			}
-			else 
-				return false;
-		}
-		else if (this.currentPlayer.role=="Deputy") {
-			//shoot who shot sheriff if role=deputy 
-			if (twoLeft(i)) {
-				this.playerOrder[(i-2)%this.totalPlayers].lifePoints--;
-				return true;
-			}
-			else if (twoRight(i)) {
-				this.playerOrder[(i+2)%this.totalPlayers].lifePoints--;
-				return true;
-			}
-			else 
-				return false;
-		}
-		else if (this.currentPlayer.role=="Renagade") {
-			//shoot who shot sheriff if role=renegade 
-			if (twoLeft(i)) {
-				this.playerOrder[(i-2)%this.totalPlayers].lifePoints--;
-				return true;
-			}
-			else if (twoRight(i)) {
-				this.playerOrder[(i+2)%this.totalPlayers].lifePoints--;
-				return true;
-			}
-			else
-				return false;
-		}
-		//shot1 -> else keep with willing to trickProbability 
-		else if (Math.random() <= this.willingToTrick){
-			//shoot whoever
-			int rand = AIDice.randInt(0, 1);
-			if (rand==1) {
-				this.playerOrder[(i-2)%this.totalPlayers].lifePoints--;
-				return true;
-				}
-			else {
-				this.playerOrder[(i+2)%this.totalPlayers].lifePoints--;
-				return true;
-			}
-		}
-		else
-			return false;
-	}
-	
+
 	public boolean keepGatling(int numGatling) {
 		if (numGatling == 1) {
 			if (Math.random() <= this.willingToKeepGatling)
@@ -790,6 +604,72 @@ public class AI {
 		}
 	}
 	
+	public void resolveKeptDice(ArrayList<String> keptDice,int numGatling){
+		System.out.println("Resolving the 5 kept dices!");
+		//Gatlings
+		resolveGatling(numGatling);
+		for(int i=0;i<keptDice.size();i++) {
+			if (keptDice.get(i)=="B") {
+				resolveBeers();
+			}
+			else if (keptDice.get(i)=="S1") {
+				resolveShot1();
+			}
+			else if (keptDice.get(i)=="S2") {
+				resolveShot2();
+			}
+			
+		}
+	}
+	
+	public void resolveShot2() {
+		int toLeft = Math.floorMod(this.position-2, this.totalPlayers);
+		int toRight = Math.floorMod(this.position+2, this.totalPlayers);
+		
+		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)) {
+			this.playerOrder[toLeft].lifePoints--;
+			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toLeft].name + " who is two position"
+					+ " to the left." );
+		}
+		else if (this.targetRole.contains(this.playerOrder[toRight].aiGuessRole) ) {
+			this.playerOrder[toRight].lifePoints--;
+			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toRight].name + " who is two position"
+					+ " to the right." );
+		}
+		else 
+			shootRandomly2();
+	}
+	
+	public void resolveShot1() {		
+		int toLeft = Math.floorMod(this.position-1, this.totalPlayers);
+		int toRight = Math.floorMod(this.position+1, this.totalPlayers);
+		
+		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)) {
+			this.playerOrder[toLeft].lifePoints--;
+			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toLeft].name + " who is one position"
+					+ " to the left." );
+		}
+		else if (this.targetRole.contains(this.playerOrder[toRight].aiGuessRole) ) {
+			this.playerOrder[toRight].lifePoints--;
+			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toRight].name + " who is one position"
+					+ " to the right." );
+		}
+		else 
+			shootRandomly1();
+	}
+		
+	public void resolveGatling(int numGatling) {
+		if(numGatling>= 3) {
+			for(int i=0;i<this.totalPlayers;i++) {
+				if(i!=this.position)
+					this.playerOrder[i].lifePoints--;
+				else {
+					this.arrowPile.remaining = this.arrowPile.remaining + this.playerOrder[i].arrows;
+					this.playerOrder[i].arrows=0;
+				}
+			}
+		}
+	}
 	
 	//decision to keep dice -> "A", "D", "S1", "S2", "B", "G"
 	public void keepDice(ArrayList<String> diceResults) {
@@ -885,73 +765,6 @@ public class AI {
 		} //end of not 3 dynamites condition
 	}//end of method
 	
-	public void resolveKeptDice(ArrayList<String> keptDice,int numGatling){
-		System.out.println("Resolving the 5 kept dices!");
-		//Gatlings
-		resolveGatling(numGatling);
-		for(int i=0;i<keptDice.size();i++) {
-			if (keptDice.get(i)=="B") {
-				resolveBeers();
-			}
-			else if (keptDice.get(i)=="S1") {
-				resolveShot1();
-			}
-			else if (keptDice.get(i)=="S2") {
-				resolveShot2();
-			}
-			
-		}
-	}
-	
-	public void resolveShot2() {
-		int toLeft = Math.floorMod(this.position-2, this.totalPlayers);
-		int toRight = Math.floorMod(this.position+2, this.totalPlayers);
-		
-		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)) {
-			this.playerOrder[toLeft].lifePoints--;
-			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toLeft].name + " who is two position"
-					+ " to the left." );
-		}
-		else if (this.targetRole.contains(this.playerOrder[toRight].aiGuessRole) ) {
-			this.playerOrder[toRight].lifePoints--;
-			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toRight].name + " who is two position"
-					+ " to the right." );
-		}
-		else 
-			shootRandomly2();
-	}
-	
-	public void resolveShot1() {		
-		int toLeft = Math.floorMod(this.position-1, this.totalPlayers);
-		int toRight = Math.floorMod(this.position+1, this.totalPlayers);
-		
-		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)) {
-			this.playerOrder[toLeft].lifePoints--;
-			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toLeft].name + " who is one position"
-					+ " to the left." );
-		}
-		else if (this.targetRole.contains(this.playerOrder[toRight].aiGuessRole) ) {
-			this.playerOrder[toRight].lifePoints--;
-			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toRight].name + " who is one position"
-					+ " to the right." );
-		}
-		else 
-			shootRandomly1();
-	}
-		
-	public void resolveGatling(int numGatling) {
-		if(numGatling>= 3) {
-			for(int i=0;i<this.totalPlayers;i++) {
-				if(i!=this.position)
-					this.playerOrder[i].lifePoints--;
-				else {
-					this.arrowPile.remaining = this.arrowPile.remaining + this.playerOrder[i].arrows;
-					this.playerOrder[i].arrows=0;
-				}
-			}
-		}
-	}
-	
 	public void keepDices(int i, int numGatling, ArrayList<String> diceResults) {
 		if ((diceResults.get(i)=="B") && keepBeer()) {
 			System.out.println(this.currentPlayer.name + " kept the beer." );
@@ -1006,78 +819,3 @@ public class AI {
 	//method to simulate one AI turn
 }
 
-
-
-
-
-
-/*
-while(maxRolls!=0) {
-	//keep all the dynamite
-	System.out.println("Roll number: " + maxRolls);
-	for(int i=0;i<diceResults.size();i++){
-		if (diceResults.get(i)=="D") {
-			this.keptDice.add(diceResults.get(i));
-			diceResults.remove(i);
-			numDynamites++;
-		}
-		//resolve all arrows
-		if (diceResults.get(i)=="A") {
-            System.out.println("You rolled an arrow. You must pick up an arrow before continuing.");
-            this.arrowPile.remove_arrow(this.currentPlayer, this.playerOrder);
-            System.out.println("AI " + this.position + " (" + this.name + ") has " + this.currentPlayer.arrows + " arrow(s).");
-            System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
-		}
-		if (diceResults.get(i)=="G") {
-			numGatling++;
-		}
-		
-	}
-	System.out.println("Dynamite number: " + numDynamites);
-	System.out.println("Gatling number: " + numGatling);
-	System.out.println("Resolved dice " + this.keptDice);
-	//if 3+ dynamites
-	if (numDynamites >= 3) {
-		//self health --
-		this.currentPlayer.lifePoints--;
-		//other dices resolved 
-		maxRolls = 0;
-	}
-	else {
-		//assess willing to keep each of the dice
-		for(int i=0;i<diceResults.size();i++) {
-			
-			if ((diceResults.get(i)=="B") && keepBeer()) {
-				this.keptDice.add(diceResults.get(i));
-				maxRolls--;
-			}
-			else if ((diceResults.get(i)=="S1") && keepShot1()) {
-				this.keptDice.add(diceResults.get(i));
-				maxRolls--;
-			}
-			else if ((diceResults.get(i)=="S2") && keepShot2()){
-				this.keptDice.add(diceResults.get(i));
-				maxRolls--;
-			}
-			else if ((diceResults.get(i)=="G") && keepGatling(numGatling)){
-				this.keptDice.add(diceResults.get(i));
-				maxRolls--;
-			}
-			else {
-				if (keepArrow())
-					this.keptDice.add(diceResults.get(i));
-					maxRolls--;
-			}
-		}
-
-	}
-	System.out.println("Resolved dice " + this.keptDice);
-}
-
-//determine if game is over after turn is over
-//stop whenever numRolls == 0
-//look at all the dice kept and resolve them
-	//gatling -> if 3 or more (all other players health-- and all arrows current player removed)
-	//arrow-> resolved on roll
-//reset keptDice after turn
- */

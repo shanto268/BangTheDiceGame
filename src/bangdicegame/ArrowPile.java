@@ -36,6 +36,7 @@ public class ArrowPile {
             selfPlayer.gain_arrow(); //player gets arrow
         }
         else if (this.pileIsEmpty()){
+        		System.out.println("======= The Indians Attacked!!! ======= ");
                //everyone loses as many lives as many arrows that they had and loses all their arrows
             	for (int i=0;i<playerOrder.length;i++) {
             		if (playerOrder[i]!=null) {
