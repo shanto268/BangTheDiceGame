@@ -5,12 +5,8 @@
 
 package bangdicegame;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
-import java.util.Arrays;
-import java.util.Comparator;
 
 /*
  *new functionality needed: 
@@ -43,24 +39,23 @@ public class AI {
 	private final int subtractHealth = 5;
 	private final int thresholdHealth;  
 	private int position;
-	private int totalPlayers;
+	private final int totalPlayers;
 	private int playersAlive;
 	private int maxRolls = 3;
-	private final int startedWith;
+	private int startedWith;
+        private GameFunctions game;
 	
 	private ArrayList<Double> ProbabilityVector;
 	public Character [] playerOrder;
 	public Character currentPlayer;
 	public ArrowPile arrowPile;
 	public int remainingArrows;
-	public AI() {
-	}
 	
 //=================  Constructor =====================================
 	@SuppressWarnings("unchecked")
-	public AI(Character [] players, int numPlayers, int pos, ArrowPile arrowPile) {
+	public AI(GameFunctions game, int i, ArrowPile arrowPile) {
 		//this.ProbabilityVector = createProbabilityVector(numPlayers);
-		this.SkepticProbability = getProbability(0.0,0.4);
+        this.SkepticProbability = getProbability(0.0,0.4);
         this.Aggressiveness = getProbability(0.0,0.4);
         this.Safetiness = getProbability(0.0,0.4);
         this.Niceness  = getProbability(0.0,0.5);
@@ -72,19 +67,19 @@ public class AI {
         this.willingToKeepGatling = getProbability(0.3,0.7);
         this.willingToKeepShots = getProbability(0.5,1.0);
         
-        this.startedWith = numPlayers;
-        this.totalPlayers = numPlayers;
-        this.playerOrder = players;
-        this.position = pos;
-        this.currentPlayer = players[pos];
-        this.role = players[pos].role;
-        this.health = players[pos].lifePoints;
+        this.startedWith = game.originalNumOfPlayers;
+        this.playerOrder = game.playerOrder;
+        this.currentPlayer = game.get_current_player();
+        this.role = game.get_current_player().role;
+        this.health = game.get_current_player().lifePoints;
         this.thresholdHealth = this.health - this.subtractHealth;
-        this.name = players[pos].name;
-  //      this.totalPlayers = playersAlive();
+        this.name = game.get_current_player().name;
+        this.totalPlayers = game.numOfPlayers;
+        this.position = i;
         this.targetRole = new ArrayList<String>(); 
         this.arrowPile = arrowPile;
         this.remainingArrows = this.arrowPile.remaining;
+        this.game = game;
      }
 	
 //==================  Getters =======================================	
@@ -442,7 +437,7 @@ public class AI {
 			}
 		
 		if (this.currentPlayer.lifePoints <= this.thresholdHealth) {
-			this.currentPlayer.lifePoints++;
+			this.currentPlayer.gain_life();
 			System.out.println(this.name + " drank the beer!" );
 			helped = true;
 			return;
@@ -454,7 +449,7 @@ public class AI {
 				//help who shot the sheriff if role=outlaw
 				for (int i=0;i<this.totalPlayers;i++) {
 					if (this.playerOrder[i].numShotSheriff>0) {
-						this.playerOrder[i].lifePoints++;
+						this.playerOrder[i].gain_life();
 						System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 						helped = true;
 						return;
@@ -468,7 +463,7 @@ public class AI {
 					if (EveryoneIsAlive()) {
 						for (int i=0;i<this.totalPlayers;i++) {
 							if (this.playerOrder[i].role=="Sheriff") {
-								this.playerOrder[i].lifePoints++;
+								this.playerOrder[i].gain_life();
 								this.currentPlayer.numHelpSheriff++;
 								System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 								helped = true;
@@ -479,7 +474,7 @@ public class AI {
 					else {
 						for (int i=0;i<this.totalPlayers;i++) {
 							if (this.playerOrder[i].numShotSheriff>0) {
-								this.playerOrder[i].lifePoints++;
+								this.playerOrder[i].gain_life();
 								System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 								helped = true;
 								return;
@@ -502,7 +497,7 @@ public class AI {
 					this.currentPlayer.numHelpSheriff++;
 			//	System.out.println("random number " + rand);
 			//	System.out.println("random player name " + this.playerOrder[rand].name);
-				this.playerOrder[rand].lifePoints++;
+				this.playerOrder[rand].gain_life();
 				System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
 				helped = true;
 				return;
@@ -513,7 +508,7 @@ public class AI {
 				//help who gave you health if role=sheriff 
 				for (int i=0;i<this.totalPlayers;i++) {
 					if (this.playerOrder[i].numHelpSheriff>0) {
-						this.playerOrder[i].lifePoints++;
+						this.playerOrder[i].gain_life();
 						System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 						helped = true;
 						return;
@@ -532,7 +527,7 @@ public class AI {
 			int rand = (int)(Math.random()*(maxi));
 		//	System.out.println("random number " + rand);
 		//	System.out.println("random player name " + this.playerOrder[rand].name);
-			this.playerOrder[rand].lifePoints++;
+			this.playerOrder[rand].gain_life();
 			if (this.playerOrder[rand].role=="Sheriff")
 				this.currentPlayer.numHelpSheriff++;
 			System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
@@ -544,7 +539,7 @@ public class AI {
 			//help sheriff is role=deputy
 			for (int i=0;i<this.totalPlayers;i++) {
 				if (this.playerOrder[i].role=="Sheriff") {
-					this.playerOrder[i].lifePoints++;
+					this.playerOrder[i].gain_life();
 					this.currentPlayer.numHelpSheriff++;
 					System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 					helped = true;
@@ -561,17 +556,14 @@ public class AI {
 		Random r = new Random();
 		int chance = r.nextInt(2); //0 or 1
 		if (chance == 1) {
-			int j = Math.floorMod(this.position+1, this.totalPlayers);
-		//	this.playerOrder[j].lifePoints--; //right
-			this.playerOrder[j].lose_life(this, this.arrowPile); 
-			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is one position"
+			System.out.println(this.currentPlayer.name + " shot " + this.game.get_next_player().name + " who is one position"
 					+ " to the right." );
+                        this.game.get_next_player().lose_life(game, arrowPile, false);
 		}
 		else {
-			int j = Math.floorMod(this.position-1, this.totalPlayers);
-			this.playerOrder[j].lose_life(this, this.arrowPile);  //left
-			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is one position"
+			System.out.println(this.currentPlayer.name + " shot " + this.game.get_previous_player().name + " who is one position"
 					+ " to the left." );
+                        this.game.get_previous_player().lose_life(game, arrowPile, false);
 		}
 	}
 	
@@ -579,16 +571,14 @@ public class AI {
 		Random r = new Random();
 		int chance = r.nextInt(2); //0 or 1
 		if (chance == 1) {
-			int j = Math.floorMod(this.position+2, this.totalPlayers);
-			this.playerOrder[j].lose_life(this, this.arrowPile); //right
-			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is two positions"
+			System.out.println(this.currentPlayer.name + " shot " + this.game.get_two_away_player(this.game.get_current_player()).name + " who is two positions"
 					+ " to the right." );
+                        this.game.get_two_away_player(this.game.get_current_player()).lose_life(game, arrowPile, false);
 		}
 		else {
-			int j = Math.floorMod(this.position-2, this.totalPlayers);
-			this.playerOrder[j].lose_life(this, this.arrowPile); //left
-			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is two positions"
+			System.out.println(this.currentPlayer.name + " shot " + this.game.get_two_before_player(this.game.get_current_player()).name + " who is two positions"
 					+ " to the left." );
+                        this.game.get_two_before_player(this.game.get_current_player()).lose_life(game, arrowPile, false);
 		}
 	}
 	
@@ -596,20 +586,20 @@ public class AI {
 		Random r = new Random();
 		int chance = r.nextInt(2); //0 or 1
 		if (chance == 1) {
-			int j = Math.floorMod(this.position+1, this.totalPlayers);
-			this.playerOrder[j].lose_life(this, this.arrowPile); //right
+                        int j = Math.floorMod(this.position-1, this.totalPlayers);
 			if (this.playerOrder[j].aiGuessRole=="Sheriff")
 				this.currentPlayer.numShotSheriff++;
-			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is one position"
+			System.out.println(this.currentPlayer.name + " shot " + this.game.get_next_player().name + " who is one position"
 					+ " to the right." );
+                        this.game.get_next_player().lose_life(game, arrowPile, false);
 		}
 		else {
 			int j = Math.floorMod(this.position-1, this.totalPlayers);
-			this.playerOrder[j].lose_life(this, this.arrowPile);  //left
 			if (this.playerOrder[j].aiGuessRole=="Sheriff")
 				this.currentPlayer.numShotSheriff++;
-			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is one position"
+			System.out.println(this.currentPlayer.name + " shot " + this.game.get_previous_player().name + " who is one position"
 					+ " to the left." );
+                        this.game.get_previous_player().lose_life(game, arrowPile, false);
 		}
 	}
 	
@@ -617,16 +607,14 @@ public class AI {
 		Random r = new Random();
 		int chance = r.nextInt(2); //0 or 1
 		if (chance == 1) {
-			int j = Math.floorMod(this.position+2, this.totalPlayers);
-			this.playerOrder[j].lose_life(this, this.arrowPile);  //right
-			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is two positions"
+			System.out.println(this.currentPlayer.name + " shot " + this.game.get_two_away_player(this.game.get_current_player()).name + " who is two positions"
 					+ " to the right." );
+                        this.game.get_two_away_player(this.game.get_current_player()).lose_life(game, arrowPile, false);
 		}
 		else {
-			int j = Math.floorMod(this.position-2, this.totalPlayers);
-			this.playerOrder[j].lose_life(this, this.arrowPile); //left
-			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is two positions"
+			System.out.println(this.currentPlayer.name + " shot " + this.game.get_two_before_player(this.game.get_current_player()).name + " who is two positions"
 					+ " to the left." );
+                        this.game.get_two_before_player(this.game.get_current_player()).lose_life(game, arrowPile, false);
 		}
 	}
 	
@@ -635,13 +623,13 @@ public class AI {
 		//Gatlings
 		resolveGatling(numGatling);
 		for(int i=0;i<keptDice.size();i++) {
-			if (keptDice.get(i)=="B") {
+			if (keptDice.get(i)=="B" && !this.game.game_over) {
 				resolveBeers();
 			}
-			else if (keptDice.get(i)=="S1") {
+			else if (keptDice.get(i)=="S1" && !this.game.game_over) {
 				resolveShot1();
 			}
-			else if (keptDice.get(i)=="S2") {
+			else if (keptDice.get(i)=="S2" && !this.game.game_over) {
 				resolveShot2();
 			}
 			
@@ -653,18 +641,18 @@ public class AI {
 		int toRight = Math.floorMod(this.position+2, this.totalPlayers);
 		
 		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)) {
-			this.playerOrder[toLeft].lose_life(this, this.arrowPile); 
 			if (this.playerOrder[toLeft].aiGuessRole=="Sheriff")
 				this.currentPlayer.numShotSheriff++;
-			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toLeft].name + " who is two position"
+			System.out.println(this.currentPlayer.name + " shot " + this.game.get_two_before_player(this.game.get_current_player()).name + " who is two position"
 					+ " to the left." );
+                        this.game.get_two_before_player(this.game.get_current_player()).lose_life(game, arrowPile, false);
 		}
 		else if (this.targetRole.contains(this.playerOrder[toRight].aiGuessRole) ) {
-			this.playerOrder[toRight].lose_life(this, this.arrowPile); 
 			if (this.playerOrder[toRight].aiGuessRole=="Sheriff")
 				this.currentPlayer.numShotSheriff++;
-			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toRight].name + " who is two position"
+			System.out.println(this.currentPlayer.name + " shot " + this.game.get_two_away_player(this.game.get_current_player()).name + " who is two position"
 					+ " to the right." );
+                        this.game.get_two_away_player(this.game.get_current_player()).lose_life(game, arrowPile, false);
 		}
 		else 
 			shootRandomly2();
@@ -675,18 +663,18 @@ public class AI {
 		int toRight = Math.floorMod(this.position+1, this.totalPlayers);
 		
 		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)) {
-			this.playerOrder[toLeft].lose_life(this, this.arrowPile); 
 			if (this.playerOrder[toLeft].aiGuessRole=="Sheriff")
 				this.currentPlayer.numShotSheriff++;
-			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toLeft].name + " who is one position"
+			System.out.println(this.currentPlayer.name + " shot " + this.game.get_previous_player().name + " who is one position"
 					+ " to the left." );
+                        this.game.get_previous_player().lose_life(game, arrowPile, false);
 		}
 		else if (this.targetRole.contains(this.playerOrder[toRight].aiGuessRole) ) {
-			this.playerOrder[toRight].lose_life(this, this.arrowPile); 
 			if (this.playerOrder[toRight].aiGuessRole=="Sheriff")
 				this.currentPlayer.numShotSheriff++;
-			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toRight].name + " who is one position"
+			System.out.println(this.currentPlayer.name + " shot " + this.game.get_next_player().name + " who is one position"
 					+ " to the right." );
+                        this.game.get_next_player().lose_life(game, arrowPile, false);
 		}
 		else 
 			shootRandomly1();
@@ -695,12 +683,12 @@ public class AI {
 	public void resolveGatling(int numGatling) {
 		if(numGatling>= 3) {
 			for(int i=0;i<this.totalPlayers;i++) {
-				if(i!=this.position)
-					this.playerOrder[i].lose_life(this, this.arrowPile); 
-				else {
-					this.arrowPile.remaining = this.arrowPile.remaining + this.playerOrder[i].arrows;
-					this.playerOrder[i].arrows=0;
-				}
+                            if(i!=this.position)
+				this.playerOrder[i].lose_life(this.game, this.arrowPile, false);
+                            else {
+                                this.arrowPile.remaining = this.arrowPile.remaining + this.playerOrder[i].arrows;
+				this.playerOrder[i].arrows=0;
+                            }
 			}
 		}
 	}
@@ -715,19 +703,19 @@ public class AI {
 		
 		for(int i=0;i<diceResults.size();i++){
 			//resolve all arrows
-			if (diceResults.get(i)=="A") {
-                System.out.println(this.name + " rolled an arrow. " + this.name + " must pick up an arrow before continuing.");
-                this.arrowPile.remove_arrow(this.currentPlayer, this.playerOrder,this);
-                System.out.println(this.name + " has " + this.currentPlayer.arrows + " arrow(s).");
-                System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
+			if (diceResults.get(i)=="A" && !this.game.game_over) {
+                            System.out.println(this.name + " rolled an arrow. " + this.name + " must pick up an arrow before continuing.");
+                            this.arrowPile.remove_arrow(this.game);
+                            System.out.println(this.name + " has " + this.currentPlayer.arrows + " arrow(s).");
+                            System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
 			}
-			else if (diceResults.get(i)=="D") {
+			else if (diceResults.get(i)=="D" && !this.game.game_over) {
 				System.out.println(this.name + " rolled a dynamite. It cannot be re-rolled.");
 				this.keptDice.add(diceResults.get(i));
 				diceResults.remove(i);
 				numDynamites++;
 			}
-			else if (diceResults.get(i)=="G") {
+			else if (diceResults.get(i)=="G" && !this.game.game_over) {
 				numGatling++;
 			}
 		}
@@ -736,10 +724,10 @@ public class AI {
 		//more than 3 dynamites
 		if (numDynamites>=3) {
 			System.out.println("Since, " + this.name + " rolled " + numDynamites + " dynamites. " + this.name + "'s turn is over.");
-			this.currentPlayer.lose_life(this, this.arrowPile); 
+			this.currentPlayer.lose_life(this.game, this.arrowPile, true);
 			for(int i=0;i<diceResults.size();i++) {
 				this.keptDice.add(diceResults.get(i));
-				if(diceResults.get(i)=="B") {
+				if(diceResults.get(i)=="B" && !this.game.game_over) {
 					if (this.currentPlayer.lifePoints < this.thresholdHealth) {
 						this.currentPlayer.lifePoints++; //apply to itself
 						System.out.println(this.name + " drank the beer!");
@@ -748,10 +736,10 @@ public class AI {
 						resolveBeers();
 					}
 				}
-				else if(diceResults.get(i)=="S1") {
+				else if(diceResults.get(i)=="S1"  && !this.game.game_over) {
 					resolveShot1();
 				}
-				else if(diceResults.get(i)=="S2") {
+				else if(diceResults.get(i)=="S2" && !this.game.game_over) {
 					resolveShot2();
 				}
 			}//end of for loop
@@ -854,31 +842,6 @@ public class AI {
 		return total;
 	}
 	
-    public void eliminate_player(Character player, ArrowPile arrowPile){
-        int i;
-        while(player.arrows > 0){
-                arrowPile.add_arrow(player);
-            }    
-        for (i = 0; i < this.totalPlayers; i++){
-            if (this.playerOrder[i] == player){
-                for (i = i; i < this.totalPlayers - 1; i++){
-                    this.playerOrder[i] = this.get_next_player();
-                }
-            }
-        }
-        this.playerOrder[this.totalPlayers] = null;
-        this.totalPlayers -= 1;    
-    }
-    
-    public Character get_next_player (){
-        int temp;
-        temp = (this.position + 1)%this.totalPlayers;
-        if (temp < 0){
-            temp = this.totalPlayers + temp;
-        }
-        return this.playerOrder[temp];
-    }
-	
 	public void test() {
 		assignOpponents();
 	//role is allocated by matching the max probability to the roles
@@ -895,4 +858,3 @@ public class AI {
 	//method to evaluate dice roll
 	
 }
-

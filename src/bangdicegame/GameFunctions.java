@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class GameFunctions {
     public Character [] playerOrder;
     public int currentPlayer, numOfPlayers, originalNumOfPlayers;
-    public Boolean game_over;
+    public Boolean game_over, realPlayerDead;
     
     public GameFunctions (Character [] players, int totalPlayers){
         this.playerOrder = players;
@@ -22,6 +22,7 @@ public class GameFunctions {
         this.numOfPlayers = totalPlayers;
         this.originalNumOfPlayers = totalPlayers;
         this.game_over = false;
+        this.realPlayerDead = false;
     }
   
     public Character next_turn (){
@@ -130,7 +131,7 @@ public class GameFunctions {
             
             //Determines if the first roll contains any arrows
             for (i = 0; i < 5; i ++){
-                if (!playerOrder.game_over){
+                if (!playerOrder.game_over && playerOrder.get_current_player().lifePoints > 0){
                     if ("Arrow".equals(allDice[i].roll)){
                         System.out.println("You rolled an arrow. You must pick up an arrow before continuing.");
                         Dice.arrow_roll(playerOrder.get_current_player(), arrowPile, playerOrder);
@@ -145,7 +146,7 @@ public class GameFunctions {
             
             
             //Allows for rerolls, if they roll 3 dynamite, takes care of that
-            while (rollsRemaining > 0 && !dynamiteExecuted){
+            while (rollsRemaining > 0 && !dynamiteExecuted && !playerOrder.game_over && playerOrder.get_current_player().lifePoints > 0){
                 System.out.println("\nYour roll: ");
                 for (i = 0; i < 5; i++){
                     System.out.println("Dice " + (i+1) + ": " + allDice[i].roll);
@@ -172,7 +173,7 @@ public class GameFunctions {
             
             //Completes all of the dice rolls
             for (i = 0; i < 5; i ++){
-                if (!playerOrder.game_over){
+                if (!playerOrder.game_over && playerOrder.get_current_player().lifePoints > 0){
                     if ("Dynamite".equals(allDice[i].roll)){
                         if (!dynamiteExecuted){
                             Dice.dynamite_roll(allDice, playerOrder.get_current_player(), playerOrder, arrowPile);
@@ -262,6 +263,11 @@ public class GameFunctions {
     
     public void eliminate_player (Character player, ArrowPile arrowPile, Boolean killedByPlayer){
         int i;
+        int j;
+        
+        if (player == this.playerOrder[0]){
+            this.realPlayerDead = true;
+        }
         
         while(player.arrows > 0){
                 arrowPile.add_arrow(player);
@@ -269,8 +275,8 @@ public class GameFunctions {
         
         for (i = 0; i < this.numOfPlayers; i++){
             if (this.playerOrder[i] == player){
-                for (i = i; i < this.numOfPlayers - 1; i++){
-                    this.playerOrder[i] = this.get_next_player();
+                for (j = i; j < this.numOfPlayers - 1; j++){
+                    this.playerOrder[j] = this.playerOrder[j+1];
                 }
             }
         }
@@ -338,18 +344,21 @@ public class GameFunctions {
         
             for (i = 0; i < playerOrder.numOfPlayers; i++){
                 if ("Sheriff".equals(playerOrder.playerOrder[i].role)){
+                    System.out.println("A Sheriff is alive, which is: " + playerOrder.playerOrder[i].name + " line 342: GameFunctions");
                     sheriffAlive += 1;
                }
                 else if ("Outlaw".equals(playerOrder.playerOrder[i].role)){
+                    System.out.println("An outlaw is alive, which is: " + playerOrder.playerOrder[i].name + " line 342: GameFunctions");
                     outlawAlive += 1;
                 }
                 else if ("Renegade".equals(playerOrder.playerOrder[i].role)){
+                    System.out.println("A renegade is alive, which is: " + playerOrder.playerOrder[i].name + " line 342: GameFunctions");
                     renegadeAlive += 1;
                 }
             }
         
             if ((sheriffAlive == 1) && (outlawAlive == 0) && (renegadeAlive == 0)){
-                System.out.println("All renegades and outlaws are dead, so the sheirff and deputies win.");
+                System.out.println("All renegades and outlaws are dead, so the sheriff and deputies win.");
                 return true;
             }
             else if (sheriffAlive == 0){

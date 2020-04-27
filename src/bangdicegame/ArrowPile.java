@@ -30,7 +30,7 @@ public class ArrowPile {
     }
     
     //for ai 
-    public void remove_arrow(Character selfPlayer, Character [] playerOrder, AI ai){
+    public void remove_arrow(Character selfPlayer, Character [] playerOrder){
         if (this.remaining > 0){
             this.remaining -= 1; //decrease pile
             selfPlayer.gain_arrow(); //player gets arrow
@@ -41,8 +41,7 @@ public class ArrowPile {
             	for (int i=0;i<playerOrder.length;i++) {
             		if (playerOrder[i]!=null) {
 	            		int numArrow = playerOrder[i].arrows;
-	            		//playerOrder[i].lose_life(numArrow);
-	            		playerOrder[i].lose_life(numArrow,ai,ai.arrowPile);
+	            		playerOrder[i].lose_life(numArrow);
 	            		playerOrder[i].arrows = 0;
             		}
             	}  
@@ -69,16 +68,35 @@ public class ArrowPile {
     
     public void empty_pile (GameFunctions players, int totalPlayers){
         int i;
+        int playersDead;
+        
+        playersDead = 0;
+        
+        System.out.println("\nThe last arrow was drawn and the indians attacked.\n");
         
         for (i = 0; i < totalPlayers; i++){
-            while (players.playerOrder[i].arrows > 0){
-                if ("Jourdonnais".equals(players.playerOrder[i].name)){
-                    players.playerOrder[i].lose_life(players, this, true);
-                    players.playerOrder[i].arrows = 0;
-                }
-                else if (players.playerOrder[i].lifePoints > 0){
-                    players.playerOrder[i].lose_arrow();
-                    players.playerOrder[i].lose_life(players, this, true);
+            if (players.playerOrder[i].arrows > players.playerOrder[i].lifePoints){
+                playersDead++;
+            }
+        }
+        
+        if (playersDead >= players.numOfPlayers){
+            players.game_over = true;
+            System.out.println("All players are dead, so the outlaws win.");
+        }
+        
+        
+        if (!players.game_over){
+            for (i = 0; i < totalPlayers; i++){
+                while (players.playerOrder[i].arrows > 0){
+                    if ("Jourdonnais".equals(players.playerOrder[i].name)){
+                        players.playerOrder[i].lose_life(players, this, true);
+                        players.playerOrder[i].arrows = 0;
+                    }
+                    else if (players.playerOrder[i].lifePoints > 0){
+                        players.playerOrder[i].lose_arrow();
+                        players.playerOrder[i].lose_life(players, this, true);
+                    }
                 }
             }
         }

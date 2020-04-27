@@ -29,28 +29,12 @@ public class SimulateAI {
         
     }
 
-	public void AITurn() {
-		
-		for(int i=1;i<this.totalPlayers;i++) {
-			AI aiPlayer = new AI(this.playerOrder, this.totalPlayers, i, this.arrowPile);
-		//	aiPlayer.getPlayerRole();
-		//	aiPlayer.getPlayerProbabilityVector();
-		//	aiPlayer.updateProbabilityVector();
-		//	System.out.println();
-		//	aiPlayer.getPlayerBehavior();
-		//	aiPlayer.getPlayerName();
-		//	aiPlayer.test();
-			aiPlayer.turn();
-			aiPlayer.rollDice();
-			System.out.println();
-		}
-	}
-	
-	public void printCharacterElements() {
-		for (int j=0;j<this.playerOrder.length;j++)
-			System.out.println("array elements: " + this.playerOrder[j]);
-		System.out.println();
-	}
+	public void AITurn(GameFunctions game, int i, ArrowPile arrowPile) {
+            AI aiPlayer = new AI(game, i, arrowPile);
+            aiPlayer.turn();
+            aiPlayer.rollDice();
+            System.out.println();
+        }
 	
 	/*
      * Game Mechanics algorithm:
