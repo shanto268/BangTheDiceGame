@@ -20,9 +20,16 @@ Garrett Olsen: Main Class along with getting everything to work well together.
 - [ ] Project Video/Presentation 
 
 ## UML Use Case Diagrams
-
+![UMLUSD](https://github.com/shanto268/Bang-/blob/master/use_case.png)
 ## UML Class Diagrams
+![UMLUSD](https://github.com/shanto268/Bang-/blob/master/class.png)
+![UMLUSD1](https://github.com/shanto268/Bang-/blob/master/class1.png)
+![UMLUSD2](https://github.com/shanto268/Bang-/blob/master/class2.png)
 
 ## CRC Cards
+![UMLcc](https://github.com/shanto268/Bang-/blob/master/crc.png)
+![UMLcrc](https://github.com/shanto268/Bang-/blob/master/crc0.png)
 
 ## GUI Plan
+![UMLgui](https://github.com/shanto268/Bang-/blob/master/gui.png)
+
