@@ -8,9 +8,13 @@ The program allows the user to play the game on the command line against the AI.
 
 ## Assignments
 Johnathan Gressick: GUI
+
 Meghan Engert: UML Use Case Diagrams, UML Class Diagrams, CRC Cards, Arrow Pile Class
+
 Cierra Ditmore: Character and Game Functions Classes
+
 Sadman Ahmed Shanto: Development of AI logic and gameplay simulation. 
+
 Garrett Olsen: Main Class along with getting everything to work well together.
 
 ## To Do List
