@@ -98,8 +98,6 @@ public class BangDiceGame {
         GameFunctions Game = new GameFunctions (players, totalPlayers);
         SimulateAI AI = new SimulateAI(players, totalPlayers, arrowPile);
         i = 0;
-        //SAS added
-//        AI ai = new AI(totalPlayers, players);
         
         //Making the sheriff the first player to go
         if (Game.numOfPlayers > 3){
@@ -110,6 +108,29 @@ public class BangDiceGame {
         }
         
         System.out.println();
+        
+        /*
+         * Game Mechanics algorithm:
+         	* game termination conditions:
+	         	* 1)Sheriff dies
+	         	* 2)All Outlaws and Renegades Die
+         	* determine_winner:
+	         	* for case 1) if only renegade is alive it wins or outlaws win
+	         	* for case 2) sheriff and deputy wins
+         	* ================================================================
+         	* while !gameover
+         		* if sheriff.isAi
+         			*AI goes first
+         			*human next
+         			*display results
+     			*else
+     				*human goes first
+     				*AI next
+     				*display results
+			*process winner!
+     	* 
+        */
+        
         
         while (!Game.game_over){
             System.out.println();

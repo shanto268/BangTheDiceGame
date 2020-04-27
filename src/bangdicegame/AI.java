@@ -12,12 +12,11 @@ import java.util.Random;
 
 /*
  *new functionality needed: 
- *one step turn function (update probabilities)
- *fix life factor
- *initialization of the game
- *NEED TO MAKE SHERIFF GO FIRST
+	 *initialization of the game
+	 *NEED TO MAKE SHERIFF GO FIRST
  *each turn of the game is player then AI 
  *game termination loop
+ *fix life factor
  *check mechanics of when someone dies
  * update totalPlayer number and EveryoneAlive function
 	 *need to include game termination check

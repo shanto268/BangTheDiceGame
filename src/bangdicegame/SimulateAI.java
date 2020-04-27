@@ -39,8 +39,8 @@ public class SimulateAI {
 		//	System.out.println();
 		//	aiPlayer.getPlayerBehavior();
 		//	aiPlayer.getPlayerName();
-			aiPlayer.rollDice();
 		//	aiPlayer.test();
+			aiPlayer.rollDice();
 			System.out.println();
 
 
