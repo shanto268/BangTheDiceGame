@@ -12,17 +12,11 @@ import java.util.Random;
 
 /*
  *new functionality needed: 
-	 *initialization of the game
-	 *NEED TO MAKE SHERIFF GO FIRST
- *each turn of the game is player then AI 
  *game termination loop
  *fix life factor
  *check mechanics of when someone dies
  * update totalPlayer number and EveryoneAlive function
-	 *need to include game termination check
 	 *eliminate players needs to be added
-	 *check stats after each round
-	 *reset all arraylists that use add after turn?
  */
 
 public class AI {
@@ -50,6 +44,7 @@ public class AI {
 	private final int totalPlayers;
 	private int playersAlive;
 	private int maxRolls = 3;
+	private int startedWith;
 	
 	private ArrayList<Double> ProbabilityVector;
 	public Character [] playerOrder;
@@ -75,6 +70,7 @@ public class AI {
         this.willingToKeepGatling = getProbability(0.3,0.7);
         this.willingToKeepShots = getProbability(0.5,1.0);
         
+        this.startedWith = numPlayers;
         this.playerOrder = players;
         this.position = pos;
         this.currentPlayer = players[pos];
@@ -82,7 +78,7 @@ public class AI {
         this.health = players[pos].lifePoints;
         this.thresholdHealth = this.health - this.subtractHealth;
         this.name = players[pos].name;
-        this.totalPlayers = numPlayers;
+        this.totalPlayers = playersAlive();
         this.targetRole = new ArrayList<String>(); 
         this.arrowPile = arrowPile;
         this.remainingArrows = this.arrowPile.remaining;
@@ -177,7 +173,7 @@ public class AI {
 		}
 	//	System.out.println("players Alive " + i);
 		this.playersAlive = i;
-		if (this.playersAlive==this.totalPlayers) 
+		if (this.playersAlive==this.startedWith) 
 			return true;
 		else
 			return false;
@@ -832,9 +828,28 @@ public class AI {
 		AIDice d = new AIDice();
 		this.diceResults = d.rollThemDice(5);
 		keepDice(this.diceResults);
-		trackProbabilityVector();
+	//	trackProbabilityVector();
 	}
 
+	public void turn() {
+		System.out.println("It is "+this.currentPlayer.name+"'s turn and he/she will now roll the dice.");
+	}
+	
+	public int playersAlive() {
+		int total = 0;
+		for (int i=0;i<this.startedWith;i++) {
+			if (this.playerOrder[i]!=null)
+				if (this.playerOrder[i].lifePoints>0)
+					total++;
+				else if (this.playerOrder[i].lifePoints<=0 && this.playerOrder[i].role!="Sheriff") {
+					System.out.println(this.playerOrder[i].name + " has died!");
+					System.out.println(this.playerOrder[i].name + " was the " + this.playerOrder[i].role);
+					this.playerOrder[i]=null;
+				}	
+		}
+		return total;
+	}
+	
 	public void test() {
 		assignOpponents();
 	//role is allocated by matching the max probability to the roles
@@ -850,6 +865,5 @@ public class AI {
 	}
 	//method to evaluate dice roll
 	
-	//method to simulate one AI turn
 }
 

@@ -256,6 +256,8 @@ public class GameFunctions {
                 }
                 numGatling -= 1;
             }
+            System.out.println();
+            
     }
     
     public void eliminate_player (Character player, ArrowPile arrowPile, Boolean killedByPlayer){

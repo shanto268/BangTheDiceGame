@@ -68,10 +68,10 @@ public class BangDiceGame {
             }
             
             //Temporary output, just showing players and order
-            System.out.println("Player " + i + " name is: " + players[i].name);
-            System.out.println("Player " + i + " role is: " + players[i].role);
-            System.out.println("Player " + i + " is an AI? " + players[i].isAi);
-            System.out.println();
+            //System.out.println("Player " + i + " name is: " + players[i].name);
+            //System.out.println("Player " + i + " role is: " + players[i].role);
+            //System.out.println("Player " + i + " is an AI? " + players[i].isAi);
+            //System.out.println();
             aiPlayers -= 1;
             i += 1;
         }
@@ -82,85 +82,109 @@ public class BangDiceGame {
             allDice[i] = new Dice();
             i++;
         }
-        
-        /*
-         * Need to do: 
-         * 		game condition start needs to change
-         * 		game termination condition needs to be added to AI class as well
-         * 		game initialization needs to change as well
-         */
-        
+                
         
         //
         //START OF GAME
         //
       //  Table table = new Table(players, totalPlayers);
         GameFunctions Game = new GameFunctions (players, totalPlayers);
-        SimulateAI AI = new SimulateAI(players, totalPlayers, arrowPile);
         i = 0;
-        
-        //Making the sheriff the first player to go
-        if (Game.numOfPlayers > 3){
-            while (!"Sheriff".equals(players[i].role)){
-                Game.next_turn();
-                i++;
-            }
+                
+        int numOutlaw=0;
+        int numRenegade=0;
+        boolean AIsheriff=false;
+        for(int j =0; j<totalPlayers;j++) {
+        	if (players[j].role=="Outlaw")
+        		numOutlaw++;
+        	else if (players[j].role=="Renegade")
+        		numRenegade++;
         }
         
-        System.out.println();
+        int sheriffPos = 0;
         
-        /*
-         * Game Mechanics algorithm:
-         	* game termination conditions:
-	         	* 1)Sheriff dies
-	         	* 2)All Outlaws and Renegades Die
-         	* determine_winner:
-	         	* for case 1) if only renegade is alive it wins or outlaws win
-	         	* for case 2) sheriff and deputy wins
-         	* ================================================================
-         	* while !gameover
-         		* if sheriff.isAi
-         			*AI goes first
-         			*human next
-         			*display results
-     			*else
-     				*human goes first
-     				*AI next
-     				*display results
-			*process winner!
-     	* 
-        */
+       	for(int j =0; j<totalPlayers;j++) {
+        	if (!players[j].isAi)
+        		System.out.println("You are " + players[j].name + " and you are the " + players[j].role);
+        		System.out.println();
+        	
+        	if (players[j].role=="Sheriff")
+        		if (players[j].isAi) {
+        			AIsheriff=true;
+        			sheriffPos = i;
+        			System.out.println(players[j].name + " is the " + players[j].role + " and will start the game.");
+        			System.out.println();
+        		}
+        		else {
+        			AIsheriff=false;
+        			sheriffPos = i;
+        			System.out.println(players[j].name + " is the " + players[j].role+ " and will start the game.");
+        			System.out.println();
+        		}
+        }
         
-        
-        while (!Game.game_over){
-            System.out.println();
-            
-            //Prints players current turn
-            System.out.println("It is currently " + Game.get_current_player().name + "'s turn\n");
-            //players[0] is the user controlled player
-            if (Game.get_current_player() == players[0]){
-                GameFunctions.player_turn(Game, allDice, arrowPile);
-            }
-            else{
-                // AI turn goes here
-            	AI.AITurn();
-          //  	System.out.println("AI turn");
-            	
-            }
-            
-            System.out.println("\nThe current standings are: ");
-            
-            //Shows standing of life points and arrows at end of round
-            for (i = 0; i < Game.numOfPlayers; i++){
-                System.out.println(players[i].name + " has " + players[i].lifePoints + " life and " + players[i].arrows + " arrow(s)");
-            }
-            
-            //Goes to next player
-            Game.next_turn();
-            input.nextLine();
-            System.out.println("\n*** Press enter to progress to the next turn. ***");
-            input.nextLine();
-            System.out.println("\n--------------------------------------------------\n");
+       	//move sheriff to players[0]
+       	Character temp = players[0];
+       	players[0] = players[sheriffPos];
+       	players[sheriffPos] = temp;
+        SimulateAI AI = new SimulateAI(players, totalPlayers, arrowPile);
+
+        while(AI.GameOver(numOutlaw, numRenegade)==2) {
+        	if (AIsheriff) {
+        		//aiturn
+        		AI.AITurn();
+        		//playerturn
+        		GameFunctions.player_turn(Game, allDice, arrowPile);
+        		//stats
+        		System.out.println("\nThe current standings are: ");    
+                //Shows standing of life points and arrows at end of round
+                for (i = 0; i < Game.numOfPlayers; i++){
+                    System.out.println(players[i].name + " has " + players[i].lifePoints + " life and " + players[i].arrows + " arrow(s)");
+                }
+                System.out.println("Number of players in the game: " + i);
+                System.out.println("\n*** Press enter to progress to the next turn. ***");
+                input.nextLine();
+                System.out.println("\n--------------------------------------------------\n");
+        	}
+        	else {
+        		//playerturn	
+        		GameFunctions.player_turn(Game, allDice, arrowPile);
+        		//aiturn
+        		AI.AITurn();
+        		//stats
+        		System.out.println("\nThe current standings are: ");    
+                //Shows standing of life points and arrows at end of round
+                for (i = 0; i < Game.numOfPlayers; i++){
+                    System.out.println(players[i].name + " has " + players[i].lifePoints + " life and " + players[i].arrows + " arrow(s)");
+                }
+                System.out.println("Number of players in the game: " + i);
+                System.out.println("\n*** Press enter to progress to the next turn. ***");
+                input.nextLine();
+                System.out.println("\n--------------------------------------------------\n");
+        	}
+        } //end of game loop
+		//process winner!
+      //0 -> sheriff dead, 1-> outlaw and renegade dead, 2->gamecontinues
+        if (AI.GameOver(numOutlaw, numRenegade)==0) {
+        	int result = 0;
+        	System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        	System.out.println("||The game is over. The Sheriff died!||");
+        	System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        	System.out.println();
+        	AI.revealResults();
+        	AI.congrats(result);
+        }
+        	
+        else if (AI.GameOver(numOutlaw, numRenegade)==1) {
+        	int result = 1;
+        	System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        	System.out.println("||The game is over. The Outlaws and Renegades died!||");
+        	System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        	System.out.println();
+        	AI.revealResults();
+        	System.out.println("This means that the Sheriff and Deputy won the game.");
+        	AI.congrats(result);
+
         }
     }
     
