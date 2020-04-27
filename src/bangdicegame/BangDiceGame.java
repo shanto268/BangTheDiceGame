@@ -68,10 +68,10 @@ public class BangDiceGame {
             }
             
             //Temporary output, just showing players and order
-            //System.out.println("Player " + i + " name is: " + players[i].name);
-            //System.out.println("Player " + i + " role is: " + players[i].role);
-            //System.out.println("Player " + i + " is an AI? " + players[i].isAi);
-            //System.out.println();
+            System.out.println("Player " + i + " name is: " + players[i].name);
+            System.out.println("Player " + i + " role is: " + players[i].role);
+            System.out.println("Player " + i + " is an AI? " + players[i].isAi);
+            System.out.println();
             aiPlayers -= 1;
             i += 1;
         }
@@ -124,9 +124,10 @@ public class BangDiceGame {
         }
         
        	//move sheriff to players[0]
-       	Character temp = players[0];
-       	players[0] = players[sheriffPos];
+       	Character temp = players[1];
+       	players[1] = players[sheriffPos];
        	players[sheriffPos] = temp;
+       	
         SimulateAI AI = new SimulateAI(players, totalPlayers, arrowPile);
 
         while(AI.GameOver(numOutlaw, numRenegade)==2) {

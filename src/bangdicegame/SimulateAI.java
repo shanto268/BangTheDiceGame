@@ -43,10 +43,13 @@ public class SimulateAI {
 			aiPlayer.turn();
 			aiPlayer.rollDice();
 			System.out.println();
-			
-
-
 		}
+	}
+	
+	public void printCharacterElements() {
+		for (int j=0;j<this.playerOrder.length;j++)
+			System.out.println("array elements: " + this.playerOrder[j]);
+		System.out.println();
 	}
 	
 	/*

@@ -30,7 +30,7 @@ public class ArrowPile {
     }
     
     //for ai 
-    public void remove_arrow(Character selfPlayer, Character [] playerOrder){
+    public void remove_arrow(Character selfPlayer, Character [] playerOrder, AI ai){
         if (this.remaining > 0){
             this.remaining -= 1; //decrease pile
             selfPlayer.gain_arrow(); //player gets arrow
@@ -41,7 +41,8 @@ public class ArrowPile {
             	for (int i=0;i<playerOrder.length;i++) {
             		if (playerOrder[i]!=null) {
 	            		int numArrow = playerOrder[i].arrows;
-	            		playerOrder[i].lose_life(numArrow);
+	            		//playerOrder[i].lose_life(numArrow);
+	            		playerOrder[i].lose_life(numArrow,ai,ai.arrowPile);
 	            		playerOrder[i].arrows = 0;
             		}
             	}  

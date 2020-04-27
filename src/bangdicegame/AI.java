@@ -41,10 +41,10 @@ public class AI {
 	private final int subtractHealth = 5;
 	private final int thresholdHealth;  
 	private int position;
-	private final int totalPlayers;
+	private int totalPlayers;
 	private int playersAlive;
 	private int maxRolls = 3;
-	private int startedWith;
+	private final int startedWith;
 	
 	private ArrayList<Double> ProbabilityVector;
 	public Character [] playerOrder;
@@ -71,6 +71,7 @@ public class AI {
         this.willingToKeepShots = getProbability(0.5,1.0);
         
         this.startedWith = numPlayers;
+        this.totalPlayers = numPlayers;
         this.playerOrder = players;
         this.position = pos;
         this.currentPlayer = players[pos];
@@ -78,7 +79,7 @@ public class AI {
         this.health = players[pos].lifePoints;
         this.thresholdHealth = this.health - this.subtractHealth;
         this.name = players[pos].name;
-        this.totalPlayers = playersAlive();
+  //      this.totalPlayers = playersAlive();
         this.targetRole = new ArrayList<String>(); 
         this.arrowPile = arrowPile;
         this.remainingArrows = this.arrowPile.remaining;
@@ -559,13 +560,14 @@ public class AI {
 		int chance = r.nextInt(2); //0 or 1
 		if (chance == 1) {
 			int j = Math.floorMod(this.position+1, this.totalPlayers);
-			this.playerOrder[j].lifePoints--; //right
+		//	this.playerOrder[j].lifePoints--; //right
+			this.playerOrder[j].lose_life(this, this.arrowPile); 
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is one position"
 					+ " to the right." );
 		}
 		else {
 			int j = Math.floorMod(this.position-1, this.totalPlayers);
-			this.playerOrder[j].lifePoints--; //left
+			this.playerOrder[j].lose_life(this, this.arrowPile);  //left
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is one position"
 					+ " to the left." );
 		}
@@ -576,13 +578,13 @@ public class AI {
 		int chance = r.nextInt(2); //0 or 1
 		if (chance == 1) {
 			int j = Math.floorMod(this.position+2, this.totalPlayers);
-			this.playerOrder[j].lifePoints--; //right
+			this.playerOrder[j].lose_life(this, this.arrowPile); //right
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is two positions"
 					+ " to the right." );
 		}
 		else {
 			int j = Math.floorMod(this.position-2, this.totalPlayers);
-			this.playerOrder[j].lifePoints--; //left
+			this.playerOrder[j].lose_life(this, this.arrowPile); //left
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is two positions"
 					+ " to the left." );
 		}
@@ -593,7 +595,7 @@ public class AI {
 		int chance = r.nextInt(2); //0 or 1
 		if (chance == 1) {
 			int j = Math.floorMod(this.position+1, this.totalPlayers);
-			this.playerOrder[j].lifePoints--; //right
+			this.playerOrder[j].lose_life(this, this.arrowPile); //right
 			if (this.playerOrder[j].aiGuessRole=="Sheriff")
 				this.currentPlayer.numShotSheriff++;
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is one position"
@@ -601,7 +603,7 @@ public class AI {
 		}
 		else {
 			int j = Math.floorMod(this.position-1, this.totalPlayers);
-			this.playerOrder[j].lifePoints--; //left
+			this.playerOrder[j].lose_life(this, this.arrowPile);  //left
 			if (this.playerOrder[j].aiGuessRole=="Sheriff")
 				this.currentPlayer.numShotSheriff++;
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is one position"
@@ -614,13 +616,13 @@ public class AI {
 		int chance = r.nextInt(2); //0 or 1
 		if (chance == 1) {
 			int j = Math.floorMod(this.position+2, this.totalPlayers);
-			this.playerOrder[j].lifePoints--; //right
+			this.playerOrder[j].lose_life(this, this.arrowPile);  //right
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is two positions"
 					+ " to the right." );
 		}
 		else {
 			int j = Math.floorMod(this.position-2, this.totalPlayers);
-			this.playerOrder[j].lifePoints--; //left
+			this.playerOrder[j].lose_life(this, this.arrowPile); //left
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[j].name + " who is two positions"
 					+ " to the left." );
 		}
@@ -649,14 +651,14 @@ public class AI {
 		int toRight = Math.floorMod(this.position+2, this.totalPlayers);
 		
 		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)) {
-			this.playerOrder[toLeft].lifePoints--;
+			this.playerOrder[toLeft].lose_life(this, this.arrowPile); 
 			if (this.playerOrder[toLeft].aiGuessRole=="Sheriff")
 				this.currentPlayer.numShotSheriff++;
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toLeft].name + " who is two position"
 					+ " to the left." );
 		}
 		else if (this.targetRole.contains(this.playerOrder[toRight].aiGuessRole) ) {
-			this.playerOrder[toRight].lifePoints--;
+			this.playerOrder[toRight].lose_life(this, this.arrowPile); 
 			if (this.playerOrder[toRight].aiGuessRole=="Sheriff")
 				this.currentPlayer.numShotSheriff++;
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toRight].name + " who is two position"
@@ -671,14 +673,14 @@ public class AI {
 		int toRight = Math.floorMod(this.position+1, this.totalPlayers);
 		
 		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)) {
-			this.playerOrder[toLeft].lifePoints--;
+			this.playerOrder[toLeft].lose_life(this, this.arrowPile); 
 			if (this.playerOrder[toLeft].aiGuessRole=="Sheriff")
 				this.currentPlayer.numShotSheriff++;
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toLeft].name + " who is one position"
 					+ " to the left." );
 		}
 		else if (this.targetRole.contains(this.playerOrder[toRight].aiGuessRole) ) {
-			this.playerOrder[toRight].lifePoints--;
+			this.playerOrder[toRight].lose_life(this, this.arrowPile); 
 			if (this.playerOrder[toRight].aiGuessRole=="Sheriff")
 				this.currentPlayer.numShotSheriff++;
 			System.out.println(this.currentPlayer.name + " shot " + this.playerOrder[toRight].name + " who is one position"
@@ -692,7 +694,7 @@ public class AI {
 		if(numGatling>= 3) {
 			for(int i=0;i<this.totalPlayers;i++) {
 				if(i!=this.position)
-					this.playerOrder[i].lifePoints--;
+					this.playerOrder[i].lose_life(this, this.arrowPile); 
 				else {
 					this.arrowPile.remaining = this.arrowPile.remaining + this.playerOrder[i].arrows;
 					this.playerOrder[i].arrows=0;
@@ -713,7 +715,7 @@ public class AI {
 			//resolve all arrows
 			if (diceResults.get(i)=="A") {
                 System.out.println(this.name + " rolled an arrow. " + this.name + " must pick up an arrow before continuing.");
-                this.arrowPile.remove_arrow(this.currentPlayer, this.playerOrder);
+                this.arrowPile.remove_arrow(this.currentPlayer, this.playerOrder,this);
                 System.out.println(this.name + " has " + this.currentPlayer.arrows + " arrow(s).");
                 System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
 			}
@@ -732,7 +734,7 @@ public class AI {
 		//more than 3 dynamites
 		if (numDynamites>=3) {
 			System.out.println("Since, " + this.name + " rolled " + numDynamites + " dynamites. " + this.name + "'s turn is over.");
-			this.currentPlayer.lifePoints--;
+			this.currentPlayer.lose_life(this, this.arrowPile); 
 			for(int i=0;i<diceResults.size();i++) {
 				this.keptDice.add(diceResults.get(i));
 				if(diceResults.get(i)=="B") {
@@ -849,6 +851,31 @@ public class AI {
 		}
 		return total;
 	}
+	
+    public void eliminate_player(Character player, ArrowPile arrowPile){
+        int i;
+        while(player.arrows > 0){
+                arrowPile.add_arrow(player);
+            }    
+        for (i = 0; i < this.totalPlayers; i++){
+            if (this.playerOrder[i] == player){
+                for (i = i; i < this.totalPlayers - 1; i++){
+                    this.playerOrder[i] = this.get_next_player();
+                }
+            }
+        }
+        this.playerOrder[this.totalPlayers] = null;
+        this.totalPlayers -= 1;    
+    }
+    
+    public Character get_next_player (){
+        int temp;
+        temp = (this.position + 1)%this.totalPlayers;
+        if (temp < 0){
+            temp = this.totalPlayers + temp;
+        }
+        return this.playerOrder[temp];
+    }
 	
 	public void test() {
 		assignOpponents();

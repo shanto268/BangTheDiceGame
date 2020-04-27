@@ -198,21 +198,34 @@ public class Character {
     }
     
     //for ai
-    public void lose_life() {
+    public void lose_life(AI ai, ArrowPile arrowPile) {
     	this.lifePoints --;
+    	if (this.lifePoints < 1){
+            System.out.println(this.name + " has run out of life points and has lost the game.");
+            System.out.println("Their role was " + this.role);
+            ai.eliminate_player(this, arrowPile);
+        }
+    	
     }
     
     //for ai
-    public void lose_life(int numArrows) {
+    public void lose_life(int numArrows, AI ai, ArrowPile arrowPile) {
     	this.lifePoints = this.lifePoints - numArrows;
+    	if (this.lifePoints < 1){
+            System.out.println(this.name + " has run out of life points and has lost the game.");
+            System.out.println("Their role was " + this.role);
+            ai.eliminate_player(this, arrowPile);
+        }
     }
+    
+    
     
     public void lose_life(GameFunctions playerOrder, ArrowPile arrowPile, Boolean arrowOrDynamite){
         String choice;
         
         Scanner input = new Scanner(System.in);
         
-        if ("Bart Cassidy".equals(this.name) && !arrowOrDynamite){
+        if ("Bart Cassidy".equals(this.name) && !arrowOrDynamite && !this.isAi){
             if (arrowPile.remaining > 1){
                 System.out.print("Bart Cassidy, would you like to lose a 'life point' or take an 'arrow'? : ");
                 choice = input.nextLine();
