@@ -344,15 +344,12 @@ public class GameFunctions {
         
             for (i = 0; i < playerOrder.numOfPlayers; i++){
                 if ("Sheriff".equals(playerOrder.playerOrder[i].role)){
-                    System.out.println("A Sheriff is alive, which is: " + playerOrder.playerOrder[i].name + " line 342: GameFunctions");
                     sheriffAlive += 1;
                }
                 else if ("Outlaw".equals(playerOrder.playerOrder[i].role)){
-                    System.out.println("An outlaw is alive, which is: " + playerOrder.playerOrder[i].name + " line 342: GameFunctions");
                     outlawAlive += 1;
                 }
                 else if ("Renegade".equals(playerOrder.playerOrder[i].role)){
-                    System.out.println("A renegade is alive, which is: " + playerOrder.playerOrder[i].name + " line 342: GameFunctions");
                     renegadeAlive += 1;
                 }
             }
