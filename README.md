@@ -91,5 +91,5 @@ To resolve the die, the AI employs the following algorithm.
 ![UMLcrc](https://github.com/shanto268/Bang-/blob/master/crc0.png)
 
 ## GUI Plan
-![UMLgui](https://github.com/shanto268/Bang-/blob/master/gui.png)
+![UMLgui](gui.png)
 
