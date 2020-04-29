@@ -81,6 +81,7 @@ To resolve the die, the AI employs the following algorithm.
 
 ## UML Use Case Diagrams
 ![UMLUSD](use_case.png)
+
 ## UML Class Diagrams
 ![UMLUSD](class.png)
 ![UMLUSD1](class1.png)
