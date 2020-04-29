@@ -77,6 +77,8 @@ To resolve the die, the AI employs the following algorithm.
 ## Active Issues
 - [ ] Player turn not ending even when the player is dead in that round.
 
+# Documentation
+
 ## UML Use Case Diagrams
 ![UMLUSD](https://github.com/shanto268/Bang-/blob/master/use_case.png)
 ## UML Class Diagrams
