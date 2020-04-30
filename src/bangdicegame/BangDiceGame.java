@@ -26,15 +26,15 @@ public class BangDiceGame {
      */
     
     public static void main(String[] args) {
-        
-        int [] randomSelection = {1, 2, 3, 4, 5, 6, 7, 8, 9 ,10, 11, 12, 13, 14, 15, 16};
+        int [] randomSelection = {1, 2, 3, 4, 5, 6, 7, 8, 9 ,10, 11, 12, 13, 14};
         int aiPlayers;
         int totalPlayers;
+        char tempExpansions;
+        boolean expansions;
         Character [] players = new Character [8];
         String [] roles;
-        Dice [] allDice = new Dice [5];
+        Dice [] allDice = new Dice [6];
         ArrowPile arrowPile = new ArrowPile();
-        boolean realPlayerDead;
         
         
         randomSelection = Character.shuffle_character(randomSelection);
@@ -42,12 +42,28 @@ public class BangDiceGame {
         Scanner input = new Scanner(System.in);
         
         //Gets how many AI players there are
-        System.out.print("How many AI players would you like to play with? (2-7): ");
+        System.out.print("How many AI players would you like to play with? (3-7): ");
         aiPlayers = input.nextInt();
         
-        while (aiPlayers < 2 || aiPlayers > 7){
-            System.out.print("Invalid input. Enter a number 2-7: ");
+        while (aiPlayers < 3 || aiPlayers > 7){
+            System.out.print("Invalid input. Enter a number 3-7: ");
             aiPlayers = input.nextInt();
+        }
+        
+        input.nextLine();
+        System.out.print("Would you like to play with the expansion packs? (Yes or No): ");
+        tempExpansions = input.nextLine().charAt(0);
+        
+        while (tempExpansions != 'y' && tempExpansions != 'Y' && tempExpansions != 'n' && tempExpansions != 'N'){
+            System.out.print("Invalid input. Enter a number 3-7: ");
+            aiPlayers = input.nextInt();
+        }
+        
+        if (tempExpansions != 'y' && tempExpansions != 'Y'){
+            expansions = true;
+        }
+        else {
+            expansions = false;
         }
         
         totalPlayers = aiPlayers + 1;
@@ -80,17 +96,17 @@ public class BangDiceGame {
               
         i = 0;
         //Creating Dice
-        while (i < 5){
+        while (i < 6){
             allDice[i] = new Dice();
             i++;
         }
                 
         
         //
-        //START OF GAME
+        //  START OF GAME
         //
-      //  Table table = new Table(players, totalPlayers);
-        GameFunctions Game = new GameFunctions (players, totalPlayers);
+        //  Table table = new Table(players, totalPlayers);
+        GameFunctions Game = new GameFunctions (players, totalPlayers, expansions);
         i = 0;
                 
         
@@ -107,6 +123,11 @@ public class BangDiceGame {
         while(!Game.game_over) {
             System.out.println();
             
+            while (i < 6){
+                allDice[i] = new Dice();
+                i++;
+            } 
+            
             //Prints players current turn
             System.out.println("It is currently " + Game.get_current_player().name + "'s turn\n");
             
@@ -117,7 +138,6 @@ public class BangDiceGame {
             else{
                 int j;
                 i = 0;
-                System.out.println("Attempted AI Turn");
                 for (j = 0; j < Game.numOfPlayers; j++){
                     if (!players[j].name.equals(Game.get_current_player().name)){
                         i++;
@@ -137,11 +157,10 @@ public class BangDiceGame {
             //Goes to next player
             Game.next_turn();
             
-            input.nextLine();
             System.out.println("\n*** Press enter to progress to the next turn. ***");
             input.nextLine();
             
             System.out.println("\n--------------------------------------------------\n");
-            }
         }
+    }
 }

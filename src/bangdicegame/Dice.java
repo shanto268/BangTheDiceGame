@@ -14,22 +14,38 @@ import java.util.Scanner;
  */
 public class Dice {
     public String roll;
+    public String type;
     
     public Dice (){
         this.roll = "";
+        this.type = "none";
     }
     
     public void roll_dice(){
         String [] faces = {"Arrow", "Dynamite", "Bull's Eye 1", "Bull's Eye 2", "Beer", "Gatling"};
+        String [] loudmouth = {"Dynamite", "Bullet", "Double Bull's Eye 1", "Double Bull's Eye 2", "Arrow", "Double Gatling"};
+        String [] coward = {"Dynamite", "Double Beer", "Broken Arrow", "Bull's Eye 1", "Arrow", "Beer"};
+        String [] duel = {"Dynamite", "Whiskey", "Fight", "Gatling", "Arrow", "Fight"};
         Random rand = new Random();
         int temp;
-        
+       
         temp = rand.nextInt(6);
         
-        this.roll = faces[temp];
+        if ("none".equals(this.type)){
+            this.roll = faces[temp];
+        }
+        else if ("loudmouth".equals(this.type)){
+            this.roll = loudmouth[temp];
+        }
+        else if ("coward".equals(this.type)){
+            this.roll = coward[temp];
+        }
+        else {
+            this.roll = duel[temp];
+        }
     }
     
-    public static int reroll_dice(Dice [] allDice, int rollsRemaining, ArrowPile arrowPile, GameFunctions playerOrder){
+    public static int reroll_dice(Dice [] allDice, int rollsRemaining, ArrowPile arrowPile, GameFunctions playerOrder, int totalDice){
         char rerollSelection;
         String diceToReroll;
         
@@ -59,6 +75,13 @@ public class Dice {
                         System.out.println("You must pick up an arrow before continuing.");
                         Dice.arrow_roll(playerOrder.get_current_player(), arrowPile, playerOrder);
                     }
+                    if ("Broken Arrow".equals(allDice[0].roll)){
+                        Dice.broken_arrow_roll(playerOrder, arrowPile);
+                    }
+                    if ("Bullet".equals(allDice[0].roll)){
+                        System.out.println("You rolled a bullet and have immediately taken 1 damage.");
+                        playerOrder.get_current_player().lose_life();
+                    }
                 }
                 else{
                     System.out.println("You are not allowed to reroll dice " + 1 + ".");
@@ -70,6 +93,13 @@ public class Dice {
                     if ("Arrow".equals(allDice[1].roll)){
                         System.out.println("You must pick up an arrow before continuing.");
                         Dice.arrow_roll(playerOrder.get_current_player(), arrowPile, playerOrder);
+                    }
+                    if ("Broken Arrow".equals(allDice[1].roll)){
+                        Dice.broken_arrow_roll(playerOrder, arrowPile);
+                    }
+                    if ("Bullet".equals(allDice[1].roll)){
+                        System.out.println("You rolled a bullet and have immediately taken 1 damage.");
+                        playerOrder.get_current_player().lose_life();
                     }
                 }
                 else{
@@ -83,6 +113,13 @@ public class Dice {
                         System.out.println("You must pick up an arrow before continuing.");
                         Dice.arrow_roll(playerOrder.get_current_player(), arrowPile, playerOrder);
                     }
+                    if ("Broken Arrow".equals(allDice[2].roll)){
+                        Dice.broken_arrow_roll(playerOrder, arrowPile);
+                    }
+                    if ("Bullet".equals(allDice[2].roll)){
+                        System.out.println("You rolled a bullet and have immediately taken 1 damage.");
+                        playerOrder.get_current_player().lose_life();
+                    }
                 }
                 else{
                     System.out.println("You are not allowed to reroll dice " + 3 + ".");
@@ -94,6 +131,13 @@ public class Dice {
                     if ("Arrow".equals(allDice[3].roll)){
                         System.out.println("You must pick up an arrow before continuing.");
                         Dice.arrow_roll(playerOrder.get_current_player(), arrowPile, playerOrder);
+                    }
+                    if ("Broken Arrow".equals(allDice[3].roll)){
+                        Dice.broken_arrow_roll(playerOrder, arrowPile);
+                    }
+                    if ("Bullet".equals(allDice[3].roll)){
+                        System.out.println("You rolled a bullet and have immediately taken 1 damage.");
+                        playerOrder.get_current_player().lose_life();
                     }
                 }
                 else{
@@ -107,9 +151,35 @@ public class Dice {
                         System.out.println("You must pick up an arrow before continuing.");
                         Dice.arrow_roll(playerOrder.get_current_player(), arrowPile, playerOrder);
                     }
+                    if ("Broken Arrow".equals(allDice[4].roll)){
+                        Dice.broken_arrow_roll(playerOrder, arrowPile);
+                    }
+                    if ("Bullet".equals(allDice[4].roll)){
+                        System.out.println("You rolled a bullet and have immediately taken 1 damage.");
+                        playerOrder.get_current_player().lose_life();
+                    }
                 }
                 else{
                     System.out.println("You are not allowed to reroll dice " + 5 + ".");
+                }
+            }
+            if (diceToReroll.contains("6") && totalDice == 6){
+                if (!"Dynamite".equals(allDice[5].roll) || "Black Jack".equals(playerOrder.get_current_player().name)){
+                    allDice[4].roll_dice();
+                    if ("Arrow".equals(allDice[5].roll)){
+                        System.out.println("You must pick up an arrow before continuing.");
+                        Dice.arrow_roll(playerOrder.get_current_player(), arrowPile, playerOrder);
+                    }
+                    if ("Broken Arrow".equals(allDice[5].roll)){
+                        Dice.broken_arrow_roll(playerOrder, arrowPile);
+                    }
+                    if ("Bullet".equals(allDice[5].roll)){
+                        System.out.println("You rolled a bullet and have immediately taken 1 damage.");
+                        playerOrder.get_current_player().lose_life();
+                    }
+                }
+                else{
+                    System.out.println("You are not allowed to reroll dice " + 6 + ".");
                 }
             }
             
@@ -147,7 +217,7 @@ public class Dice {
         }
     }
     
-    public static void bullsEye1_roll (GameFunctions playerOrder, ArrowPile arrowPile, Boolean doubleDamage){
+    public static void bullsEye1_roll (GameFunctions playerOrder, ArrowPile arrowPile){
         Character nextPlayer = playerOrder.get_next_player();
         Character previousPlayer = playerOrder.get_previous_player();
         String enteredPlayer;
@@ -159,24 +229,10 @@ public class Dice {
             System.out.println("You shot " + nextPlayer.name + ".");
             nextPlayer.lose_life(playerOrder, arrowPile, false);
             
-            if (doubleDamage){
-                nextPlayer.lose_life(playerOrder, arrowPile, false);
-            }
-            
             if ("El Gringo".equals(nextPlayer.name)){
                 arrowPile.remove_arrow(playerOrder);
                 System.out.println(playerOrder.get_current_player().name + " made El Gringo lose a life point, so they have taken an arrow.");
             }
-        }
-        
-        else if ("Calamity Janet".equals(playerOrder.get_current_player().name)){
-            Dice.calamity_rose1_roll(playerOrder, arrowPile);
-            enteredPlayer = "";
-        }
-        
-        else if ("Rose Doolan".equals(playerOrder.get_current_player().name)){
-            Dice.calamity_rose1_roll(playerOrder, arrowPile);
-            enteredPlayer = "";
         }
         
         else {
@@ -195,10 +251,6 @@ public class Dice {
                 if ("Sheriff".equals(nextPlayer.role)){
                     playerOrder.get_current_player().numShotSheriff+= 1;
                 }
-                
-                if (doubleDamage){
-                    nextPlayer.lose_life(playerOrder, arrowPile, false);
-                }
             }
             else if (enteredPlayer.equals(previousPlayer.name)){
                 previousPlayer.lose_life(playerOrder, arrowPile, false);
@@ -206,10 +258,6 @@ public class Dice {
                 //NEW CODE
                 if ("Sheriff".equals(previousPlayer.role)){
                     playerOrder.get_current_player().numShotSheriff += 1;
-                }
-                
-                if (doubleDamage){
-                    previousPlayer.lose_life(playerOrder, arrowPile, false);
                 }
             }
             
@@ -221,7 +269,7 @@ public class Dice {
         }
     }
     
-    public static void bullsEye2_roll (GameFunctions playerOrder, ArrowPile arrowPile, Boolean doubleDamage){
+    public static void bullsEye2_roll (GameFunctions playerOrder, ArrowPile arrowPile){
         Character nextPlayer = playerOrder.get_two_away_player(playerOrder.get_current_player());
         Character previousPlayer = playerOrder.get_two_before_player(playerOrder.get_current_player());
         String enteredPlayer;
@@ -232,25 +280,11 @@ public class Dice {
             enteredPlayer = "";
             System.out.println("You shot " + nextPlayer.name + ".");
             nextPlayer.lose_life(playerOrder, arrowPile, false);
-            
-            if (doubleDamage){
-                    nextPlayer.lose_life(playerOrder, arrowPile, false);
-                }
-            
+
             if ("El Gringo".equals(nextPlayer.name)){
                 arrowPile.remove_arrow(playerOrder);
                 System.out.println(playerOrder.get_current_player().name + " made El Gringo lose a life point, so they have taken an arrow.");
             }
-        }
-        
-        else if ("Calamity Janet".equals(playerOrder.get_current_player().name)){
-            Dice.calamity_rose1_roll(playerOrder, arrowPile);
-            enteredPlayer = "";
-        }
-        
-        else if ("Rose Doolan".equals(playerOrder.get_current_player().name)){
-            Dice.rose_roll_2(playerOrder, arrowPile);
-            enteredPlayer = "";
         }
         
         else {
@@ -270,10 +304,6 @@ public class Dice {
                 if ("Sheriff".equals(nextPlayer.role)){
                     playerOrder.get_current_player().numShotSheriff += 1;
                 }
-                
-                if (doubleDamage){
-                    nextPlayer.lose_life(playerOrder, arrowPile, false);
-                }
             }
             else if (enteredPlayer.equals(previousPlayer.name)){
                 previousPlayer.lose_life(playerOrder, arrowPile, false);
@@ -282,10 +312,6 @@ public class Dice {
                 if ("Sheriff".equals(previousPlayer.role)){
                     playerOrder.get_current_player().numShotSheriff += 1;
                 }
-                
-                if (doubleDamage){
-                    previousPlayer.lose_life(playerOrder, arrowPile, false);
-                }
             }
         }
         
@@ -294,118 +320,7 @@ public class Dice {
             System.out.println(playerOrder.get_current_player().name + " made El Gringo lose a life point, so they have taken an arrow.");
         }
     }
-    
-    public static void calamity_rose1_roll (GameFunctions playerOrder, ArrowPile arrowPile){
-        Character nextPlayer = playerOrder.get_next_player();
-        Character previousPlayer = playerOrder.get_previous_player();
-        Character next2Player = playerOrder.get_two_away_player(playerOrder.get_current_player());
-        Character previous2Player = playerOrder.get_two_before_player(playerOrder.get_current_player());
-        String enteredPlayer;
         
-        Scanner input = new Scanner(System.in);
-            
-        if (playerOrder.numOfPlayers >= 5){
-            System.out.print("Would you like to shoot " + nextPlayer.name + ", " + previousPlayer.name + ", " + next2Player.name + ", or " + previous2Player.name + "? : ");
-            enteredPlayer = input.nextLine();
-            
-            while (!enteredPlayer.equals(nextPlayer.name) && !enteredPlayer.equals(previousPlayer.name) && !enteredPlayer.equals(next2Player.name) && !enteredPlayer.equals(previous2Player.name)){
-                System.out.print("Invalid input. Please enter one of the player names: ");
-                enteredPlayer = input.nextLine();
-            }
-        }
-        else if (playerOrder.numOfPlayers >= 4){
-            System.out.print("Would you like to shoot " + nextPlayer.name + ", " + previousPlayer.name + ", or " + previous2Player.name + "? : ");
-            enteredPlayer = input.nextLine();
-           
-            while (!enteredPlayer.equals(nextPlayer.name) && !enteredPlayer.equals(previousPlayer.name) && !enteredPlayer.equals(previous2Player.name)){
-                System.out.print("Invalid input. Please enter one of the player names: ");
-                enteredPlayer = input.nextLine();
-            }
-        }
-        else {
-            System.out.print("Would you like to shoot " + nextPlayer.name + " or " + previousPlayer.name + "? : ");
-            enteredPlayer = input.nextLine();
-          
-            while (!enteredPlayer.equals(nextPlayer.name) && !enteredPlayer.equals(previousPlayer.name)){
-                System.out.print("Invalid input. Please enter one of the player names: ");
-                    enteredPlayer = input.nextLine();
-            } 
-        }     
-            
-        if (enteredPlayer.equals(nextPlayer.name)){
-            nextPlayer.lose_life(playerOrder, arrowPile, false);
-        }
-        else if (enteredPlayer.equals(previousPlayer.name)){
-            previousPlayer.lose_life(playerOrder, arrowPile, false);
-        } 
-        else if (enteredPlayer.equals(next2Player.name)){
-            next2Player.lose_life(playerOrder, arrowPile, false);
-        }
-        else if (enteredPlayer.equals(previous2Player.name)){
-            previous2Player.lose_life(playerOrder, arrowPile, false);
-        }
-        
-        if ("El Gringo".equals(enteredPlayer)){
-            arrowPile.remove_arrow(playerOrder);
-            System.out.println(playerOrder.get_current_player().name + " made El Gringo lose a life point, so they have taken an arrow.");
-        }
-    }
-    
-    public static void rose_roll_2 (GameFunctions playerOrder, ArrowPile arrowPile){
-        Character nextPlayer = playerOrder.get_two_away_player(playerOrder.get_current_player());
-        Character previousPlayer = playerOrder.get_two_before_player(playerOrder.get_current_player());
-        Character next2Player = playerOrder.get_two_away_player(playerOrder.get_next_player());
-        Character previous2Player = playerOrder.get_two_before_player(playerOrder.get_previous_player());
-        String enteredPlayer;
-        
-        Scanner input = new Scanner(System.in);
-        
-        if (playerOrder.numOfPlayers >= 7){
-            System.out.print("Would you like to shoot " + nextPlayer.name + ", " + previousPlayer.name + ", " + next2Player.name + ", or " + previous2Player.name + "? : ");
-            enteredPlayer = input.nextLine();
-            
-            while (!enteredPlayer.equals(nextPlayer.name) && !enteredPlayer.equals(previousPlayer.name) && !enteredPlayer.equals(next2Player.name) && !enteredPlayer.equals(previous2Player.name)){
-                System.out.print("Invalid input. Please enter one of the player names: ");
-                enteredPlayer = input.nextLine();
-            }
-        }
-        else if (playerOrder.numOfPlayers >= 6){
-            System.out.print("Would you like to shoot " + nextPlayer.name + ", " + previousPlayer.name + ", or " + previous2Player.name + "? : ");
-            enteredPlayer = input.nextLine();
-           
-            while (!enteredPlayer.equals(nextPlayer.name) && !enteredPlayer.equals(previousPlayer.name) && !enteredPlayer.equals(previous2Player.name)){
-                System.out.print("Invalid input. Please enter one of the player names: ");
-                enteredPlayer = input.nextLine();
-            }
-        }
-        else {
-            System.out.print("Would you like to shoot " + nextPlayer.name + " or " + previousPlayer.name + "? : ");
-            enteredPlayer = input.nextLine();
-          
-            while (!enteredPlayer.equals(nextPlayer.name) && !enteredPlayer.equals(previousPlayer.name)){
-                System.out.print("Invalid input. Please enter one of the player names: ");
-                    enteredPlayer = input.nextLine();
-            } 
-        }     
-            
-        if (enteredPlayer.equals(nextPlayer.name)){
-            nextPlayer.lose_life(playerOrder, arrowPile, false);
-        }
-        else if (enteredPlayer.equals(previousPlayer.name)){
-            previousPlayer.lose_life(playerOrder, arrowPile, false);
-        } 
-        else if (enteredPlayer.equals(next2Player.name)){
-            next2Player.lose_life(playerOrder, arrowPile, false);
-        }
-        else if (enteredPlayer.equals(previous2Player.name)){
-            previous2Player.lose_life(playerOrder, arrowPile, false);
-        }
-        
-        if ("El Gringo".equals(enteredPlayer)){
-            arrowPile.remove_arrow(playerOrder);
-            System.out.println(playerOrder.get_current_player().name + " made El Gringo lose a life point, so they have taken an arrow.");
-        }
-    }    
     
     public static void beer_roll (GameFunctions playerOrder){
         String enteredCharacter;
@@ -441,68 +356,11 @@ public class Dice {
     
     public static void gatling_roll (Dice [] dice, Character player, GameFunctions playerOrder, ArrowPile arrowPile){
         int count = 0;
-        int tempCount = 0;
         int i;
-        Scanner input = new Scanner(System.in);
-        String enteredPlayer;
-        Boolean removedArrow = false;
         
         for (i = 0; i < 5; i ++){
             if ("Gatling".equals(dice[i].roll)){
                 count += 1;
-                tempCount += 1;
-            }
-        }
-        
-        if ("Kit Carlson".equals(player.name)){
-            int playersWithArrows = 0;
-            
-            for (i = 0; i < playerOrder.numOfPlayers; i++){
-                if (playerOrder.playerOrder[i].arrows > 0){
-                    playersWithArrows += 1;
-                }
-            }
-            
-            while (tempCount > 0 && playersWithArrows > 0){
-                System.out.print("Kit Carlson, you rolled a gatling, which player would you like to remove an arrow from? (You may enter your own name): ");
-                enteredPlayer = input.nextLine();
-                
-                while (!removedArrow){
-                    for (i = 0; i < playerOrder.numOfPlayers; i ++){
-                        if (enteredPlayer.equals(playerOrder.playerOrder[i].name)){
-                            if (playerOrder.playerOrder[i].arrows > 0){
-                               playerOrder.playerOrder[i].lose_arrow();
-                               removedArrow = true;
-                               tempCount -= 1;
-                            }
-                            else{
-                                System.out.print("Entered character does not have any arrows to remove");
-                                removedArrow = true;
-                            }
-                        }
-                    }
-                    if (!removedArrow){
-                        System.out.print("Could not find character name. Please try again: ");
-                        enteredPlayer = input.nextLine();
-                    }
-                }
-                
-                playersWithArrows = 0;
-                
-                
-                
-                for (i = 0; i < playerOrder.numOfPlayers; i++){
-                    if (playerOrder.playerOrder[i].arrows> 0){
-                        playersWithArrows += 1;
-                    }
-                }
-                removedArrow = false;
-            }
-        }
-        
-        if ("Willy the Kid".equals(playerOrder.get_current_player().name)){
-            if (count == 2){
-                count = 3;
             }
         }
         
@@ -539,4 +397,82 @@ public class Dice {
             }
         }
     }
+    
+    public static void broken_arrow_roll (GameFunctions playerOrder, ArrowPile arrowPile){
+        String enteredCharacter;
+        Boolean removedArrow = false;
+        int i;
+        
+        Scanner input = new Scanner(System.in);
+        
+        System.out.print("You rolled a broken arrow. Enter the name of the character you want to remove an arrow from (You may enter your own name): ");
+        enteredCharacter = input.nextLine();
+        
+        while (!removedArrow){
+            for (i = 0; i < playerOrder.numOfPlayers; i ++){
+                if (enteredCharacter.equals(playerOrder.playerOrder[i].name)){
+                    if (playerOrder.playerOrder[i].arrows > 0){
+                        arrowPile.add_arrow(playerOrder.playerOrder[i]);
+                        System.out.println(enteredCharacter + " returned 1 arrow to the pile.");
+                    }
+                    else{
+                        System.out.println(enteredCharacter + " did not have any arrows to return to the pile.");
+                    }
+                    removedArrow = true;
+                }
+            }
+            if (!removedArrow){
+                System.out.print("Could not find character name. Please try again: ");
+                enteredCharacter = input.nextLine();
+            }
+        }
+    }
+    
+    public static void fight_roll (GameFunctions playerOrder){
+        Scanner input = new Scanner(System.in);
+        String otherPlayer;
+        Boolean completedDuel;
+        Boolean rolledFight;
+        int i;
+        
+        Dice dice = new Dice();
+        dice.type = "duel";
+        
+        completedDuel = false;
+        rolledFight = false;
+        
+        System.out.println("Who would you like to challenge to a duel? (Enter player name): ");
+        otherPlayer = input.nextLine();
+        
+        while (!completedDuel){
+            for (i = 0; i < playerOrder.numOfPlayers; i++){
+                if (otherPlayer.equals(playerOrder.playerOrder[i].name) && !otherPlayer.equals(playerOrder.get_current_player().name)){
+                    while (!rolledFight){
+                        dice.roll_dice();
+                        System.out.println(otherPlayer + " rolled their dice and rolled a " + dice.roll);
+                        if ("Fight".equals(dice.roll)){
+                            System.out.println(otherPlayer + " won the duel, and " + playerOrder.get_current_player().name + " lost a life point.");
+                            playerOrder.get_current_player().lose_life();
+                            rolledFight = true;
+                        }
+                        else{
+                            dice.roll_dice();
+                            System.out.println(playerOrder.get_current_player().name + " rolled their dice and rolled a " + dice.roll);
+                            if ("Fight".equals(dice.roll)){
+                                System.out.println(playerOrder.get_current_player().name + " won the duel, and " + otherPlayer + " lost a life point.");
+                                playerOrder.playerOrder[i].lose_life();
+                                rolledFight = true;
+                            }
+                        }
+                    }
+                    completedDuel = true;
+                }
+            }
+            if (!completedDuel){
+                System.out.print("Could not find character name. Please try again: ");
+                otherPlayer = input.nextLine();
+            }
+        }
+    }
 }
+

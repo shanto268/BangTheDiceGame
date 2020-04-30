@@ -20,13 +20,15 @@ import java.util.Scanner;
 public class Character {
     public int lifePoints, arrows, maxLife, numShotSheriff, numHelpSheriff;
     public String name, role, aiGuessRole;
-    public boolean isAi;
+    public boolean isAi, cheifArrow, isDead;
     public ArrayList<Double> ProbabilityVector;
     
     public Character(int selection, boolean isAI){
         this.arrows = 0;
         this.role = "";
         this.isAi = isAI;
+        this.cheifArrow = false;
+        this.isAi = false;
         this.numShotSheriff = 0;
         this.numHelpSheriff = 0;
         this.ProbabilityVector =  new ArrayList<Double>();
@@ -44,74 +46,61 @@ public class Character {
                 this.maxLife = 8;
                 return;
             case 3:
-                this.name = "Calamity Janet";
-                this.lifePoints = 8;
-                this.maxLife = 8;
-                return;
-            case 4:
                 this.name = "El Gringo";
                 this.lifePoints = 7;
                 this.maxLife = 7;
                 return;
-            case 5:
+            case 4:
                 this.name = "Jesse Jones";
                 this.lifePoints = 9;
                 this.maxLife = 9;
                 return;
-            case 6:
+            case 5:
                 this.name = "Jourdonnais";
                 this.lifePoints = 7;
                 this.maxLife = 7;
                 return;
-            case 7:
-                this.name = "Kit Carlson";
-                this.lifePoints = 7;
-                this.maxLife = 7;
-                return;
-            case 8:
+            case 6:
                 this.name = "Lucky Duke";
                 this.lifePoints = 8;
                 this.maxLife = 8;
                 return;
-            case 9:
+            case 7:
                 this.name = "Paul Regret";
                 this.lifePoints = 9;
                 this.maxLife = 9;
                 return;
-            case 10:
+            case 8:
                 this.name = "Pedro Ramirez";
                 this.lifePoints = 8;
                 this.maxLife = 8;
                 return;
-            case 11:
-                this.name = "Rose Doolan";
-                this.lifePoints = 9;
-                this.maxLife = 9;
-                return;
-            case 12:
-                this.name = "Sid Ketchum";
-                this.lifePoints = 8;
-                this.maxLife = 8;
-                return;
-            case 13:
-                this.name = "Slab the Killer";
-                this.lifePoints = 8;
-                this.maxLife = 8;
-                return;
-            case 14:
+            case 9:
                 this.name = "Suzy Lafayette";
                 this.lifePoints = 8;
                 this.maxLife = 8;
                 return;
-            case 15:
+            case 10:
                 this.name = "Vulture Sam";
                 this.lifePoints = 9;
                 this.maxLife = 9;
                 return;
-            case 16:
-                this.name = "Willy the Kid";
+            case 11:
+                this.name = "Jose Delgado";
+                this.lifePoints = 7;
+                this.maxLife = 7;
+            case 12:
+                this.name = "Tequila Joe";
+                this.lifePoints = 7;
+                this.maxLife = 7;
+            case 13:
+                this.name = "Belle Star";
                 this.lifePoints = 8;
                 this.maxLife = 8;
+            case 14:
+                this.name = "Greg Digger";
+                this.lifePoints = 7;
+                this.maxLife = 7;
        }
     }
     
@@ -122,8 +111,8 @@ public class Character {
     public static int [] shuffle_character (int [] randomSelection){
         Random rand = new Random();
         int random;
-        for (int i = 0; i < 16; i++){
-            random = rand.nextInt(16);
+        for (int i = 0; i < 14; i++){
+            random = rand.nextInt(14);
             int temp1 = randomSelection[random];
             int temp2 = randomSelection [i];
             randomSelection[i] = temp1;
@@ -148,10 +137,6 @@ public class Character {
     
     public static String [] select_role (int num){
         switch (num){
-            case 2:
-                String roles2 [] = {"Deputy", "Renegade", "Outlaw"};
-                roles2 = Character.shuffle_roles(roles2, num);
-                return roles2;
             case 3:
                 String roles3 [] = {"Sheriff", "Renegade", "Outlaw", "Outlaw"};
                 roles3 = Character.shuffle_roles(roles3, num);
