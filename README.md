@@ -74,17 +74,23 @@ To resolve the die, the AI employs the following algorithm.
 - [ ] Addition of extenstion pack
 - [ ] Project Video/Presentation 
 
+## Active Issues
+- [ ] Player turn not ending even when the player is dead in that round.
+
+# Documentation
+
 ## UML Use Case Diagrams
-![UMLUSD](https://github.com/shanto268/Bang-/blob/master/use_case.png)
+![UMLUSD](use_case.png)
+
 ## UML Class Diagrams
-![UMLUSD](https://github.com/shanto268/Bang-/blob/master/class.png)
-![UMLUSD1](https://github.com/shanto268/Bang-/blob/master/class1.png)
-![UMLUSD2](https://github.com/shanto268/Bang-/blob/master/class2.png)
+![UMLUSD](class.png)
+![UMLUSD1](class1.png)
+![UMLUSD2](class2.png)
 
 ## CRC Cards
-![UMLcc](https://github.com/shanto268/Bang-/blob/master/crc.png)
-![UMLcrc](https://github.com/shanto268/Bang-/blob/master/crc0.png)
+![UMLcc](crc.png)
+![UMLcrc](crc0.png)
 
 ## GUI Plan
-![UMLgui](https://github.com/shanto268/Bang-/blob/master/gui.png)
+![UMLgui](gui.png)
 
