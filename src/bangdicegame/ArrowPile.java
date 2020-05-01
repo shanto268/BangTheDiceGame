@@ -19,12 +19,12 @@ public class ArrowPile {
         this.chiefArrow = 1;
     }
     
-    public void remove_arrow (GameFunctions playerOrder){
+    public void remove_arrow (GameFunctions game){
         Scanner input = new Scanner(System.in);
         char decision = 'n';
         
         if (this.remaining > 0){
-            if (this.chiefArrow == 1 && playerOrder.expansions && !playerOrder.get_current_player().isAi){
+            if (this.chiefArrow == 1 && game.expansions && !game.get_current_player().isAi){
                 System.out.print("Would you like to draw the chief's arrow? (Y/N): ");
                 decision = input.nextLine().charAt(0);
                 
@@ -35,17 +35,18 @@ public class ArrowPile {
             }
             
             if (decision == 'y' || decision == 'Y'){
-                System.out.println("You have taken the cheif's arrow.");
-                playerOrder.get_current_player().arrows += 2;
-                playerOrder.get_current_player().cheifArrow = true;
+                System.out.println("You have taken the chief's arrow.");
+                game.get_current_player().gain_arrow();
+                game.get_current_player().gain_arrow();
+                game.get_current_player().cheifArrow = true;
                 this.chiefArrow = 0;
             }
             
             else{
                 this.remaining -= 1;
-                playerOrder.get_current_player().gain_arrow();
+                game.get_current_player().gain_arrow();
                 if (this.pileIsEmpty()){
-                    this.empty_pile(playerOrder, playerOrder.numOfPlayers);
+                    this.empty_pile(game, game.numOfPlayers);
                 }
             }
         }
@@ -54,6 +55,7 @@ public class ArrowPile {
         }
     }
     
+    /*
     //for ai 
     public void remove_arrow(Character selfPlayer, Character [] playerOrder){
         if (this.remaining > 0){
@@ -76,6 +78,7 @@ public class ArrowPile {
             System.out.println("Remove_arrow Error, no arrows remaining");
         }
     }
+    */
     
     public void add_arrow (Character player){
         this.remaining += 1;
@@ -91,7 +94,7 @@ public class ArrowPile {
         }
     }
     
-    public void empty_pile (GameFunctions players, int totalPlayers){
+    public void empty_pile (GameFunctions game, int totalPlayers){
         int i;
         int playersDead;
         int mostArrowsPosition;
@@ -104,40 +107,42 @@ public class ArrowPile {
         System.out.println("\nThe last arrow was drawn and the indians attacked.\n");
         
         
-        for (i = 0; i < totalPlayers; i++){
-            if (players.playerOrder[i].arrows > players.playerOrder[i].lifePoints){
+        for (i = 0; i < game.numOfPlayers; i++){
+            if (game.playerOrder[i].arrows >= game.playerOrder[i].lifePoints && !game.playerOrder[i].isDead){
                 playersDead++;
             }
-            if (players.playerOrder[i].arrows > mostArrows){
+            if (game.playerOrder[i].arrows > mostArrows){
                 mostArrowsPosition = i;
-                mostArrows = players.playerOrder[i].arrows;
+                mostArrows = game.playerOrder[i].arrows;
             }
         }
         
-        if (playersDead >= players.numOfPlayers){
-            players.game_over = true;
+        if (playersDead >= game.numOfPlayers){
+            game.game_over = true;
             System.out.println("All players are dead, so the outlaws win.");
         }
         
-        if (players.playerOrder[mostArrowsPosition].cheifArrow == true){
-            System.out.println(players.playerOrder[mostArrowsPosition].name + " had the most arrows and the cheif's arrow, so they will take no damage.");
-            players.playerOrder[mostArrowsPosition].arrows = 0;
+        if (game.playerOrder[mostArrowsPosition].cheifArrow == true){
+            System.out.println(game.playerOrder[mostArrowsPosition].name + " had the most arrows and the chief's arrow, so they will take no damage.");
+            game.playerOrder[mostArrowsPosition].arrows = 0;
         }
         
         
-        if (!players.game_over){
+        if (!game.game_over){
             for (i = 0; i < totalPlayers; i++){
-                while (players.playerOrder[i].arrows > 0){
-                    if ("Jourdonnais".equals(players.playerOrder[i].name)){
-                        players.playerOrder[i].lose_life(players, this, true);
-                        players.playerOrder[i].arrows = 0;
+                if (!game.game_over){
+                   while (game.playerOrder[i].arrows > 0){
+                        if ("Jourdonnais".equals(game.playerOrder[i].name)){
+                            game.playerOrder[i].lose_life(game, this, true);
+                            game.playerOrder[i].arrows = 0;
+                        }
+                        else if (game.playerOrder[i].lifePoints > 0){
+                            game.playerOrder[i].lose_arrow();
+                            game.playerOrder[i].lose_life(game, this, true);
+                        }
                     }
-                    else if (players.playerOrder[i].lifePoints > 0){
-                        players.playerOrder[i].lose_arrow();
-                        players.playerOrder[i].lose_life(players, this, true);
-                    }
+                    game.playerOrder[i].cheifArrow = false; 
                 }
-                players.playerOrder[i].cheifArrow = false;
             }
         }
         

@@ -54,20 +54,20 @@ public class AI {
 //=================  Constructor =====================================
 	@SuppressWarnings("unchecked")
 	public AI(GameFunctions game, int i, ArrowPile arrowPile) {
-		//this.ProbabilityVector = createProbabilityVector(numPlayers);
+	//this.ProbabilityVector = createProbabilityVector(numPlayers);
         this.SkepticProbability = getProbability(0.0,0.4);
         this.Aggressiveness = getProbability(0.0,0.4);
         this.Safetiness = getProbability(0.0,0.4);
         this.Niceness  = getProbability(0.0,0.5);
         
-		this.willingToTrick = getProbability(0.0,0.2);
+	this.willingToTrick = getProbability(0.0,0.2);
         this.willingToKeepDice  = getProbability(0.0,1.0);
         this.willingToKeepHealth  = getProbability(0.5,1.0);
         this.willingToKeepArrow = getProbability(0.0,1.0);
         this.willingToKeepGatling = getProbability(0.3,0.7);
         this.willingToKeepShots = getProbability(0.5,1.0);
         
-        this.startedWith = game.originalNumOfPlayers;
+        this.startedWith = game.numOfPlayers;
         this.playerOrder = game.playerOrder;
         this.currentPlayer = game.get_current_player();
         this.role = game.get_current_player().role;
@@ -84,53 +84,52 @@ public class AI {
 	
 //==================  Getters =======================================	
 	public void getPlayer() {
-		System.out.println("AI " + this.position + " is " + this.currentPlayer);
+            System.out.println("AI " + this.position + " is " + this.currentPlayer);
 	}
 	
 	public void getPlayerName() {
-		System.out.println("AI " + this.position + " is " + this.currentPlayer.name);
+            System.out.println("AI " + this.position + " is " + this.currentPlayer.name);
 	}
 	
 	public void getPlayerHealth() {
-		System.out.println("AI " + this.position + " is " + this.currentPlayer.lifePoints);
+            System.out.println("AI " + this.position + " is " + this.currentPlayer.lifePoints);
 	}
 	
 	public void getPlayerRole() {
-		System.out.println("AI " + this.position + " is " + this.currentPlayer.role);
+            System.out.println("AI " + this.position + " is " + this.currentPlayer.role);
 	}
 	
 	public void getPlayerBehavior() {
-		System.out.println("AI " + this.position);
-		System.out.println("Willing to trick: " + this.willingToTrick);
-		System.out.println("Willing to keep dice: " + this.willingToKeepDice);
-		System.out.println("Willing to keep beer: " + this.willingToKeepHealth);
-		System.out.println("Willing to keep arrow: " + this.willingToKeepArrow);
-		System.out.println("Willing to keep Gatling: " + this.willingToKeepGatling);
-		System.out.println("Willing to keep gun: " + this.willingToKeepShots);		
-		System.out.println("Willing to be skeptic: " +this.SkepticProbability); 
-		System.out.println("Willing to be aggressive: " +this.Aggressiveness); 
-		System.out.println("Willing to safe: " +this.Safetiness);
-		System.out.println("Willing to nice: " +this.Niceness); 
-//		System.out.println("Probability Vector: " +this.ProbabilityVector);
+            System.out.println("AI " + this.position);
+            System.out.println("Willing to trick: " + this.willingToTrick);
+            System.out.println("Willing to keep dice: " + this.willingToKeepDice);
+            System.out.println("Willing to keep beer: " + this.willingToKeepHealth);
+            System.out.println("Willing to keep arrow: " + this.willingToKeepArrow);
+            System.out.println("Willing to keep Gatling: " + this.willingToKeepGatling);
+            System.out.println("Willing to keep gun: " + this.willingToKeepShots);		
+            System.out.println("Willing to be skeptic: " +this.SkepticProbability); 
+            System.out.println("Willing to be aggressive: " +this.Aggressiveness); 
+            System.out.println("Willing to safe: " +this.Safetiness);
+            System.out.println("Willing to nice: " +this.Niceness); 
 
 	}
 
 	public void trackProbabilityVector() {
-		for (int i=0;i<this.totalPlayers;i++) {
-			System.out.println(this.playerOrder[i].name + " P Vector is " + this.playerOrder[i].ProbabilityVector);
-		}
+            for (int i=0;i<this.totalPlayers;i++) {
+		System.out.println(this.playerOrder[i].name + " P Vector is " + this.playerOrder[i].ProbabilityVector);
+            }
 	}
 	
 	public void getPlayerProbabilityVector() {
-		System.out.println("AI " + this.role + " P(vector) " + this.currentPlayer.ProbabilityVector);
+            System.out.println("AI " + this.role + " P(vector) " + this.currentPlayer.ProbabilityVector);
 	}
 	
 	public void getGuessRole(){
-		for (int i=0;i<this.totalPlayers;i++){
-			if ( i!=this.position ) { 
-				System.out.println("guessed role of " + this.playerOrder[i].role + " is " + this.playerOrder[i].aiGuessRole);
-			}
+            for (int i=0;i<this.totalPlayers;i++){
+                if ( i!=this.position ) { 
+                    System.out.println("guessed role of " + this.playerOrder[i].role + " is " + this.playerOrder[i].aiGuessRole);
 		}
+            }
 	}
 	
 	/*Probability Generator*/
@@ -142,85 +141,94 @@ public class AI {
 	/* 1) _____Method to track which players shot sheriff______*/
 	//returns array of position of players that shot sheriff
 	public ArrayList<Integer> SheriffShooters(){
-		ArrayList<Integer> positionOfSheriffShooters = new ArrayList<Integer>();
-		for (int i=0;i<this.totalPlayers;i++) {
-			//System.out.println(this.playerOrder[i].numShotSheriff); 
-			if ((this.playerOrder[i].numShotSheriff > 0) && i!=this.position)
-				positionOfSheriffShooters.add(i);
-		}
-		return positionOfSheriffShooters;
+            ArrayList<Integer> positionOfSheriffShooters = new ArrayList<Integer>();
+            for (int i=0;i<this.totalPlayers;i++) {
+		//System.out.println(this.playerOrder[i].numShotSheriff); 
+		if ((this.playerOrder[i].numShotSheriff > 0) && i!=this.position)
+                    positionOfSheriffShooters.add(i);
+            }
+            return positionOfSheriffShooters;
 	}
 	
 	/* 2) _____Method to track which players gave beers to sheriff______*/
 	//returns array of position of players that helped sheriff
 	public ArrayList<Integer> SheriffHelpers(){
-		ArrayList<Integer> positionOfSheriffHelpers = new ArrayList<>();
-		for (int i=0;i<this.totalPlayers;i++) {
-			if ((this.playerOrder[i].numHelpSheriff > 0) && i!=this.position)
-				positionOfSheriffHelpers.add(i);
-		}
-		return positionOfSheriffHelpers;
+            ArrayList<Integer> positionOfSheriffHelpers = new ArrayList<>();
+            for (int i=0;i<this.totalPlayers;i++) {
+		if ((this.playerOrder[i].numHelpSheriff > 0) && i!=this.position)
+                    positionOfSheriffHelpers.add(i);
+            }
+            return positionOfSheriffHelpers;
 	}
 	
 	public boolean EveryoneIsAlive() {
-		int i = 0;
+            int i;
+            int temp = 0;
+                
+            for (i = 0; i < this.startedWith; i++){
+                if (!this.playerOrder[i].isDead){
+                    temp++;
+                }
+            }
+                /*
 		for (Character element : this.playerOrder) {
 		//	System.out.println(element);
 			if (element != null)
 				i++;
 		}
+                */
 	//	System.out.println("players Alive " + i);
-		this.playersAlive = i;
-		if (this.playersAlive==this.startedWith) 
-			return true;
-		else
-			return false;
+            this.playersAlive = temp;
+            if (this.playersAlive==this.startedWith) 
+		return true;
+            else
+		return false;
 	}
 	
 	/* 3) _____Method to update Probability vector______*/
 	//vector format: [S,R,O,D]
 	public void updateProbabilityVector() {
-			if (EveryoneIsAlive()) {
-			for (int i=0;i<this.totalPlayers;i++) {
-				//if player is sheriff
-				if (this.playerOrder[i].role == "Sheriff") {
-					this.playerOrder[i].ProbabilityVector.set(0,1.0);
-					this.playerOrder[i].ProbabilityVector.set(1,0.0);
-					this.playerOrder[i].ProbabilityVector.set(2,0.0);
-					this.playerOrder[i].ProbabilityVector.set(3,0.0);
-				}
-				//if player is not sheriff
-				else if (this.playerOrder[i].role != "Sheriff")
-					this.playerOrder[i].ProbabilityVector.set(0, 0.0);
-				//if player gave health to sheriff:
-				if (this.playerOrder[i].numHelpSheriff > 0) {
-					double R = this.playerOrder[i].ProbabilityVector.get(1) + this.SkepticProbability;
-					double D = this.playerOrder[i].ProbabilityVector.get(3) + this.SkepticProbability;
-					double O = this.playerOrder[i].ProbabilityVector.get(2) - this.SkepticProbability;
-					this.playerOrder[i].ProbabilityVector.set(1, R);
-					this.playerOrder[i].ProbabilityVector.set(2, O);
-					this.playerOrder[i].ProbabilityVector.set(3, D);
-				}					
-				//if player shot sheriff:
-				else if (this.playerOrder[i].numShotSheriff > 0) {
-					double R = this.playerOrder[i].ProbabilityVector.get(1) - this.SkepticProbability;
-					double D = this.playerOrder[i].ProbabilityVector.get(3) - this.SkepticProbability;
-					double O = this.playerOrder[i].ProbabilityVector.get(2) + this.SkepticProbability;	
-					this.playerOrder[i].ProbabilityVector.set(1, R);
-					this.playerOrder[i].ProbabilityVector.set(2, O);
-					this.playerOrder[i].ProbabilityVector.set(3, D);
-				}
+            if (EveryoneIsAlive()) {
+                for (int i=0;i<this.totalPlayers;i++) {
+                    //if player is sheriff
+                    if (this.playerOrder[i].role == "Sheriff") {
+                        this.playerOrder[i].ProbabilityVector.set(0,1.0);
+                        this.playerOrder[i].ProbabilityVector.set(1,0.0);
+                        this.playerOrder[i].ProbabilityVector.set(2,0.0);
+                        this.playerOrder[i].ProbabilityVector.set(3,0.0);
+                    }
+                    //if player is not sheriff
+                    else if (this.playerOrder[i].role != "Sheriff")
+                        this.playerOrder[i].ProbabilityVector.set(0, 0.0);
+                    //if player gave health to sheriff:
+                    if (this.playerOrder[i].numHelpSheriff > 0) {
+                        double R = this.playerOrder[i].ProbabilityVector.get(1) + this.SkepticProbability;
+                        double D = this.playerOrder[i].ProbabilityVector.get(3) + this.SkepticProbability;
+                        double O = this.playerOrder[i].ProbabilityVector.get(2) - this.SkepticProbability;
+                        this.playerOrder[i].ProbabilityVector.set(1, R);
+                        this.playerOrder[i].ProbabilityVector.set(2, O);
+                        this.playerOrder[i].ProbabilityVector.set(3, D);
+                    }					
+                    //if player shot sheriff:
+                    else if (this.playerOrder[i].numShotSheriff > 0) {
+                        double R = this.playerOrder[i].ProbabilityVector.get(1) - this.SkepticProbability;
+                        double D = this.playerOrder[i].ProbabilityVector.get(3) - this.SkepticProbability;
+                        double O = this.playerOrder[i].ProbabilityVector.get(2) + this.SkepticProbability;	
+                        this.playerOrder[i].ProbabilityVector.set(1, R);
+                        this.playerOrder[i].ProbabilityVector.set(2, O);
+                        this.playerOrder[i].ProbabilityVector.set(3, D);
+                    }
 				
-				//Constraint all probabilities in the vector to 0 and 1
-	        	for (int j=0;j<4;j++) {
-	        		if (this.playerOrder[i].ProbabilityVector.get(j) > 1.0)
-	        			this.playerOrder[i].ProbabilityVector.set(j, 1.0);
-	        		if (this.playerOrder[i].ProbabilityVector.get(j) < 0.0)
-	        			this.playerOrder[i].ProbabilityVector.set(j, 0.0);
-	        	}
+                    //Constraint all probabilities in the vector to 0 and 1
+                    for (int j=0;j<4;j++) {
+                        if (this.playerOrder[i].ProbabilityVector.get(j) > 1.0)
+                            this.playerOrder[i].ProbabilityVector.set(j, 1.0);
+                        if (this.playerOrder[i].ProbabilityVector.get(j) < 0.0)
+                            this.playerOrder[i].ProbabilityVector.set(j, 0.0);
+                    }
 				
-			} //end of for loop
-		}//end of if condition
+                } //end of for loop
+            }//end of if condition
 		//After someone died:
 		else {
 			double R = 0;
@@ -448,7 +456,7 @@ public class AI {
 			if (this.currentPlayer.role=="Outlaw") {
 				//help who shot the sheriff if role=outlaw
 				for (int i=0;i<this.totalPlayers;i++) {
-					if (this.playerOrder[i].numShotSheriff>0) {
+					if (this.playerOrder[i].numShotSheriff>0 && !this.playerOrder[i].isDead) {
 						this.playerOrder[i].gain_life();
 						System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 						helped = true;
@@ -462,7 +470,7 @@ public class AI {
 				 //else help who shot sheriff
 					if (EveryoneIsAlive()) {
 						for (int i=0;i<this.totalPlayers;i++) {
-							if (this.playerOrder[i].role=="Sheriff") {
+							if (this.playerOrder[i].role=="Sheriff" && !this.playerOrder[i].isDead) {
 								this.playerOrder[i].gain_life();
 								this.currentPlayer.numHelpSheriff++;
 								System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
@@ -473,7 +481,7 @@ public class AI {
 					}
 					else {
 						for (int i=0;i<this.totalPlayers;i++) {
-							if (this.playerOrder[i].numShotSheriff>0) {
+							if (this.playerOrder[i].numShotSheriff>0 && !this.playerOrder[i].isDead) {
 								this.playerOrder[i].gain_life();
 								System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 								helped = true;
@@ -486,28 +494,30 @@ public class AI {
 		}
 		
 		else if (!sheriffShooter && !helped) {
-				//randomly give help	
-				int maxi = 0;
-				for (int i=0;i<this.totalPlayers;i++) {
+				//randomly give help
+                                while (!helped){
+                                    int maxi = 0;
+                                    for (int i=0;i<this.totalPlayers;i++) {
 					if (this.playerOrder[i] != null)
-						maxi++;
-				}
-				int rand = (int)(Math.random()*(maxi));
-				if (this.playerOrder[rand].role=="Sheriff")
-					this.currentPlayer.numHelpSheriff++;
-			//	System.out.println("random number " + rand);
-			//	System.out.println("random player name " + this.playerOrder[rand].name);
-				this.playerOrder[rand].gain_life();
-				System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
-				helped = true;
-				return;
-				}
-		
+                                            maxi++;
+                                    }
+                                    int rand = (int)(Math.random()*(maxi));
+                                    if (!this.playerOrder[rand].isDead){
+                                        if (this.playerOrder[rand].role=="Sheriff")
+                                            this.currentPlayer.numHelpSheriff++;
+            				this.playerOrder[rand].gain_life();
+                			System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
+                        		helped = true;
+                                	return;
+                                    }
+                                }
+                }
+              
 		if (sheriffHelper && !helped) {
 			 if (this.currentPlayer.role=="Sheriff") {
 				//help who gave you health if role=sheriff 
 				for (int i=0;i<this.totalPlayers;i++) {
-					if (this.playerOrder[i].numHelpSheriff>0) {
+					if (this.playerOrder[i].numHelpSheriff>0 && !this.playerOrder[i].isDead) {
 						this.playerOrder[i].gain_life();
 						System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 						helped = true;
@@ -519,26 +529,28 @@ public class AI {
 		
 		else if (!sheriffHelper && !helped) {
 			//randomly give help	
-			int maxi = 0;
-			for (int i=0;i<this.totalPlayers;i++) {
-				if (this.playerOrder[i] != null)
-					maxi++;
-			}
-			int rand = (int)(Math.random()*(maxi));
-		//	System.out.println("random number " + rand);
-		//	System.out.println("random player name " + this.playerOrder[rand].name);
-			this.playerOrder[rand].gain_life();
-			if (this.playerOrder[rand].role=="Sheriff")
-				this.currentPlayer.numHelpSheriff++;
-			System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
-			helped = true;
-			return;
-			}
+			while (!helped){
+                            int maxi = 0;
+                            for (int i=0;i<this.totalPlayers;i++) {
+                                if (this.playerOrder[i] != null)
+                                    maxi++;
+                            }
+                            int rand = (int)(Math.random()*(maxi));
+                            if (!this.playerOrder[rand].isDead){
+                                if (this.playerOrder[rand].role=="Sheriff")
+                                    this.currentPlayer.numHelpSheriff++;
+                                this.playerOrder[rand].gain_life();
+                		System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
+                        	helped = true;
+                                return;
+                            }
+                        }
+                }
 		
 		if (this.currentPlayer.role=="Deputy" && !helped) {
 			//help sheriff is role=deputy
 			for (int i=0;i<this.totalPlayers;i++) {
-				if (this.playerOrder[i].role=="Sheriff") {
+				if (this.playerOrder[i].role=="Sheriff" && !this.playerOrder[i].isDead) {
 					this.playerOrder[i].gain_life();
 					this.currentPlayer.numHelpSheriff++;
 					System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
@@ -621,7 +633,12 @@ public class AI {
 	public void resolveKeptDice(ArrayList<String> keptDice,int numGatling){
 		System.out.println("Resolving the 5 kept dices!");
 		//Gatlings
-		resolveGatling(numGatling);
+                numGatling = 0;
+                for (int i=0; i < keptDice.size(); i++){
+                    if (keptDice.get(i)=="B"){
+                        numGatling += 1;
+                    }
+                }
 		for(int i=0;i<keptDice.size();i++) {
 			if (keptDice.get(i)=="B" && !this.game.game_over) {
 				resolveBeers();
@@ -632,8 +649,8 @@ public class AI {
 			else if (keptDice.get(i)=="S2" && !this.game.game_over) {
 				resolveShot2();
 			}
-			
 		}
+                resolveGatling(numGatling);
 	}
 	
 	public void resolveShot2() {
@@ -683,9 +700,10 @@ public class AI {
 	public void resolveGatling(int numGatling) {
 		if(numGatling>= 3) {
 			for(int i=0;i<this.totalPlayers;i++) {
-                            if(i!=this.position)
+                            if(i!=this.position && !this.playerOrder[i].isDead){
 				this.playerOrder[i].lose_life(this.game, this.arrowPile, false);
-                            else {
+                            }
+                            else if (i == this.position){
                                 this.arrowPile.remaining = this.arrowPile.remaining + this.playerOrder[i].arrows;
 				this.playerOrder[i].arrows=0;
                             }
@@ -701,13 +719,25 @@ public class AI {
 		int numGatling = 0;
 		System.out.println("Dices rolled: " + diceResults);
 		
-		for(int i=0;i<diceResults.size();i++){
+                if (!game.game_over && !game.get_current_player().isDead){
+                    for(int i=0;i<diceResults.size();i++){
 			//resolve all arrows
 			if (diceResults.get(i)=="A" && !this.game.game_over) {
-                            System.out.println(this.name + " rolled an arrow. " + this.name + " must pick up an arrow before continuing.");
-                            this.arrowPile.remove_arrow(this.game);
-                            System.out.println(this.name + " has " + this.currentPlayer.arrows + " arrow(s).");
-                            System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
+                            //NEW CODE
+                            if (game.get_current_player().arrows >= 3 && this.arrowPile.chiefArrow != 0){
+                                System.out.println(this.name + "rolled an arrow and has taken the chief's arrow.");
+                                game.get_current_player().gain_arrow();
+                                game.get_current_player().gain_arrow();
+                                game.get_current_player().cheifArrow = true;
+                                this.arrowPile.chiefArrow = 0;
+                            }
+                            //END OF NEW CODE
+                            else{
+                                System.out.println(this.name + " rolled an arrow. " + this.name + " must pick up an arrow before continuing.");
+                                this.arrowPile.remove_arrow(this.game);
+                                System.out.println(this.name + " has " + this.currentPlayer.arrows + " arrow(s).");
+                                System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
+                            }
 			}
 			else if (diceResults.get(i)=="D" && !this.game.game_over) {
 				System.out.println(this.name + " rolled a dynamite. It cannot be re-rolled.");
@@ -718,11 +748,11 @@ public class AI {
 			else if (diceResults.get(i)=="G" && !this.game.game_over) {
 				numGatling++;
 			}
-		}
+                    }
 		
-		System.out.println(this.name + " rolled " + numGatling + " Gatling(s). " + this.name +   " rolled " + numDynamites + " Dynamite(s).");
-		//more than 3 dynamites
-		if (numDynamites>=3) {
+                    System.out.println(this.name + " rolled " + numGatling + " Gatling(s). " + this.name +   " rolled " + numDynamites + " Dynamite(s).");
+                    //more than 3 dynamites
+                    if (numDynamites>=3) {
 			System.out.println("Since, " + this.name + " rolled " + numDynamites + " dynamites. " + this.name + "'s turn is over.");
 			this.currentPlayer.lose_life(this.game, this.arrowPile, true);
 			for(int i=0;i<diceResults.size();i++) {
@@ -744,47 +774,46 @@ public class AI {
 				}
 			}//end of for loop
 			System.out.println(this.name+"'s final dices are " + this.keptDice); //need to replace DiceResults with keptDices
-		}//end of 3+ dynamite condition
-		else { //if not 3 dynamites
+                    }//end of 3+ dynamite condition
+                    else { //if not 3 dynamites
 			int numRolls = 0;
 			for(int i=0;i<diceResults.size();i++) {
 				keepDices(i, numGatling, diceResults);
 			}//end of for loop
 			System.out.println(this.name+" kept the following dice " + this.keptDice); 
 			if (this.keptDice.size()==5) {
-				//resolve the dices
-				resolveKeptDice(this.keptDice, numGatling);
+                            //resolve the dices
+                            resolveKeptDice(this.keptDice, numGatling);
 			}
 			else {
 				while (numRolls!=maxRolls) {
-					int diceLeft = 5-this.keptDice.size();
-					System.out.println(this.currentPlayer.name + " re-rolled " + diceLeft + " dice(s).");
-					//get diceLeft number of dice
-					AIDice d2 = new AIDice();
-					ArrayList<String> newDice = d2.rollThemDice(diceLeft);
-					System.out.println("Newly rolled dices " + newDice);
-					//update number of Gatling
-					for(int i=0;i<newDice.size();i++) {
-						if (newDice.get(i)=="G") {
-							numGatling++;
-						}
+                                    int diceLeft = 5-this.keptDice.size();
+                                    System.out.println(this.currentPlayer.name + " re-rolled " + diceLeft + " dice(s).");
+                                    //get diceLeft number of dice
+                                    AIDice d2 = new AIDice();
+                                    ArrayList<String> newDice = d2.rollThemDice(diceLeft);
+                                    System.out.println("Newly rolled dices " + newDice);
+                                    //update number of Gatling
+                                    for(int i=0;i<newDice.size();i++) {
+					if (newDice.get(i)=="G") {
+						numGatling++;
 					}
-					//keep using keepDices and add to keptDice
-					for(int i=0;i<newDice.size();i++) {
-						keepDices(i, numGatling, newDice);
-					}
-					System.out.println(this.currentPlayer.name + " rolled " + (numRolls+1) + " times this round!");
-					if ( (this.keptDice.size() == 5))
-						numRolls = maxRolls;
-					else
-						numRolls++;
-				}
-				System.out.println(this.name+" kept the following dice " + this.keptDice); 
-				resolveKeptDice(this.keptDice, numGatling);
-			}
-			
-			
-		} //end of not 3 dynamites condition
+                                    }
+                                    //keep using keepDices and add to keptDice
+                                    for(int i=0;i<newDice.size();i++) {
+					keepDices(i, numGatling, newDice);
+                                    }
+                                    System.out.println(this.currentPlayer.name + " rolled " + (numRolls+1) + " times this round!");
+                                    if ( (this.keptDice.size() == 5))
+					numRolls = maxRolls;
+                                    else
+                                        numRolls++;
+                                    }
+                                System.out.println(this.name+" kept the following dice " + this.keptDice); 
+                                resolveKeptDice(this.keptDice, numGatling);
+                            }      
+          		}
+                }//end of not 3 dynamites condition
 	}//end of method
 	
 	public void keepDices(int i, int numGatling, ArrayList<String> diceResults) {

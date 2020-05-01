@@ -28,7 +28,7 @@ public class Character {
         this.role = "";
         this.isAi = isAI;
         this.cheifArrow = false;
-        this.isAi = false;
+        this.isDead = false;
         this.numShotSheriff = 0;
         this.numHelpSheriff = 0;
         this.ProbabilityVector =  new ArrayList<Double>();
@@ -89,18 +89,22 @@ public class Character {
                 this.name = "Jose Delgado";
                 this.lifePoints = 7;
                 this.maxLife = 7;
+                return;
             case 12:
                 this.name = "Tequila Joe";
                 this.lifePoints = 7;
                 this.maxLife = 7;
+                return;
             case 13:
                 this.name = "Belle Star";
                 this.lifePoints = 8;
                 this.maxLife = 8;
+                return;
             case 14:
                 this.name = "Greg Digger";
                 this.lifePoints = 7;
                 this.maxLife = 7;
+                return;
        }
     }
     
@@ -173,7 +177,10 @@ public class Character {
     }
     
     public void gain_life (){
-        if (this.lifePoints < this.maxLife){
+        if ("Zombie".equals(this.role)){
+            System.out.println(this.name + " is a zombie and cannot be healed.");
+        }
+        else if (this.lifePoints < this.maxLife){
             this.lifePoints += 1;
             System.out.println(this.name + " gained 1 life point.");
         }
@@ -183,7 +190,11 @@ public class Character {
     }
     
     //for ai
+    /*
     public void lose_life() {
+        if (this.lifePoints == 0){
+            System.out.println("\n-----\nERROR, LOSE_LIFE(): " + this.name + "\n-----\n");
+        }
     	this.lifePoints --;
     }
     
@@ -191,50 +202,56 @@ public class Character {
     public void lose_life(int numArrows) {
     	this.lifePoints = this.lifePoints - numArrows;
     }
+    */
     
-    public void lose_life(GameFunctions playerOrder, ArrowPile arrowPile, Boolean arrowOrDynamite){
+    public void lose_life(GameFunctions game, ArrowPile arrowPile, Boolean arrowOrDynamite){
         String choice;
         
         Scanner input = new Scanner(System.in);
         
-        if ("Bart Cassidy".equals(this.name) && !arrowOrDynamite && !this.isAi){
-            if (arrowPile.remaining > 1){
-                System.out.print("Bart Cassidy, would you like to lose a 'life point' or take an 'arrow'? : ");
-                choice = input.nextLine();
-                
-                choice = choice.toLowerCase();
-            
-                while (!"arrow".equals(choice) && !"life point".equals(choice)){
-                    System.out.print("Invalid input. Please enter 'life point' or 'arrow': ");
+        
+        
+        if (this.lifePoints == 0){
+            System.out.println("\n-----\nERROR, LOSE_LIFE(): " + this.name + "\n-----\n");
+        }
+        else{
+            if ("Bart Cassidy".equals(this.name) && !arrowOrDynamite && !this.isAi){
+                if (arrowPile.remaining > 1){
+                    System.out.print("Bart Cassidy, would you like to lose a 'life point' or take an 'arrow'? : ");
                     choice = input.nextLine();
+                    
                     choice = choice.toLowerCase();
-                }
+            
+                    while (!"arrow".equals(choice) && !"life point".equals(choice)){
+                        System.out.print("Invalid input. Please enter 'life point' or 'arrow': ");
+                        choice = input.nextLine();
+                        choice = choice.toLowerCase();
+                    }
                 
-                if ("arrow".equals(choice)){
-                    arrowPile.remove_arrow(playerOrder);
-                }
-                else {
-                    this.lifePoints -= 1;
+                    if ("arrow".equals(choice)){
+                        arrowPile.remove_arrow(game);
+                    }
+                    else {
+                        this.lifePoints -= 1;
+                    }
                 }
             }
-        }
+            this.lifePoints --;
         
-        else{ 
-            this.lifePoints -= 1;
-        }
+            if ("Pedro Ramirez".equals(this.name)){
+                if (this.arrows > 0){
+                    arrowPile.add_arrow(this);
+                    System.out.println("Pedro Ramirez lost a life point, so he discarded an arrow.");
+                }
+            }
         
-        if ("Pedro Ramirez".equals(this.name)){
-            if (this.arrows > 0){
-                arrowPile.add_arrow(this);
-                System.out.println("Pedro Ramirez lost a life point, so he discarded an arrow.");
+            if (this.lifePoints < 1){
+                System.out.println(this.name + " has run out of life points and has lost the game.");
+                System.out.println("Their role was " + this.role);
+                game.eliminate_player(this, arrowPile, !arrowOrDynamite);
             }
         }
-        
-        if (this.lifePoints < 1){
-            System.out.println(this.name + " has run out of life points and has lost the game.");
-            System.out.println("Their role was " + this.role);
-            playerOrder.eliminate_player(this, arrowPile, !arrowOrDynamite);
-        }
+    	
     }
     
   

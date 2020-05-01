@@ -59,7 +59,7 @@ public class BangDiceGame {
             aiPlayers = input.nextInt();
         }
         
-        if (tempExpansions != 'y' && tempExpansions != 'Y'){
+        if (tempExpansions == 'y' || tempExpansions == 'Y'){
             expansions = true;
         }
         else {
@@ -107,6 +107,7 @@ public class BangDiceGame {
         //
         //  Table table = new Table(players, totalPlayers);
         GameFunctions Game = new GameFunctions (players, totalPlayers, expansions);
+        
         i = 0;
                 
         
@@ -131,11 +132,16 @@ public class BangDiceGame {
             //Prints players current turn
             System.out.println("It is currently " + Game.get_current_player().name + "'s turn\n");
             
-            if (Game.get_current_player() == players[0] && !Game.realPlayerDead){
+            if (Game.expansions && Game.get_current_player().isDead && !Game.outbreak){
+                System.out.println(Game.get_current_player().name + " drew a boneyard card.");
+                Game.draw_boneyard_card(Game);
+            }
+            
+            else if (Game.get_current_player() == players[0] && !Game.get_current_player().isDead){
                 GameFunctions.player_turn(Game, allDice, arrowPile);
             }
             
-            else{
+            else if (!Game.get_current_player().isDead) {
                 int j;
                 i = 0;
                 for (j = 0; j < Game.numOfPlayers; j++){
@@ -154,8 +160,17 @@ public class BangDiceGame {
                 System.out.println(players[i].name + " has " + players[i].lifePoints + " life and " + players[i].arrows + " arrow(s)");
             }
             
-            //Goes to next player
+            System.out.println("\n\nTESTING PLAYER ORDER -------------");
+            System.out.println("Before next turn method, current player is: " + Game.currentPlayer );
+            System.out.println("TESTING PLAYER ORDER -------------");
+            
+            
             Game.next_turn();
+            
+            System.out.println("TESTING PLAYER ORDER -------------");
+            System.out.println("After next turn method, current player is: " + Game.currentPlayer );
+            System.out.println("TESTING PLAYER ORDER -------------\n\n");
+            
             
             System.out.println("\n*** Press enter to progress to the next turn. ***");
             input.nextLine();
