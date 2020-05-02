@@ -38,6 +38,11 @@ public class AIDice {
 		return results;
 	}
 	
+	public String rollDuelDice() {
+		int roll = (int)(Math.random()*6);
+		return this.duel.get(roll);
+	}
+	
 	public ArrayList<String> rollDiceExpansion(int num, char choice){
 		ArrayList<String> results = new ArrayList<String>();
 		for (int i=0;i<num-3;i++) {

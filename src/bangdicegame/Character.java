@@ -209,8 +209,6 @@ public class Character {
         
         Scanner input = new Scanner(System.in);
         
-        
-        
         if (this.lifePoints == 0){
             System.out.println("\n-----\nERROR, LOSE_LIFE(): " + this.name + "\n-----\n");
         }
