@@ -10,11 +10,6 @@ import java.util.Random;
 
 /*
  *new functionality needed: 
- *game termination loop
- *fix life factor
- *check mechanics of when someone dies
- * update totalPlayer number and EveryoneAlive function
-	 *eliminate players needs to be added
  */
 
 public class AI {
@@ -43,7 +38,7 @@ public class AI {
 	private int playersAlive;
 	private int maxRolls = 3;
 	private int startedWith;
-        private GameFunctions game;
+    private GameFunctions game; //cdma added
 	
 	private ArrayList<Double> ProbabilityVector;
 	public Character [] playerOrder;
@@ -839,11 +834,36 @@ public class AI {
 		}
 	}
 	
+	/*
+	 * New algorithm idea:
+	 * after roles guessed
+	 * if no expansion packL
+	 	* normal AI
+	 * else
+	 	* probabilistically decide whether to replace 1 normal dice with loudmouth or coward
+	 	* 3 or 2 normal dices, 2 black dice, 1 loudmouth or coward dice
+	 	* resolve dice results
+	 		* normal dices like before
+	 		* loudmouth //{"Dynamite", "Bullet", "Double Bull's Eye 1", "Double Bull's Eye 2", "Arrow", "Double Gatling"};
+	 			* DB1 -> shoot twice 1 dist away
+	 			* DB1 -> shoot twice 2 dist away
+	 			* DG -> counts each face as 2
+	 		* coward // {"Dynamite", "Double Beer", "Broken Arrow", "Bull's Eye 1", "Arrow", "Beer"};
+	 			* DB -> health+=2
+	 			* BA -> return one arrow to ArrowPile 
+	 		* black //  {"Dynamite", "Whiskey", "Fight", "Gatling", "Arrow", "Fight"};
+	 			*  W -> self.health++
+	 			*  Fight -> choose target probabilistically else someone else randomly
+	 				* if not fight -> dueller.health--
+	 				* else
+	 					* self toss black die and same logic applies   
+
+	 */
+	
+	
 	/* 4) _____Dice Interactions______*/
 	public void rollDice() {
-	//Predict the roles of each player using the Probability Vector associated with that player
 		assignOpponents();
-	//role is allocated by matching the max probability to the roles
 		updateProbabilityVector();
 		guessRoles();
 		AIDice d = new AIDice();
