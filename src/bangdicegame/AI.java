@@ -26,7 +26,11 @@ public class AI {
 	private final double SkepticProbability;
 	private final double willingToKeepNormalDice;
 	private final double willingToKeepCowardDice;
-	
+	private final double willingToKeepBrokenArrow;
+	private final double willingToKeepFight;
+	private final double willingToKeepWhiskey;
+	private final double willingToKeepBullet;
+
 	private final String name;
 	private final String role;     
 	private ArrayList<String> targetRole;
@@ -65,6 +69,11 @@ public class AI {
         this.willingToKeepArrow = getProbability(0.0,1.0);
         this.willingToKeepGatling = getProbability(0.3,0.7);
         this.willingToKeepShots = getProbability(0.5,1.0);
+        this.willingToKeepFight = getProbability(0.5,1.0);
+        this.willingToKeepBrokenArrow = getProbability(0.5,1.0);
+        this.willingToKeepWhiskey = getProbability(0.5,1.0);
+        this.willingToKeepBullet = getProbability(0.5,1.0);
+
         
         this.startedWith = game.numOfPlayers;
         this.playerOrder = game.playerOrder;
@@ -836,6 +845,56 @@ public class AI {
 			System.out.println(this.currentPlayer.name + " kept the Gatling." );
 			this.keptDice.add(diceResults.get(i));
 		}
+		//new dice faces
+		// Bt, DB1, DB2, DG -> loud mouth
+		// DBr, BA -> coward
+		// W, F -> duel
+	}
+	
+	public boolean keepBullet() {
+		if (Math.random() <= this.willingToKeepBullet)
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean keepDoubleShot1() {
+		return keepShot1();
+	}
+	
+	public boolean keepDoubleShot2() {
+		return keepShot2();
+	}
+	
+	public boolean keepDoubleGatling(int numGatling) {
+		return keepGatling(numGatling);
+	}
+	
+	public boolean keepDoubleBeer() {
+		return keepBeer();
+	}
+	
+	public boolean keepBrokenArrow() {
+		if (Math.random() <= this.willingToKeepBrokenArrow)
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean keepWhiskey() {
+		Random r = new Random();
+		int rlife = r.nextInt(3); //0,1,2
+		if (this.currentPlayer.lifePoints < this.thresholdHealth+rlife)
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean keepFight() {
+		if (Math.random() <= this.willingToKeepFight)
+			return true;
+		else
+			return false;
 	}
 	
 	/*
@@ -879,7 +938,6 @@ public class AI {
 			return;
 		}
 		else {
-			
 			AIDice d = new AIDice();
 			if (Math.random() <= this.willingToKeepNormalDice) {
 				System.out.println(this.currentPlayer.name+ " has decided to use the regular dies");
@@ -901,9 +959,13 @@ public class AI {
 				return;
 			}
 		}
-
 	//	trackProbabilityVector();
 	}
+	
+	//keepDiceExpansion
+		//same structure as keepDice with new additions
+		//re-shuffling correct die
+		//numGatling number
 
 	public void turn() {
 		System.out.println("It is "+this.currentPlayer.name+"'s turn and he/she will now roll the dice.");

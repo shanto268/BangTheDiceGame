@@ -20,7 +20,7 @@ public class AIDice {
 		this.faces.addAll(Arrays.asList("A", "D", "S1", "S2", "B", "G"));
 		this.numDice = 5;
         this.loudMouth.addAll(Arrays.asList("D", "Bt", "DB1", "DB2", "A", "DG"));
-        this.coward.addAll(Arrays.asList("D", "DBr", "BA", "S1", "A", "Br"));
+        this.coward.addAll(Arrays.asList("D", "DBr", "BA", "S1", "A", "B"));
         this.duel.addAll(Arrays.asList("D", "W", "F", "G", "A", "F"));
 	}
 	
