@@ -1026,7 +1026,12 @@ public class AI {
 			DoubleShootRandomly2();
 	}
 	
-	public void resolveDoubleBeer() { //cannot give beer if max life 
+	public void resolveDoubleBeer() { //random
+		resolveBeers();
+		resolveBeers();
+	}
+	
+	public void resolveDoubleBeer1() { //2 to itself or other 
 		boolean sheriffHelper = false;
 		boolean sheriffShooter = false;
 		boolean helped = false;
@@ -1248,7 +1253,6 @@ public class AI {
 		}
 	}
 	
-
 	/* 4) _____Dice Interactions______*/
 	public void rollDice() {
 		assignOpponents();
@@ -1291,6 +1295,23 @@ public class AI {
 		//same structure as keepDice with new additions
 		//re-shuffling correct die
 		//numGatling number
+	
+	/*
+	 * keepDiceExpansion()
+	 * if !3 dynamites
+	 	* for the first role 	
+		 	* resolve arrows
+		 		* chief
+		 		* broken
+	 		* dynamites no reroll
+	 		* resolve gatling and double gatling
+	 		* resolve beer, double beer, whiskey
+	 		* resolve S1, S2, DB1, DB2
+		* rerolls 
+	 * elif 3 dynamites
+	 	* resolve die
+	 */
+	
 
 	public void turn() {
 		System.out.println("It is "+this.currentPlayer.name+"'s turn and he/she will now roll the dice.");
