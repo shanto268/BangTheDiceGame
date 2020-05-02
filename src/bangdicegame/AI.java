@@ -1345,6 +1345,23 @@ public class AI {
 	 	* resolve die
 	 */
 	
+	public void determineDiceType(ArrayList<String> keptDice) {
+		// create an arrayList as follows
+		// [boolean keptLoudMouth, boolean keptCoward, boolean keptDuel, boolean keptBothDuel]
+		// if (Bt, DB1, DB2, DG) present 
+			// keptLoudMouth = true
+		// if (DBr, BA) present
+			// keptCoward = true
+		// if (W or F) present
+			// keptDuel = true
+		// if (W and F) present
+		// keptBothDuel = true
+		
+		//return updated arrayList
+		//interpretation 
+			
+	}
+	
 	public void keepDiceExpansion(ArrayList<String> diceResults) {
 		this.keptDice = new ArrayList<String>();
 		int maxRolls = this.maxRolls; 
@@ -1462,16 +1479,21 @@ public class AI {
 				while (numRolls!=maxRolls) {
 									//*********** NEW ******************
 									//algorithm:
+
 									//determine how many dice needs to be re rolled
-									//determine which type of dice they are
-									//re roll that specific type
-					
                                     int diceLeft = 5-this.keptDice.size();
                                     System.out.println(this.currentPlayer.name + " re-rolled " + diceLeft + " dice(s).");
                                     //get diceLeft number of dice
+                                    
+									//determine which type of dice they are
+                                    determineDiceType(this.keptDice);
+									//re roll that specific type
+                                    
                                     AIDice d2 = new AIDice();
                                     ArrayList<String> newDice = d2.rollThemDice(diceLeft);
                                     System.out.println("Newly rolled dices " + newDice);
+                                    
+                                    
                                     //update number of Gatling
                                     for(int i=0;i<newDice.size();i++) {
 					if (newDice.get(i)=="G") {
