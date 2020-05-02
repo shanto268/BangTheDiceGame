@@ -653,21 +653,45 @@ public class AI {
                     
                 }
 		for(int i=0;i<keptDice.size();i++) {
-			if (keptDice.get(i)=="B" && !this.game.game_over) {
-				resolveBeers();
+			if (keptDice.get(i)=="W" && !this.game.game_over) {
+				resolveWhiskey();
 			}
 			else if (keptDice.get(i)=="S1" && !this.game.game_over) {
 				resolveShot1();
 			}
 			else if (keptDice.get(i)=="S2" && !this.game.game_over) {
 				resolveShot2();
+			}	
+			
+			else if (keptDice.get(i)=="DB1" && !this.game.game_over) {
+				resolveDoubleShot1();
+			}
+			else if (keptDice.get(i)=="DB2" && !this.game.game_over) {
+				resolveDoubleShot2();
+			}
+			
+			else if (keptDice.get(i)=="B" && !this.game.game_over) {
+				resolveBeers();
+			}
+
+			else if (keptDice.get(i)=="DBr" && !this.game.game_over) {
+				resolveDoubleBeer();
+			}
+			
+			else if (keptDice.get(i)=="G" && !this.game.game_over) {
+				resolveGatling(numGatling); 
+			}
+			
+			else if (keptDice.get(i)=="DG" && !this.game.game_over) {
+				resolveGatling(numGatling); 
+			}
+			
+			else if (keptDice.get(i)=="F" && !this.game.game_over) {
+				resolveFight();
 			}
 		
-		//*********NEW**************
-		//Need to include other dice
-		
 		}
-        resolveGatling(numGatling);          
+                 
 	}
 	
 	public void resolveShot2() {
@@ -776,7 +800,7 @@ public class AI {
 				this.keptDice.add(diceResults.get(i));
 				if(diceResults.get(i)=="B" && !this.game.game_over) {
 					if (this.currentPlayer.lifePoints < this.thresholdHealth) {
-						this.currentPlayer.lifePoints++; //apply to itself
+						this.currentPlayer.gain_life();
 						System.out.println(this.name + " drank the beer!");
 					}
 					else {
@@ -1327,7 +1351,8 @@ public class AI {
 		int numDynamites = 0;
 		int numGatling = 0;
 		System.out.println("Dices rolled: " + diceResults);
-		
+		//Resolving order
+		//Arrows, Bullet, Dynamite, Others
                 if (!game.game_over && !game.get_current_player().isDead){
                     for(int i=0;i<diceResults.size();i++){
 			//resolve all arrows
@@ -1341,6 +1366,7 @@ public class AI {
                                 this.arrowPile.chiefArrow = 0;
                             }
                             //END OF NEW CODE
+                            //Broken Arrow
                             else if (diceResults.get(i)=="BA" && !this.game.game_over) {
                             	System.out.println(this.name + "rolled a Broken Arrow and must resolve it.");
                             	resolveBrokenArrow();
@@ -1353,6 +1379,11 @@ public class AI {
                                 System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
                             }
 			}
+			
+			else if(diceResults.get(i)=="Bt" && !this.game.game_over) {
+				resolveBullet();
+			}
+			
 			else if (diceResults.get(i)=="D" && !this.game.game_over) {
 				System.out.println(this.name + " rolled a dynamite. It cannot be re-rolled.");
 				this.keptDice.add(diceResults.get(i));
@@ -1378,13 +1409,18 @@ public class AI {
 				this.keptDice.add(diceResults.get(i));
 				if(diceResults.get(i)=="B" && !this.game.game_over) {
 					if (this.currentPlayer.lifePoints < this.thresholdHealth) {
-						this.currentPlayer.lifePoints++; //apply to itself
+						this.currentPlayer.gain_life();
 						System.out.println(this.name + " drank the beer!");
 					}
 					else {
 						resolveBeers();
 					}
 				}
+				
+				else if(diceResults.get(i)=="W" && !this.game.game_over) {
+					resolveWhiskey();
+				}
+				
 				else if(diceResults.get(i)=="S1"  && !this.game.game_over) {
 					resolveShot1();
 				}
@@ -1392,9 +1428,22 @@ public class AI {
 					resolveShot2();
 				}
 				
-				//************* NEW *****************
-				//need to include all other dies here
+				else if(diceResults.get(i)=="DB1" && !this.game.game_over) {
+					resolveDoubleShot1();
+				}
 				
+				else if(diceResults.get(i)=="DB2" && !this.game.game_over) {
+					resolveDoubleShot2();
+				}
+				
+				else if(diceResults.get(i)=="DBr" && !this.game.game_over) {
+					resolveDoubleBeer();
+				}
+				
+				else if(diceResults.get(i)=="F" && !this.game.game_over) {
+					resolveFight();
+				}
+								
 			}//end of for loop
 			System.out.println(this.name+"'s final dices are " + this.keptDice); //need to replace DiceResults with keptDices
                     }//end of 3+ dynamite condition
@@ -1412,7 +1461,10 @@ public class AI {
 			else {
 				while (numRolls!=maxRolls) {
 									//*********** NEW ******************
-									//make sure the correct dice is being rerolled here
+									//algorithm:
+									//determine how many dice needs to be re rolled
+									//determine which type of dice they are
+									//re roll that specific type
 					
                                     int diceLeft = 5-this.keptDice.size();
                                     System.out.println(this.currentPlayer.name + " re-rolled " + diceLeft + " dice(s).");
