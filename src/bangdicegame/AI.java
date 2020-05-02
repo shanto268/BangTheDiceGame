@@ -24,6 +24,8 @@ public class AI {
 	private final double willingToKeepArrow;
 	private final double willingToKeepGatling;
 	private final double SkepticProbability;
+	private final double willingToKeepNormalDice;
+	private final double willingToKeepCowardDice;
 	
 	private final String name;
 	private final String role;     
@@ -55,7 +57,9 @@ public class AI {
         this.Safetiness = getProbability(0.0,0.4);
         this.Niceness  = getProbability(0.0,0.5);
         
-	this.willingToTrick = getProbability(0.0,0.2);
+        this.willingToKeepCowardDice =  getProbability(0.0,1.0);
+        this.willingToTrick = getProbability(0.0,0.2);
+        this.willingToKeepNormalDice = getProbability(0.0,1.0);
         this.willingToKeepDice  = getProbability(0.0,1.0);
         this.willingToKeepHealth  = getProbability(0.5,1.0);
         this.willingToKeepArrow = getProbability(0.0,1.0);
@@ -847,9 +851,10 @@ public class AI {
 	 		* loudmouth //{"Dynamite", "Bullet", "Double Bull's Eye 1", "Double Bull's Eye 2", "Arrow", "Double Gatling"};
 	 			* DB1 -> shoot twice 1 dist away
 	 			* DB1 -> shoot twice 2 dist away
+	 			* Bt -> lose 1 lifepoints
 	 			* DG -> counts each face as 2
 	 		* coward // {"Dynamite", "Double Beer", "Broken Arrow", "Bull's Eye 1", "Arrow", "Beer"};
-	 			* DB -> health+=2
+	 			* DBr -> health+=2
 	 			* BA -> return one arrow to ArrowPile 
 	 		* black //  {"Dynamite", "Whiskey", "Fight", "Gatling", "Arrow", "Fight"};
 	 			*  W -> self.health++
@@ -866,9 +871,37 @@ public class AI {
 		assignOpponents();
 		updateProbabilityVector();
 		guessRoles();
-		AIDice d = new AIDice();
-		this.diceResults = d.rollThemDice(5);
-		keepDice(this.diceResults);
+		if (!this.game.expansions) {
+			AIDice d = new AIDice();
+			System.out.println(this.currentPlayer.name+ " has decided to not use either of the Coward's or Loudmouth's dice");
+			this.diceResults = d.rollThemDice(5);
+			keepDice(this.diceResults);
+			return;
+		}
+		else {
+			
+			AIDice d = new AIDice();
+			if (Math.random() <= this.willingToKeepNormalDice) {
+				System.out.println(this.currentPlayer.name+ " has decided to use the regular dies");
+				this.diceResults = d.rollDiceExpansion(5, 'R');
+				//process die
+				return;
+			}
+			
+			else if (Math.random() <= this.willingToKeepCowardDice) {
+				System.out.println(this.currentPlayer.name+ " has decided to use the Coward's dice");
+				this.diceResults = d.rollDiceExpansion(5, 'C');
+				//process die
+				return;
+			}
+			else {
+				System.out.println(this.currentPlayer.name+ " has decided to use the Loudmouth's dice");
+				this.diceResults = d.rollDiceExpansion(5, 'L');
+				//process die
+				return;
+			}
+		}
+
 	//	trackProbabilityVector();
 	}
 

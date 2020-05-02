@@ -75,7 +75,7 @@ To resolve the die, the AI employs the following algorithm.
 - [ ] Project Video/Presentation 
 
 ## Active Issues
-- [ ] Player turn not ending even when the player is dead in that round.
+- [ ] Chief arrow handling in AI logic 
 
 # Documentation
 
