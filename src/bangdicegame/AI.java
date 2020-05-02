@@ -643,9 +643,14 @@ public class AI {
 		//Gatlings
                 numGatling = 0;
                 for (int i=0; i < keptDice.size(); i++){
-                    if (keptDice.get(i)=="B"){
-                        numGatling += 1;
+                    if (keptDice.get(i)=="G"){
+                        numGatling++;
                     }
+                    
+                    else if (keptDice.get(i)=="DG"){
+                        numGatling = numGatling + 2;
+                    }
+                    
                 }
 		for(int i=0;i<keptDice.size();i++) {
 			if (keptDice.get(i)=="B" && !this.game.game_over) {
@@ -657,8 +662,12 @@ public class AI {
 			else if (keptDice.get(i)=="S2" && !this.game.game_over) {
 				resolveShot2();
 			}
+		
+		//*********NEW**************
+		//Need to include other dice
+		
 		}
-                resolveGatling(numGatling);
+        resolveGatling(numGatling);          
 	}
 	
 	public void resolveShot2() {
@@ -1300,17 +1309,140 @@ public class AI {
 	 * keepDiceExpansion()
 	 * if !3 dynamites
 	 	* for the first role 	
-		 	* resolve arrows
-		 		* chief
-		 		* broken
-	 		* dynamites no reroll
-	 		* resolve gatling and double gatling
+		 	* resolve arrows X
+		 		* chief X
+		 		* broken X
+	 		* dynamites no reroll X
+	 		* resolve gatling and double gatling X
 	 		* resolve beer, double beer, whiskey
 	 		* resolve S1, S2, DB1, DB2
 		* rerolls 
 	 * elif 3 dynamites
 	 	* resolve die
 	 */
+	
+	public void keepDiceExpansion(ArrayList<String> diceResults) {
+		this.keptDice = new ArrayList<String>();
+		int maxRolls = this.maxRolls; 
+		int numDynamites = 0;
+		int numGatling = 0;
+		System.out.println("Dices rolled: " + diceResults);
+		
+                if (!game.game_over && !game.get_current_player().isDead){
+                    for(int i=0;i<diceResults.size();i++){
+			//resolve all arrows
+			if (diceResults.get(i)=="A" && !this.game.game_over) {
+                            //NEW CODE
+                            if (game.get_current_player().arrows >= 3 && this.arrowPile.chiefArrow != 0){
+                                System.out.println(this.name + "rolled an arrow and has taken the chief's arrow.");
+                                game.get_current_player().gain_arrow();
+                                game.get_current_player().gain_arrow();
+                                game.get_current_player().cheifArrow = true;
+                                this.arrowPile.chiefArrow = 0;
+                            }
+                            //END OF NEW CODE
+                            else if (diceResults.get(i)=="BA" && !this.game.game_over) {
+                            	System.out.println(this.name + "rolled a Broken Arrow and must resolve it.");
+                            	resolveBrokenArrow();
+                            }
+                            
+                            else{
+                                System.out.println(this.name + " rolled an arrow. " + this.name + " must pick up an arrow before continuing.");
+                                this.arrowPile.remove_arrow(this.game);
+                                System.out.println(this.name + " has " + this.currentPlayer.arrows + " arrow(s).");
+                                System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
+                            }
+			}
+			else if (diceResults.get(i)=="D" && !this.game.game_over) {
+				System.out.println(this.name + " rolled a dynamite. It cannot be re-rolled.");
+				this.keptDice.add(diceResults.get(i));
+				diceResults.remove(i);
+				numDynamites++;
+			}
+			else if (diceResults.get(i)=="G" && !this.game.game_over) {
+				numGatling++;
+			}
+			
+			else if (diceResults.get(i)=="DG" && !this.game.game_over) {
+				numGatling = numGatling + 2;
+			}
+			
+                    }
+		
+                    System.out.println(this.name + " rolled " + numGatling + " Gatling(s). " + this.name +   " rolled " + numDynamites + " Dynamite(s).");
+                    //more than 3 dynamites
+                    if (numDynamites>=3) {
+			System.out.println("Since, " + this.name + " rolled " + numDynamites + " dynamites. " + this.name + "'s turn is over.");
+			this.currentPlayer.lose_life(this.game, this.arrowPile, true);
+			for(int i=0;i<diceResults.size();i++) {
+				this.keptDice.add(diceResults.get(i));
+				if(diceResults.get(i)=="B" && !this.game.game_over) {
+					if (this.currentPlayer.lifePoints < this.thresholdHealth) {
+						this.currentPlayer.lifePoints++; //apply to itself
+						System.out.println(this.name + " drank the beer!");
+					}
+					else {
+						resolveBeers();
+					}
+				}
+				else if(diceResults.get(i)=="S1"  && !this.game.game_over) {
+					resolveShot1();
+				}
+				else if(diceResults.get(i)=="S2" && !this.game.game_over) {
+					resolveShot2();
+				}
+				
+				//************* NEW *****************
+				//need to include all other dies here
+				
+			}//end of for loop
+			System.out.println(this.name+"'s final dices are " + this.keptDice); //need to replace DiceResults with keptDices
+                    }//end of 3+ dynamite condition
+                    
+                    else { //if not 3 dynamites
+			int numRolls = 0;
+			for(int i=0;i<diceResults.size();i++) {
+				keepDices(i, numGatling, diceResults);
+			}//end of for loop
+			System.out.println(this.name+" kept the following dice " + this.keptDice); 
+			if (this.keptDice.size()==5) {
+                            //resolve the dices
+                            resolveKeptDice(this.keptDice, numGatling);
+			}
+			else {
+				while (numRolls!=maxRolls) {
+									//*********** NEW ******************
+									//make sure the correct dice is being rerolled here
+					
+                                    int diceLeft = 5-this.keptDice.size();
+                                    System.out.println(this.currentPlayer.name + " re-rolled " + diceLeft + " dice(s).");
+                                    //get diceLeft number of dice
+                                    AIDice d2 = new AIDice();
+                                    ArrayList<String> newDice = d2.rollThemDice(diceLeft);
+                                    System.out.println("Newly rolled dices " + newDice);
+                                    //update number of Gatling
+                                    for(int i=0;i<newDice.size();i++) {
+					if (newDice.get(i)=="G") {
+						numGatling++;
+					}
+                                    }
+                                    //keep using keepDices and add to keptDice
+                                    for(int i=0;i<newDice.size();i++) {
+					keepDices(i, numGatling, newDice);
+                                    }
+                                    System.out.println(this.currentPlayer.name + " rolled " + (numRolls+1) + " times this round!");
+                                    if ( (this.keptDice.size() == 5))
+					numRolls = maxRolls;
+                                    else
+                                        numRolls++;
+                                    }
+                                System.out.println(this.name+" kept the following dice " + this.keptDice); 
+                                resolveKeptDice(this.keptDice, numGatling);
+                            }      
+          		}
+                }//end of not 3 dynamites condition
+	}//end of method
+
 	
 
 	public void turn() {
