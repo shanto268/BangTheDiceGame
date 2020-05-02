@@ -62,9 +62,9 @@ public class AI {
         this.Safetiness = getProbability(0.0,0.4);
         this.Niceness  = getProbability(0.0,0.5);
         
-        this.willingToKeepCowardDice =  getProbability(0.0,1.0);
+        this.willingToKeepCowardDice =  getProbability(0.0,0.1);
         this.willingToTrick = getProbability(0.0,0.2);
-        this.willingToKeepNormalDice = getProbability(0.0,1.0);
+        this.willingToKeepNormalDice = getProbability(0.6,1.0);
         this.willingToKeepDice  = getProbability(0.0,1.0);
         this.willingToKeepHealth  = getProbability(0.5,1.0);
         this.willingToKeepArrow = getProbability(0.0,1.0);
@@ -854,8 +854,8 @@ public class AI {
                                 System.out.println(this.name+" kept the following dice " + this.keptDice); 
                                 resolveKeptDice(this.keptDice, numGatling);
                             }      
-          		}
-                }//end of not 3 dynamites condition
+          		}//end of not 3 dynamites condition
+                }
 	}//end of method
 	
 	public void keepDices(int i, int numGatling, ArrayList<String> diceResults) {
@@ -1339,7 +1339,10 @@ public class AI {
 		int numD = 0;
 		int numL = 0;
 		int numC = 0;
-		
+		int counter = 0;
+        boolean isWonky =false;
+		Random r = new Random();
+        		
 		if (DiceType == 'R') {
 			//guess numD
 			if (keptDice.contains("W") || keptDice.contains("F"))
@@ -1352,7 +1355,34 @@ public class AI {
 			numR = numKeptDice - numD;
 			numDiceToRoll.add(0, 3-numR);
 			numDiceToRoll.add(1, 0);
-			numDiceToRoll.add(2, 2-numD);
+			numDiceToRoll.add(2, 2-numD);	
+			
+	        for(int s = 0; s < numDiceToRoll.size(); s++){
+	            if(numDiceToRoll.get(s) < 0)
+		          	isWonky = true; //flag variable
+	         }
+	        //if wonky
+	        if (isWonky) {
+	        	numD = 0;
+	        	numR = 0;
+	        	numDiceToRoll.clear();
+	        	
+		        //number of dice left
+		        //randomly generate that number of rolls
+	        	while (counter!=diceLeft) {
+		    		int die = r.nextInt(2); //0 or 1	
+		    		if (die==0)
+		    			numD++;
+		    		else
+		    			numR++;
+		    		counter++;
+	        	}
+				numDiceToRoll.add(0, numR);
+				numDiceToRoll.add(1, 0);
+				numDiceToRoll.add(2, numD);	
+	        }
+
+	        
 
 		}
 		else if (DiceType == 'L') {	
@@ -1370,9 +1400,39 @@ public class AI {
 				numL=0;
 			
 			numR = numKeptDice - numD - numL;
-			numDiceToRoll.add(0, 3-numR);
+			numDiceToRoll.add(0, 2-numR);
 			numDiceToRoll.add(1, 1 - numL);
 			numDiceToRoll.add(2, 2-numD);
+			
+			
+	        for(int s = 0; s < numDiceToRoll.size(); s++){
+	            if(numDiceToRoll.get(s) < 0)
+		          	isWonky = true; //flag variable
+	         }
+	      //if wonky
+	        if (isWonky) {
+	        	numD = 0;
+	        	numR = 0;
+	        	numL=0;
+	        	numDiceToRoll.clear();
+	        	
+		        //number of dice left
+		        //randomly generate that number of rolls
+	        	while (counter!=diceLeft) {
+		    		int die = r.nextInt(3); //0 or 1 or 2	
+		    		
+		    		if (die==0)
+		    			numD++;
+		    		else if (die==1)
+		    			numR++;
+		    		else
+		    			numL++;
+		    		counter++;
+	        	}
+				numDiceToRoll.add(0, numR);
+				numDiceToRoll.add(1, numL);
+				numDiceToRoll.add(2, numD);	
+	        }
 			
 		}
 		
@@ -1391,95 +1451,77 @@ public class AI {
 				numC = 0;
 			
 			numR = numKeptDice - numD - numC;
-			numDiceToRoll.add(0, 3-numR);
+			numDiceToRoll.add(0, 2-numR);
 			numDiceToRoll.add(1, 1 - numC);
 			numDiceToRoll.add(2, 2-numD);
+			
+			
+	        for(int s = 0; s < numDiceToRoll.size(); s++){
+	            if(numDiceToRoll.get(s) < 0)
+		          	isWonky = true; //flag variable
+	         }
+	        if (isWonky) {
+	        	numD = 0;
+	        	numR = 0;
+	        	numC=0;
+	        	numDiceToRoll.clear();
+	        	
+		        //number of dice left
+		        //randomly generate that number of rolls
+	        	while (counter!=diceLeft) {
+		    		int die = r.nextInt(3); //0 or 1 or 2	
+		    		
+		    		if (die==0)
+		    			numD++;
+		    		else if (die==1)
+		    			numR++;
+		    		else
+		    			numC++;
+		    		counter++;
+	        	}	        	
+				numDiceToRoll.add(0, numR);
+				numDiceToRoll.add(1, numC);
+				numDiceToRoll.add(2, numD);	
+	        }
 		}
 		
 		return numDiceToRoll;
 	}
 	
-	public ArrayList<Integer>  determineDiceType1(ArrayList<String> keptDice, char DiceType, int diceLeft) {
-		ArrayList<Boolean> diceBoolean = new ArrayList<Boolean>();
-		ArrayList<Integer> numDiceToRoll = new ArrayList<Integer>();
-		ArrayList<Double> probabilityType = new ArrayList<Double>();
-		int numDiceKept = 5 - diceLeft;
-		int maxnumRegular = 3;
-		int maxnumDuel = 2;
-		int maxnumLoudMouth = 1;
-		int maxnumCoward = 1;
-		
-		int numRegular = 2;
-		int numDuel = 2;
-		int numLoudMouth = 0;
-		int numCoward = 0;
+	
+	public ArrayList<String> reRoll(ArrayList<String> keptDice, char diceUsed, int numNeeded){
+		ArrayList<String> results = new ArrayList<String>();
+		int numD = 0;
 
-		//[saloon, regular, duel] -> probability structure
-		// [boolean diceType, boolean keptDuel, boolean keptBothDuel] -> diceBoolean		
-
+		AIDice dice = new AIDice();
 		
-		if (DiceType == 'R') {
-			numRegular++;
-			probabilityType.add(0, 0.0);
-			probabilityType.add(1, 0.6);
-			probabilityType.add(2, 0.4);
-			diceBoolean.add(0, false);
-
-		}
-		else if (DiceType == 'C') {
-			numCoward++;
-			probabilityType.add(0, 0.2);
-			probabilityType.add(1, 0.4);
-			probabilityType.add(2, 0.4);
-			if (keptDice.contains("DBr") || keptDice.contains("BA"))
-				diceBoolean.add(0, true);
-		}
-		else if (DiceType == 'L') {
-			numLoudMouth++;
-			probabilityType.add(0, 0.2);
-			probabilityType.add(1, 0.4);
-			probabilityType.add(2, 0.4);
-			if (keptDice.contains("DB1") || keptDice.contains("Bt") || keptDice.contains("DB2") || keptDice.contains("DG"))
-				diceBoolean.add(0, true);
-		}
-		
+		//determine how many times Duel was used
 		if (keptDice.contains("W") || keptDice.contains("F"))
-			diceBoolean.add(1, true);
+			numD = 1;
 		if (keptDice.contains("W") && keptDice.contains("F"))
-			diceBoolean.add(2, true);
+			numD = 2;
 		else
-			diceBoolean.add(2, false);
+			numD = 0;
 		
-			
-		// [f,f,f] -> 3 reg, 2 duel
-		// [t,t,t] 
-		// [f,t,t]
-		// [t,f,f]
-		// [t,t,f]
-        ArrayList<Boolean> case1 = new ArrayList<>(Arrays.asList(false,false,false));
-        ArrayList<Boolean> case2 = new ArrayList<>(Arrays.asList(true,true,true));
-        ArrayList<Boolean> case3 = new ArrayList<>(Arrays.asList(false,true,true));
-        ArrayList<Boolean> case4 = new ArrayList<>(Arrays.asList(true,false,false));
-        ArrayList<Boolean> case5 = new ArrayList<>(Arrays.asList(true,true,false));
-
-        if (diceBoolean.equals(case1)) {
-        	
-        }
-        else if (diceBoolean.equals(case2)) {
-        	
-        }
-        else if (diceBoolean.equals(case3)) {
-        	
-        }
-        else if (diceBoolean.equals(case4)) {
-        	
-        }
-        else if (diceBoolean.equals(case5)) {
-        	
-        }			
-
-				
-		return numDiceToRoll;
+		if (diceUsed == 'R') {
+			results.addAll(dice.generateRolls(numNeeded, diceUsed, false, numD));
+		}
+		
+		else if (diceUsed == 'L') {
+			if (keptDice.contains("DB1") || keptDice.contains("Bt") || keptDice.contains("DB2") || keptDice.contains("DG"))
+				results.addAll(dice.generateRolls(numNeeded, diceUsed, true, numD));
+			else
+				results.addAll(dice.generateRolls(numNeeded, diceUsed, false, numD));
+		}
+		
+		else if (diceUsed == 'C') {
+			if (keptDice.contains("DBr") || keptDice.contains("BA"))
+				results.addAll(dice.generateRolls(numNeeded, diceUsed, true, numD));
+			else
+				results.addAll(dice.generateRolls(numNeeded, diceUsed, false, numD));
+		}
+		
+		return results;
 	}
 	
 	public void keepDiceExpansion(ArrayList<String> diceResults, char diceUsed) {
@@ -1504,12 +1546,6 @@ public class AI {
                                 this.arrowPile.chiefArrow = 0;
                             }
                             //END OF NEW CODE
-                            //Broken Arrow
-                            else if (diceResults.get(i)=="BA" && !this.game.game_over) {
-                            	System.out.println(this.name + "rolled a Broken Arrow and must resolve it.");
-                            	resolveBrokenArrow();
-                            }
-                            
                             else{
                                 System.out.println(this.name + " rolled an arrow. " + this.name + " must pick up an arrow before continuing.");
                                 this.arrowPile.remove_arrow(this.game);
@@ -1517,6 +1553,12 @@ public class AI {
                                 System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
                             }
 			}
+			
+            //Broken Arrow                            
+			if (diceResults.get(i)=="BA" && !this.game.game_over) {
+            	System.out.println(this.name + "rolled a Broken Arrow and must resolve it.");
+            	resolveBrokenArrow();
+            }
 			
 			else if(diceResults.get(i)=="Bt" && !this.game.game_over) {
 				resolveBullet();
@@ -1588,6 +1630,7 @@ public class AI {
                     
                     else { //if not 3 dynamites
 			int numRolls = 0;
+			
 			for(int i=0;i<diceResults.size();i++) {
 				keepDices(i, numGatling, diceResults);
 			}//end of for loop
@@ -1604,8 +1647,13 @@ public class AI {
                                     int regular = 0;
                                     int saloon = 0;
                                     int duel = 0;
-                                
+                                    AIDice d2 = new AIDice();
+                                    ArrayList<String> newDice =  new ArrayList<String>();//summation of all dices
+                                    
                                     System.out.println(this.currentPlayer.name + " re-rolled " + diceLeft + " dice(s).");
+                                    newDice.addAll(reRoll(this.keptDice, diceUsed, diceLeft));
+                                    
+                                    /*
                                     //get diceLeft number of dice
                                     
 									//determine which type of dice they are
@@ -1615,14 +1663,16 @@ public class AI {
                                     saloon  = diceChoice.get(1);
                                     duel  = diceChoice.get(2);
                                     
-                                    AIDice d2 = new AIDice();
-                                    ArrayList<String> newDice =  new ArrayList<String>();//summation of all dices
+                                    System.out.println("R: " + regular + "S: " + saloon + "D: " + duel);
+                                    
+ 
 
                                     if (diceUsed=='R') {
                                         ArrayList<String> RDice = d2.rollThemDice(regular);
                                         ArrayList<String> DDice = d2.rollThemDuelDice(duel);
                                         newDice.addAll(RDice);
                                         newDice.addAll(DDice);
+
                                     }
                                     
                                     else if (diceUsed=='L') {
@@ -1643,7 +1693,10 @@ public class AI {
                                         newDice.addAll(SDice);
 
                                     }
-                                    newDice.removeIf( face -> face.equals("Empty"));                                    
+                                    newDice.removeIf( face -> face.equals("Empty"));  
+                                    */
+                                    
+                                    
                                     System.out.println("Newly rolled dices " + newDice);
                                                                     
                                     //update number of Gatling
@@ -1664,12 +1717,12 @@ public class AI {
 					numRolls = maxRolls;
                                     else
                                         numRolls++;
-                                    }
+                                    } //end of while loop
                                 System.out.println(this.name+" kept the following dice " + this.keptDice); 
                                 resolveKeptDice(this.keptDice, numGatling);
                             }      
-          		}
-                }//end of not 3 dynamites condition
+          		}//end of not 3 dynamites condition
+                }
 	}//end of method
 
 	

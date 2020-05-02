@@ -79,6 +79,64 @@ public class AIDice {
 		return results;
 	}
 	
+	
+	public ArrayList<String> generateRolls(int numNeeded, char diceUsed, boolean SUsed, int numD) {
+		ArrayList<String> results = new ArrayList<String>();
+		int maxD = 2;
+		int maxR = 3;
+		int numR = 0;
+		int numS = 0;
+		
+		if (diceUsed == 'R') {
+			numR = Math.min(numNeeded-numD, maxR);
+			numD = Math.max(numR-maxD,numD);
+			results.addAll(rollThemDice(numR));
+			results.addAll(rollThemDuelDice(numD));
+		}
+		
+		else if (diceUsed == 'L') {
+			maxR = 2;
+			if (SUsed) {
+				numR = Math.min(numNeeded-numD, maxR);
+				numD = Math.min(numNeeded-numD,numNeeded-numR);
+				results.addAll(rollThemDice(numR));
+				results.addAll(rollThemDuelDice(numD));
+			}
+			else {
+				numS = 1;
+				results.addAll(rollThemLoudMouthDice(numS));
+				numR = Math.min(numNeeded-numD, maxR);
+				numD = Math.min(numNeeded-numD,numNeeded-numR);
+				results.addAll(rollThemDice(numR));
+				results.addAll(rollThemDuelDice(numD));
+			}
+								
+		}
+		
+		else if (diceUsed == 'C') {
+			maxR = 2;
+			if (SUsed) {
+				numR = Math.min(numNeeded-numD, maxR);
+				numD = Math.min(numNeeded-numD,numNeeded-numR);
+				results.addAll(rollThemDice(numR));
+				results.addAll(rollThemDuelDice(numD));
+			}
+			else {
+				numS = 1;
+				results.addAll(rollThemCowardDice(numS));
+				numR = Math.min(numNeeded-numD, maxR);
+				numD = Math.min(numNeeded-numD,numNeeded-numR);
+				results.addAll(rollThemDice(numR));
+				results.addAll(rollThemDuelDice(numD));
+			}
+		}
+		
+		results.removeIf( face -> face.equals("Empty"));  
+		return results;
+	}
+	
+	
+	
 	public ArrayList<String> rollDiceExpansion(int num, char choice){
 		
 		ArrayList<String> results = new ArrayList<String>();
