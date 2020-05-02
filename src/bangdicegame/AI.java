@@ -845,10 +845,45 @@ public class AI {
 			System.out.println(this.currentPlayer.name + " kept the Gatling." );
 			this.keptDice.add(diceResults.get(i));
 		}
+		
 		//new dice faces
 		// Bt, DB1, DB2, DG -> loud mouth
 		// DBr, BA -> coward
 		// W, F -> duel
+		
+		else if ((diceResults.get(i)=="Bt") && keepBullet()) {
+			System.out.println(this.currentPlayer.name + " kept the Bullet." );
+			this.keptDice.add(diceResults.get(i));
+		}
+		else if ((diceResults.get(i)=="DB1") && keepDoubleShot1()) {
+			System.out.println(this.currentPlayer.name + " kept the Double Bulls' Eye 1." );
+			this.keptDice.add(diceResults.get(i));
+		}
+		else if ((diceResults.get(i)=="DB2") && keepDoubleShot2()) {
+			System.out.println(this.currentPlayer.name + " kept the Double Bulls' Eye 2." );
+			this.keptDice.add(diceResults.get(i));
+		}
+		else if ((diceResults.get(i)=="DG") && keepDoubleGatling(numGatling)){
+			System.out.println(this.currentPlayer.name + " kept the Double Gatling." );
+			this.keptDice.add(diceResults.get(i));
+		}
+		else if ((diceResults.get(i)=="DBr") && keepDoubleBeer()) {
+			System.out.println(this.currentPlayer.name + " kept the Double Beer." );
+			this.keptDice.add(diceResults.get(i));
+		}
+		else if ((diceResults.get(i)=="BA") && keepBrokenArrow()) {
+			System.out.println(this.currentPlayer.name + " kept the Broken Arrow." );
+			this.keptDice.add(diceResults.get(i));
+		}
+		else if ((diceResults.get(i)=="W") && keepWhiskey()) {
+			System.out.println(this.currentPlayer.name + " kept the Whiskey." );
+			this.keptDice.add(diceResults.get(i));
+		}
+		else if ((diceResults.get(i)=="G") && keepFight()){
+			System.out.println(this.currentPlayer.name + " kept the Duel(Fight)." );
+			this.keptDice.add(diceResults.get(i));
+		}
+
 	}
 	
 	public boolean keepBullet() {
