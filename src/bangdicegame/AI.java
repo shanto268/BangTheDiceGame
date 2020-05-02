@@ -1212,7 +1212,7 @@ public class AI {
 		while (rIndex == this.position)
 			rIndex = r.nextInt(pplAlive);
 		//starts duel with opponent
-		System.out.println(this.currentPlayer.name + " chose to duel with " + opponent.name);
+		System.out.println(this.currentPlayer.name + " chose to duel with " + this.playerOrder[rIndex].name);
 		duel(this.currentPlayer, this.playerOrder[rIndex]);
 	}
 	
@@ -1221,6 +1221,7 @@ public class AI {
 		//opponent rolls the duel dice
 		//if not fight
 		if (oppoDice.rollDuelDice() != "F") {
+			System.out.println(opponent.name + " did not roll Fight and hence lost the duel.");
 			opponent.lose_life(this.game, this.arrowPile, false);
 			return; //exit condition
 		}
@@ -1228,6 +1229,7 @@ public class AI {
 		//if fight
 		//self toss
 		else if (oppoDice.rollDuelDice() == "F") {
+			System.out.println("Since, " + opponent.name + " rolled Fight. It is " + self.name + "'s turn to roll the dice.");
 			duel(opponent, self);
 		}
 	}
