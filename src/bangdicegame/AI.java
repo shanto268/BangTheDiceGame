@@ -5,6 +5,7 @@
 
 package bangdicegame;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
@@ -1286,6 +1287,7 @@ public class AI {
 		}
 	}
 	
+	
 	/* 4) _____Dice Interactions______*/
 	public void rollDice() {
 		assignOpponents();
@@ -1303,20 +1305,20 @@ public class AI {
 			if (Math.random() <= this.willingToKeepNormalDice) {
 				System.out.println(this.currentPlayer.name+ " has decided to use the regular dies");
 				this.diceResults = d.rollDiceExpansion(5, 'R');
-				//process die
+				keepDiceExpansion(this.diceResults, 'R');
 				return;
 			}
 			
 			else if (Math.random() <= this.willingToKeepCowardDice) {
 				System.out.println(this.currentPlayer.name+ " has decided to use the Coward's dice");
 				this.diceResults = d.rollDiceExpansion(5, 'C');
-				//process die
+				keepDiceExpansion(this.diceResults, 'C');
 				return;
 			}
 			else {
 				System.out.println(this.currentPlayer.name+ " has decided to use the Loudmouth's dice");
 				this.diceResults = d.rollDiceExpansion(5, 'L');
-				//process die
+				keepDiceExpansion(this.diceResults, 'L');
 				return;
 			}
 		}
@@ -1329,71 +1331,160 @@ public class AI {
 		//re-shuffling correct die
 		//numGatling number
 	
-	/*
-	 * keepDiceExpansion()
-	 * if !3 dynamites
-	 	* for the first role 	
-		 	* resolve arrows X
-		 		* chief X
-		 		* broken X
-	 		* dynamites no reroll X
-	 		* resolve gatling and double gatling X
-	 		* resolve beer, double beer, whiskey
-	 		* resolve S1, S2, DB1, DB2
-		* rerolls 
-	 * elif 3 dynamites
-	 	* resolve die
-	 */
 	
-	public ArrayList<Boolean>  determineDiceType(ArrayList<String> keptDice, char DiceType, int diceLeft) {
+	public ArrayList<Integer> determineDiceType(ArrayList<String> keptDice, char DiceType, int diceLeft){
+		ArrayList<Integer> numDiceToRoll = new ArrayList<Integer>();
+		int numKeptDice = keptDice.size();
+		int numR = 0;
+		int numD = 0;
+		int numL = 0;
+		int numC = 0;
+		
+		if (DiceType == 'R') {
+			//guess numD
+			if (keptDice.contains("W") || keptDice.contains("F"))
+				numD = 1;
+			if (keptDice.contains("W") && keptDice.contains("F"))
+				numD = 2;
+			else
+				numD = 0;
+			
+			numR = numKeptDice - numD;
+			numDiceToRoll.add(0, 3-numR);
+			numDiceToRoll.add(1, 0);
+			numDiceToRoll.add(2, 2-numD);
+
+		}
+		else if (DiceType == 'L') {	
+			//guess numD
+			if (keptDice.contains("W") || keptDice.contains("F"))
+				numD = 1;
+			if (keptDice.contains("W") && keptDice.contains("F"))
+				numD = 2;
+			else
+				numD = 0;
+			//guess numL
+			if (keptDice.contains("DB1") || keptDice.contains("Bt") || keptDice.contains("DB2") || keptDice.contains("DG"))
+				numL=1;
+			else
+				numL=0;
+			
+			numR = numKeptDice - numD - numL;
+			numDiceToRoll.add(0, 3-numR);
+			numDiceToRoll.add(1, 1 - numL);
+			numDiceToRoll.add(2, 2-numD);
+			
+		}
+		
+		else if (DiceType == 'C') {
+			//guess numD
+			if (keptDice.contains("W") || keptDice.contains("F"))
+				numD = 1;
+			if (keptDice.contains("W") && keptDice.contains("F"))
+				numD = 2;
+			else
+				numD = 0;
+			//guess numC
+			if (keptDice.contains("DBr") || keptDice.contains("BA"))
+				numC = 1;
+			else
+				numC = 0;
+			
+			numR = numKeptDice - numD - numC;
+			numDiceToRoll.add(0, 3-numR);
+			numDiceToRoll.add(1, 1 - numC);
+			numDiceToRoll.add(2, 2-numD);
+		}
+		
+		return numDiceToRoll;
+	}
+	
+	public ArrayList<Integer>  determineDiceType1(ArrayList<String> keptDice, char DiceType, int diceLeft) {
 		ArrayList<Boolean> diceBoolean = new ArrayList<Boolean>();
-		// create an arrayList as follows
-		// [boolean diceType, boolean keptDuel, boolean keptBothDuel]
-		// if (Bt, DB1, DB2, DG) present 
-			// keptLoudMouth = true
-		// if (DBr, BA) present
-			// keptCoward = true
-		// if (W or F) present
-			// keptDuel = true
-		// if (W and F) present
-		// keptBothDuel = true
+		ArrayList<Integer> numDiceToRoll = new ArrayList<Integer>();
+		ArrayList<Double> probabilityType = new ArrayList<Double>();
+		int numDiceKept = 5 - diceLeft;
+		int maxnumRegular = 3;
+		int maxnumDuel = 2;
+		int maxnumLoudMouth = 1;
+		int maxnumCoward = 1;
 		
-		// probability
-		// if char
-		// [saloon, regular, duel]
-		// [0.2 , 0.4, 0.4]
-		// if not char
-		// [0.0, 0.6, 0.4]
+		int numRegular = 2;
+		int numDuel = 2;
+		int numLoudMouth = 0;
+		int numCoward = 0;
+
+		//[saloon, regular, duel] -> probability structure
+		// [boolean diceType, boolean keptDuel, boolean keptBothDuel] -> diceBoolean		
+
 		
+		if (DiceType == 'R') {
+			numRegular++;
+			probabilityType.add(0, 0.0);
+			probabilityType.add(1, 0.6);
+			probabilityType.add(2, 0.4);
+			diceBoolean.add(0, false);
+
+		}
+		else if (DiceType == 'C') {
+			numCoward++;
+			probabilityType.add(0, 0.2);
+			probabilityType.add(1, 0.4);
+			probabilityType.add(2, 0.4);
+			if (keptDice.contains("DBr") || keptDice.contains("BA"))
+				diceBoolean.add(0, true);
+		}
+		else if (DiceType == 'L') {
+			numLoudMouth++;
+			probabilityType.add(0, 0.2);
+			probabilityType.add(1, 0.4);
+			probabilityType.add(2, 0.4);
+			if (keptDice.contains("DB1") || keptDice.contains("Bt") || keptDice.contains("DB2") || keptDice.contains("DG"))
+				diceBoolean.add(0, true);
+		}
 		
-		//return updated arrayList
-		//interpretation 
-		//case 1:
-		// [true, true, false]
-		// at most one duel and two regular die available to re roll
-	
-		//case 2:
-		// [false, true, true]
-		// at most three dice left to roll 
-		// 2 of them are regular and one char die
-		// re roll with initial probability
+		if (keptDice.contains("W") || keptDice.contains("F"))
+			diceBoolean.add(1, true);
+		if (keptDice.contains("W") && keptDice.contains("F"))
+			diceBoolean.add(2, true);
+		else
+			diceBoolean.add(2, false);
 		
-		// [true, true, true]
-		// at most 2 dice left to roll
-		// two of them are regular
-		
-		// [true, false, false]
-		// at most 4 dice left to roll
-		// 2 regular and 2 duel dice
-		
-		// [false, false, false]
-		// re roll with initial probability
-		return diceBoolean;
+			
+		// [f,f,f] -> 3 reg, 2 duel
+		// [t,t,t] 
+		// [f,t,t]
+		// [t,f,f]
+		// [t,t,f]
+        ArrayList<Boolean> case1 = new ArrayList<>(Arrays.asList(false,false,false));
+        ArrayList<Boolean> case2 = new ArrayList<>(Arrays.asList(true,true,true));
+        ArrayList<Boolean> case3 = new ArrayList<>(Arrays.asList(false,true,true));
+        ArrayList<Boolean> case4 = new ArrayList<>(Arrays.asList(true,false,false));
+        ArrayList<Boolean> case5 = new ArrayList<>(Arrays.asList(true,true,false));
+
+        if (diceBoolean.equals(case1)) {
+        	
+        }
+        else if (diceBoolean.equals(case2)) {
+        	
+        }
+        else if (diceBoolean.equals(case3)) {
+        	
+        }
+        else if (diceBoolean.equals(case4)) {
+        	
+        }
+        else if (diceBoolean.equals(case5)) {
+        	
+        }			
+
+				
+		return numDiceToRoll;
 	}
 	
 	public void keepDiceExpansion(ArrayList<String> diceResults, char diceUsed) {
 		this.keptDice = new ArrayList<String>();
-		ArrayList<Boolean> diceBoolean = new ArrayList<Boolean>();
+		ArrayList<Integer> diceChoice = new ArrayList<Integer>();
 		int maxRolls = this.maxRolls; 
 		int numDynamites = 0;
 		int numGatling = 0;
@@ -1507,27 +1598,61 @@ public class AI {
 			}
 			else {
 				while (numRolls!=maxRolls) {
-									//*********** NEW ******************
-									//algorithm:
-
+		
 									//determine how many dice needs to be re rolled
                                     int diceLeft = 5-this.keptDice.size();
+                                    int regular = 0;
+                                    int saloon = 0;
+                                    int duel = 0;
+                                
                                     System.out.println(this.currentPlayer.name + " re-rolled " + diceLeft + " dice(s).");
                                     //get diceLeft number of dice
                                     
 									//determine which type of dice they are
-                                    diceBoolean = determineDiceType(this.keptDice, diceUsed, diceLeft);
+                                    diceChoice = determineDiceType(this.keptDice, diceUsed, diceLeft);
 									//re roll that specific type
+                                    regular  = diceChoice.get(0);
+                                    saloon  = diceChoice.get(1);
+                                    duel  = diceChoice.get(2);
                                     
                                     AIDice d2 = new AIDice();
-                                    ArrayList<String> newDice = d2.rollThemDice(diceLeft);
+                                    ArrayList<String> newDice =  new ArrayList<String>();//summation of all dices
+
+                                    if (diceUsed=='R') {
+                                        ArrayList<String> RDice = d2.rollThemDice(regular);
+                                        ArrayList<String> DDice = d2.rollThemDuelDice(duel);
+                                        newDice.addAll(RDice);
+                                        newDice.addAll(DDice);
+                                    }
+                                    
+                                    else if (diceUsed=='L') {
+                                        ArrayList<String> RDice = d2.rollThemDice(regular);
+                                        ArrayList<String> DDice = d2.rollThemDuelDice(saloon);                                        
+                                    	ArrayList<String> SDice = d2.rollThemLoudMouthDice(duel);
+                                        newDice.addAll(RDice);
+                                        newDice.addAll(DDice);
+                                        newDice.addAll(SDice);
+
+                                    }
+                                    else if (diceUsed=='C') {
+                                        ArrayList<String> RDice = d2.rollThemDice(regular);
+                                        ArrayList<String> DDice = d2.rollThemDuelDice(saloon);                                    
+                                    	ArrayList<String> SDice = d2.rollThemCowardDice(duel);
+                                        newDice.addAll(RDice);
+                                        newDice.addAll(DDice);
+                                        newDice.addAll(SDice);
+
+                                    }
+                                    newDice.removeIf( face -> face.equals("Empty"));                                    
                                     System.out.println("Newly rolled dices " + newDice);
-                                    
-                                    
+                                                                    
                                     //update number of Gatling
                                     for(int i=0;i<newDice.size();i++) {
 					if (newDice.get(i)=="G") {
 						numGatling++;
+					}
+					else if (newDice.get(i)=="DG") {
+						numGatling = numGatling+2;
 					}
                                     }
                                     //keep using keepDices and add to keptDice
@@ -1549,9 +1674,11 @@ public class AI {
 
 	
 
+	
 	public void turn() {
 		System.out.println("It is "+this.currentPlayer.name+"'s turn and he/she will now roll the dice.");
 	}
+	
 	
 	public int playersAlive() {
 		int total = 0;
@@ -1567,6 +1694,7 @@ public class AI {
 		}
 		return total;
 	}
+	
 	
 	public void test() {
 		assignOpponents();

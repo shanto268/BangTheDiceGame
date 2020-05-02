@@ -35,6 +35,8 @@ public class AIDice {
 			int roll = (int)(Math.random()*6);
 			results.add(this.faces.get(roll));
 		}
+		if (num==0)
+			results.add("Empty");
 		return results;
 	}
 	
@@ -43,7 +45,42 @@ public class AIDice {
 		return this.duel.get(roll);
 	}
 	
+	public ArrayList<String> rollThemDuelDice(int num){
+		ArrayList<String> results = new ArrayList<String>();
+		for (int i=0;i<num;i++) {
+			int roll = (int)(Math.random()*6);
+			results.add(this.duel.get(roll));
+		}
+		if (num==0)
+			results.add("Empty");
+		return results;
+	}
+	
+	public ArrayList<String> rollThemLoudMouthDice(int num){
+		ArrayList<String> results = new ArrayList<String>();
+		for (int i=0;i<num;i++) {
+			int roll = (int)(Math.random()*6);
+			results.add(this.coward.get(roll));
+		}
+		if (num==0)
+			results.add("Empty");
+		return results;
+	}
+	
+	
+	public ArrayList<String> rollThemCowardDice(int num){
+		ArrayList<String> results = new ArrayList<String>();
+		for (int i=0;i<num;i++) {
+			int roll = (int)(Math.random()*6);
+			results.add(this.loudMouth.get(roll));
+		}
+		if (num==0)
+			results.add("Empty");
+		return results;
+	}
+	
 	public ArrayList<String> rollDiceExpansion(int num, char choice){
+		
 		ArrayList<String> results = new ArrayList<String>();
 		for (int i=0;i<num-3;i++) {
 			int roll = (int)(Math.random()*6);
