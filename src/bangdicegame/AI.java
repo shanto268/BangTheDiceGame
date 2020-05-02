@@ -1345,9 +1345,10 @@ public class AI {
 	 	* resolve die
 	 */
 	
-	public void determineDiceType(ArrayList<String> keptDice) {
+	public ArrayList<Boolean>  determineDiceType(ArrayList<String> keptDice, char DiceType, int diceLeft) {
+		ArrayList<Boolean> diceBoolean = new ArrayList<Boolean>();
 		// create an arrayList as follows
-		// [boolean keptLoudMouth, boolean keptCoward, boolean keptDuel, boolean keptBothDuel]
+		// [boolean diceType, boolean keptDuel, boolean keptBothDuel]
 		// if (Bt, DB1, DB2, DG) present 
 			// keptLoudMouth = true
 		// if (DBr, BA) present
@@ -1357,13 +1358,42 @@ public class AI {
 		// if (W and F) present
 		// keptBothDuel = true
 		
+		// probability
+		// if char
+		// [saloon, regular, duel]
+		// [0.2 , 0.4, 0.4]
+		// if not char
+		// [0.0, 0.6, 0.4]
+		
+		
 		//return updated arrayList
 		//interpretation 
-			
+		//case 1:
+		// [true, true, false]
+		// at most one duel and two regular die available to re roll
+	
+		//case 2:
+		// [false, true, true]
+		// at most three dice left to roll 
+		// 2 of them are regular and one char die
+		// re roll with initial probability
+		
+		// [true, true, true]
+		// at most 2 dice left to roll
+		// two of them are regular
+		
+		// [true, false, false]
+		// at most 4 dice left to roll
+		// 2 regular and 2 duel dice
+		
+		// [false, false, false]
+		// re roll with initial probability
+		return diceBoolean;
 	}
 	
-	public void keepDiceExpansion(ArrayList<String> diceResults) {
+	public void keepDiceExpansion(ArrayList<String> diceResults, char diceUsed) {
 		this.keptDice = new ArrayList<String>();
+		ArrayList<Boolean> diceBoolean = new ArrayList<Boolean>();
 		int maxRolls = this.maxRolls; 
 		int numDynamites = 0;
 		int numGatling = 0;
@@ -1486,7 +1516,7 @@ public class AI {
                                     //get diceLeft number of dice
                                     
 									//determine which type of dice they are
-                                    determineDiceType(this.keptDice);
+                                    diceBoolean = determineDiceType(this.keptDice, diceUsed, diceLeft);
 									//re roll that specific type
                                     
                                     AIDice d2 = new AIDice();
