@@ -71,11 +71,10 @@ To resolve the die, the AI employs the following algorithm.
 ## To Do List
 - [ ] Successful debugging of command line version of the game
 - [ ] GUI implementation
-- [ ] Addition of extenstion pack
 - [ ] Project Video/Presentation 
 
 ## Active Issues
-- [ ] Chief arrow handling in AI logic 
+- [x] Chief arrow handling in AI logic 
 
 # Documentation
 
@@ -84,11 +83,14 @@ To resolve the die, the AI employs the following algorithm.
 
 ## UML Class Diagrams
 ![UMLUSD](class.png)
+
 ![UMLUSD1](class1.png)
+
 ![UMLUSD2](class2.png)
 
 ## CRC Cards
 ![UMLcc](crc.png)
+
 ![UMLcrc](crc0.png)
 
 ## GUI Plan
