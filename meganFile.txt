@@ -1,0 +1,15 @@
+This file contains information for the following files:
+    AI.java, AIDice.java and SimulateAI.java
+
+Inheritance:
+    I have not used any inheritence in these files.
+
+Interfaces:
+    I have not used any inheritence in these files.
+
+Composition:
+    The AI class cannot exist without the SimulateAI class.
+    The AIDice class cannot exist without the AI class, hence is also dependent on SimulateAI class
+
+Method Overloading/Overriding:
+    I have not used any method overloading/overriding in these files. However, I have used them in the Dice.java class which Cierra should report
