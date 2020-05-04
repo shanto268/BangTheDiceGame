@@ -1,29 +1,45 @@
 /*
  * Cierra Ditmore
  * CS 2365
- * Note: double check your remove_arrow method
  */
 package bangdicegame;
 import java.util.Scanner;
 
 /**
- *
- * @author cmdma
+ * Builds the arrow pile for use throughout game, and takes care of any arrow based actions
  */
+
 public class ArrowPile {
+
+    /**
+     *  how many arrows are remaining in pile
+     */
     public int remaining;
+
+    /**
+     *  1 if chief arrow is remaining, 0 if not
+     */
     public int chiefArrow;
     
+    /**
+     *  initialize arrowPile
+     */
     public ArrowPile(){
         this.remaining = 9;
         this.chiefArrow = 1;
     }
     
+    /**
+     * removes an arrow from the pile, and if the pile = 0, initiates indian attack
+     *
+     * @param game gameFunctions object
+     */
     public void remove_arrow (GameFunctions game){
         Scanner input = new Scanner(System.in);
         char decision = 'n';
         
         if (this.remaining > 0){
+            //allows user to take chief arrow if expansions are enabled
             if (this.chiefArrow == 1 && game.expansions && !game.get_current_player().isAi){
                 System.out.print("Would you like to draw the chief's arrow? (Y/N): ");
                 decision = input.nextLine().charAt(0);
@@ -34,17 +50,20 @@ public class ArrowPile {
                 }
             }
             
+            //if chief arrow is taken
             if (decision == 'y' || decision == 'Y'){
                 System.out.println("You have taken the chief's arrow.");
                 game.get_current_player().gain_arrow();
                 game.get_current_player().gain_arrow();
-                game.get_current_player().cheifArrow = true;
+                game.get_current_player().chiefArrow = true;
                 this.chiefArrow = 0;
             }
             
+            //otherwise, adds 1 arrow to player and sub 1 from remaining in pile
             else{
                 this.remaining -= 1;
                 game.get_current_player().gain_arrow();
+                //if pile is now empty, indian attack
                 if (this.pileIsEmpty()){
                     this.empty_pile(game, game.numOfPlayers);
                 }
@@ -54,37 +73,24 @@ public class ArrowPile {
             System.out.println("Remove_arrow Error, no arrows remaining");
         }
     }
-    
-    /*
-    //for ai 
-    public void remove_arrow(Character selfPlayer, Character [] playerOrder){
-        if (this.remaining > 0){
-            this.remaining -= 1; //decrease pile
-            selfPlayer.gain_arrow(); //player gets arrow
-        }
-        else if (this.pileIsEmpty()){
-        		System.out.println("======= The Indians Attacked!!! =======");
-               //everyone loses as many lives as many arrows that they had and loses all their arrows
-            	for (int i=0;i<playerOrder.length;i++) {
-            		if (playerOrder[i]!=null) {
-	            		int numArrow = playerOrder[i].arrows;
-	            		playerOrder[i].lose_life(numArrow);
-	            		playerOrder[i].arrows = 0;
-            		}
-            	}  
-            	this.remaining = 9; //set pile back to normal again
-       } 
-        else {
-            System.out.println("Remove_arrow Error, no arrows remaining");
-        }
-    }
-    */
+
+    /**
+     * adds arrow back onto pile
+     *
+     * @param player current player
+     */
+
     
     public void add_arrow (Character player){
         this.remaining += 1;
         player.lose_arrow();
     }
     
+    /**
+     * determines if pile is empty
+     *
+     * @return true if pile is empty, false otherwise
+     */
     public Boolean pileIsEmpty(){
         if (this.remaining == 0){
             return true;
@@ -94,11 +100,17 @@ public class ArrowPile {
         }
     }
     
+    /**
+     * Indian attack when pile is empty
+     *
+     * @param game GameFunctions object
+     * @param totalPlayers total players alive
+     */
     public void empty_pile (GameFunctions game, int totalPlayers){
-        int i;
-        int playersDead;
-        int mostArrowsPosition;
-        int mostArrows;
+        int i; //counter
+        int playersDead; //number of players that will be killed
+        int mostArrowsPosition; //position of player with most arrows
+        int mostArrows; //largest amount of arrows any one player has
         
         playersDead = 0;
         mostArrowsPosition = 0;
@@ -106,7 +118,7 @@ public class ArrowPile {
         
         System.out.println("\nThe last arrow was drawn and the indians attacked.\n");
         
-        
+        //counts how many players will die, and where the player with the most arrows is
         for (i = 0; i < game.numOfPlayers; i++){
             if (game.playerOrder[i].arrows >= game.playerOrder[i].lifePoints && !game.playerOrder[i].isDead){
                 playersDead++;
@@ -117,17 +129,22 @@ public class ArrowPile {
             }
         }
         
-        if (playersDead >= game.numOfPlayers){
-            game.game_over = true;
-            System.out.println("All players are dead, so the outlaws win.");
-        }
-        
-        if (game.playerOrder[mostArrowsPosition].cheifArrow == true){
+        //if the player with the most arrows has the cheif arrow, they do not take damage
+        if (game.playerOrder[mostArrowsPosition].chiefArrow == true){
+            if (game.playerOrder[mostArrowsPosition].arrows >= game.playerOrder[mostArrowsPosition].lifePoints){
+                playersDead--;
+            }
             System.out.println(game.playerOrder[mostArrowsPosition].name + " had the most arrows and the chief's arrow, so they will take no damage.");
             game.playerOrder[mostArrowsPosition].arrows = 0;
         }
         
+        //if the indians will kill all the players, the game is over
+        if (playersDead >= game.numAlivePlayers){
+            game.game_over = true;
+            System.out.println("All players are dead, so the outlaws win.");
+        }
         
+        //takes life from each player equal to how many arrows they have, then sets their arrows back to 0
         if (!game.game_over){
             for (i = 0; i < totalPlayers; i++){
                 if (!game.game_over){
@@ -141,11 +158,12 @@ public class ArrowPile {
                             game.playerOrder[i].lose_life(game, this, true);
                         }
                     }
-                    game.playerOrder[i].cheifArrow = false; 
+                    game.playerOrder[i].chiefArrow = false; 
                 }
             }
         }
         
+        //refreshes arrow pile variables
         this.remaining = 9;
         this.chiefArrow = 1;
     }

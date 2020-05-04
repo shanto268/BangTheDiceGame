@@ -4,40 +4,43 @@
  */
 package bangdicegame;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- *
- * @author cmdma
+ * Contains Main, starts and runs the program
+ * 
  */
 
-/**
- *Changes made by SAS:
- *called AI class
- * players[0] is the user controlled player
- * all others are AI -> created character class with isAI attribute
+
+
+/*
+ *  Changes made by SAS:
+ *  called AI class
+ *  players[0] is the user controlled player
+ *  all others are AI - created character class with isAI attribute
  * 
  */
 
 public class BangDiceGame {
 
     /**
+     * creates and runs the dice game
+     * 
      * @param args the command line arguments
      */
     
     public static void main(String[] args) {
-        int [] randomSelection = {1, 2, 3, 4, 5, 6, 7, 8, 9 ,10, 11, 12, 13, 14};
-        int aiPlayers;
-        int totalPlayers;
-        char tempExpansions;
-        boolean expansions;
-        Character [] players = new Character [8];
-        String [] roles;
-        Dice [] allDice = new Dice [6];
-        ArrowPile arrowPile = new ArrowPile();
+        int [] randomSelection = {1, 2, 3, 4, 5, 6, 7, 8, 9 ,10, 11, 12, 13, 14};   //Array that will decide which of the 14 characters are assigned to players
+        int aiPlayers; //number of ai players
+        int totalPlayers; //number of ai players + 1
+        char tempExpansions; //temporary variable to hold Y or N for if they want to use expansions
+        boolean expansions; //true/false for expansions
+        Character [] players = new Character [8]; //array to hold the players in order of creation
+        String [] roles; //hold the roles for the players, size depends on how many players there are
+        Dice [] allDice = new Dice [6]; //array for dice, up to 6 dice can be used
+        ArrowPile arrowPile = new ArrowPile(); //arrowPile creation
         
-        
+        //shuffles the array, each number corresponds to a player name
         randomSelection = Character.shuffle_character(randomSelection);
         
         Scanner input = new Scanner(System.in);
@@ -51,6 +54,7 @@ public class BangDiceGame {
             aiPlayers = input.nextInt();
         }
         
+        // gets Y or N for expansions
         input.nextLine();
         System.out.print("Would you like to play with the expansion packs? (Yes or No): ");
         tempExpansions = input.nextLine().charAt(0);
@@ -69,9 +73,11 @@ public class BangDiceGame {
         
         totalPlayers = aiPlayers + 1;
         
+        //gets the correct amount of roles for the amount of players
         roles = Character.select_role(aiPlayers);
         int i = 0;
         boolean isAi = false;
+        
         //Creates all of the players
         System.out.println();
         while (aiPlayers >= 0){
@@ -96,6 +102,7 @@ public class BangDiceGame {
         }
               
         i = 0;
+        
         //Creating Dice
         while (i < 6){
             allDice[i] = new Dice();
@@ -106,12 +113,11 @@ public class BangDiceGame {
         //
         //  START OF GAME
         //
-        //  Table table = new Table(players, totalPlayers);
         GameFunctions Game = new GameFunctions (players, totalPlayers, expansions);
         
         i = 0;
                 
-        
+        //makes the Sheriff the first player to go
         if (Game.numOfPlayers > 3){
             while (!"Sheriff".equals(players[i].role)){
                 Game.next_turn();
@@ -121,10 +127,11 @@ public class BangDiceGame {
         
         SimulateAI AI = new SimulateAI(players, totalPlayers, arrowPile);
        	
-
+        //stops while loop when game is over
         while(!Game.game_over) {
             System.out.println();
             
+            //will refresh the dice on each turn
             while (i < 6){
                 allDice[i] = new Dice();
                 i++;
@@ -133,15 +140,18 @@ public class BangDiceGame {
             //Prints players current turn
             System.out.println("It is currently " + Game.get_current_player().name + "'s turn\n");
             
+            //if expansions are on and the player is dead, performs boneyard tasks
             if (Game.expansions && Game.get_current_player().isDead && !Game.outbreak){
                 System.out.println(Game.get_current_player().name + " drew a boneyard card.");
                 Game.draw_boneyard_card(Game);
             }
             
+            //human player turn
             else if (Game.get_current_player() == players[0] && !Game.get_current_player().isDead){
                 GameFunctions.player_turn(Game, allDice, arrowPile);
             }
             
+            //AI player turn
             else if (!Game.get_current_player().isDead) {
                 int j;
                 i = 0;
@@ -154,6 +164,7 @@ public class BangDiceGame {
                 AI.AITurn(Game, i, arrowPile);
             }
             
+            //prints out current standings: life and arrows
             System.out.println("\nThe current standings are: ");
             
             //Shows standing of life points and arrows at end of round
@@ -161,17 +172,8 @@ public class BangDiceGame {
                 System.out.println(players[i].name + " has " + players[i].lifePoints + " life and " + players[i].arrows + " arrow(s)");
             }
             
-            System.out.println("\n\nTESTING PLAYER ORDER -------------");
-            System.out.println("Before next turn method, current player is: " + Game.currentPlayer );
-            System.out.println("TESTING PLAYER ORDER -------------");
-            
-            
+            //goes to next turn
             Game.next_turn();
-            
-            System.out.println("TESTING PLAYER ORDER -------------");
-            System.out.println("After next turn method, current player is: " + Game.currentPlayer );
-            System.out.println("TESTING PLAYER ORDER -------------\n\n");
-            
             
             System.out.println("\n*** Press enter to progress to the next turn. ***");
             input.nextLine();

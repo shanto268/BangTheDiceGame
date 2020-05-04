@@ -1,0 +1,114 @@
+//change the fx:controller in the pane to whatever ur controller file class is called
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="909.0" prefWidth="1301.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bang_dice_game.FXMLDocumentController">
+   <children>
+      <ToggleButton fx:id="Dice_5" layoutX="714.0" layoutY="397.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="90.0" text="Dice 5" />
+      <ToggleButton fx:id="Dice_4" layoutX="554.0" layoutY="397.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="90.0" text="Dice 4" />
+      <ToggleButton fx:id="Dice_6" layoutX="401.0" layoutY="262.0" mnemonicParsing="false" opacity="0.0" prefHeight="97.0" prefWidth="90.0" text="ToggleButton" />
+      <ToggleButton fx:id="Dice_3" layoutX="401.0" layoutY="397.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="90.0" text="Dice 3" />
+      <ToggleButton fx:id="Dice_2" layoutX="218.0" layoutY="397.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="90.0" style="-fx-background-color: RED;" text="Dice 2">
+         <cursor>
+            <Cursor fx:constant="NONE" />
+         </cursor></ToggleButton>
+      <ToggleButton fx:id="Dice_1" layoutX="59.0" layoutY="397.0" mnemonicParsing="false" prefHeight="97.0" prefWidth="90.0" text="Dice 1" />
+      <ImageView fx:id="Player_7_Pic" fitHeight="97.0" fitWidth="117.0" layoutX="49.0" layoutY="605.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Calamity_Janet.PNG" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="Player_6_Pic" fitHeight="97.0" fitWidth="117.0" layoutX="49.0" layoutY="156.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Calamity_Janet.PNG" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="Player_5_Pic" fitHeight="97.0" fitWidth="117.0" layoutX="267.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Calamity_Janet.PNG" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="Player_4_Pic" fitHeight="97.0" fitWidth="117.0" layoutX="520.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Calamity_Janet.PNG" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="Player_3_Pic" fitHeight="97.0" fitWidth="117.0" layoutX="704.0" layoutY="163.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Calamity_Janet.PNG" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="Player_2_Pic" fitHeight="97.0" fitWidth="117.0" layoutX="705.0" layoutY="599.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Calamity_Janet.PNG" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="Player_1_Pic" fitHeight="97.0" fitWidth="117.0" layoutX="520.0" layoutY="698.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Calamity_Janet.PNG" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="Player_0_Pic" fitHeight="97.0" fitWidth="117.0" layoutX="267.0" layoutY="698.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Calamity_Janet.PNG" />
+         </image>
+      </ImageView>
+      <Button fx:id="Player_5_Button" layoutX="263.0" layoutY="51.0" mnemonicParsing="false" onAction="#p5Action" opacity="0.0" prefHeight="108.0" prefWidth="117.0" text="Player 5" />
+      <Label fx:id="Player_5_Tag" layoutX="263.0" layoutY="21.0" prefHeight="30.0" prefWidth="117.0" text="Player 5" />
+      <Label fx:id="Player_5_HP" layoutX="263.0" layoutY="159.0" prefHeight="30.0" prefWidth="117.0" text="HP:" />
+      <Label fx:id="Player_5_Arrows" layoutX="263.0" layoutY="189.0" prefHeight="30.0" prefWidth="117.0" text="Arrows:" />
+      <Label fx:id="Player_5_Role" layoutX="263.0" layoutY="219.0" prefHeight="30.0" prefWidth="117.0" text="Role:" />
+      <Button fx:id="Player_4_Button" layoutX="516.0" layoutY="51.0" mnemonicParsing="false" onAction="#p4Action" opacity="0.0" prefHeight="108.0" prefWidth="117.0" text="Player 4" />
+      <Label fx:id="Player_4_Tag" layoutX="516.0" layoutY="21.0" prefHeight="30.0" prefWidth="117.0" text="Player 4" />
+      <Label fx:id="Player_4_HP" layoutX="516.0" layoutY="159.0" prefHeight="30.0" prefWidth="117.0" text="HP:" />
+      <Label fx:id="Player_4_Arrows" layoutX="516.0" layoutY="189.0" prefHeight="30.0" prefWidth="117.0" text="Arrows:" />
+      <Label fx:id="Player_4_Role" layoutX="516.0" layoutY="219.0" prefHeight="30.0" prefWidth="117.0" text="Role:" />
+      <Button fx:id="Player_3_Button" layoutX="700.0" layoutY="157.0" mnemonicParsing="false" onAction="#p3Action" opacity="0.0" prefHeight="108.0" prefWidth="117.0" text="Player 3" />
+      <Label fx:id="Player_3_Tag" layoutX="700.0" layoutY="127.0" prefHeight="30.0" prefWidth="117.0" text="Player 3" />
+      <Label fx:id="Player_3_HP" layoutX="700.0" layoutY="265.0" prefHeight="30.0" prefWidth="117.0" text="HP:" />
+      <Label fx:id="Player_3_Arrows" layoutX="700.0" layoutY="295.0" prefHeight="30.0" prefWidth="117.0" text="Arrows:" />
+      <Label fx:id="Player_3_Role" layoutX="700.0" layoutY="325.0" prefHeight="30.0" prefWidth="117.0" text="Role:" />
+      <Button fx:id="Player_2_Button" layoutX="700.0" layoutY="593.0" mnemonicParsing="false" onAction="#p2Action" opacity="0.0" prefHeight="108.0" prefWidth="117.0" text="Player 2" />
+      <Label fx:id="Player_2_Tag" layoutX="700.0" layoutY="563.0" prefHeight="30.0" prefWidth="117.0" text="Player 2" />
+      <Label fx:id="Player_2_HP" layoutX="700.0" layoutY="701.0" prefHeight="30.0" prefWidth="117.0" text="HP:" />
+      <Label fx:id="Player_2_Arrows" layoutX="700.0" layoutY="731.0" prefHeight="30.0" prefWidth="117.0" text="Arrows:" />
+      <Label fx:id="Player_2_Role" layoutX="700.0" layoutY="761.0" prefHeight="30.0" prefWidth="117.0" text="Role:" />
+      <Button fx:id="Player_1_Button" layoutX="516.0" layoutY="692.0" mnemonicParsing="false" onAction="#p1Action" opacity="0.0" prefHeight="108.0" prefWidth="117.0" text="Player 1" />
+      <Label fx:id="Player_1_Tag" layoutX="516.0" layoutY="662.0" prefHeight="30.0" prefWidth="117.0" text="Player 1" />
+      <Label fx:id="Player_1_HP" layoutX="516.0" layoutY="800.0" prefHeight="30.0" prefWidth="117.0" text="HP:" />
+      <Label fx:id="Player_1_Arrows" layoutX="516.0" layoutY="830.0" prefHeight="30.0" prefWidth="117.0" text="Arrows:" />
+      <Label fx:id="Player_1_Role" layoutX="516.0" layoutY="860.0" prefHeight="30.0" prefWidth="117.0" text="Role:" />
+      <Button fx:id="Player_0_Button" layoutX="263.0" layoutY="692.0" mnemonicParsing="false" opacity="0.0" prefHeight="108.0" prefWidth="117.0" text="User" />
+      <Label fx:id="Player_0_Tag" layoutX="263.0" layoutY="662.0" prefHeight="30.0" prefWidth="117.0" text="User (Player 0)" />
+      <Label fx:id="Player_0_HP" layoutX="263.0" layoutY="800.0" prefHeight="30.0" prefWidth="117.0" text="HP: 9" />
+      <Label fx:id="Player_0_Arrows" layoutX="263.0" layoutY="830.0" prefHeight="30.0" prefWidth="117.0" text="Arrows:" />
+      <Label fx:id="Player_0_Role" layoutX="263.0" layoutY="860.0" prefHeight="30.0" prefWidth="117.0" text="Role:" />
+      <Button fx:id="Player_7_Button" layoutX="45.0" layoutY="599.0" mnemonicParsing="false" onAction="#p7Action" opacity="0.0" prefHeight="108.0" prefWidth="117.0" text="Player 7" />
+      <Label fx:id="Player_7_Tag" layoutX="45.0" layoutY="569.0" prefHeight="30.0" prefWidth="117.0" text="Player 7" />
+      <Label fx:id="Player_7_HP" layoutX="45.0" layoutY="707.0" prefHeight="30.0" prefWidth="117.0" text="HP:" />
+      <Label fx:id="Player_7_Arrows" layoutX="45.0" layoutY="737.0" prefHeight="30.0" prefWidth="117.0" text="Arrows:" />
+      <Label fx:id="Player_7_Role" layoutX="45.0" layoutY="767.0" prefHeight="30.0" prefWidth="117.0" text="Role:" />
+      <Button fx:id="Player_6_Button" layoutX="45.0" layoutY="150.0" mnemonicParsing="false" onAction="#p6Action" opacity="0.0" prefHeight="108.0" prefWidth="117.0" text="Player 6" />
+      <Label fx:id="Player_6_Tag" layoutX="45.0" layoutY="120.0" prefHeight="30.0" prefWidth="117.0" text="Player 6" />
+      <Label fx:id="Player_6_HP" layoutX="45.0" layoutY="258.0" prefHeight="30.0" prefWidth="117.0" text="HP:" />
+      <Label fx:id="Player_6_Arrows" layoutX="45.0" layoutY="288.0" prefHeight="30.0" prefWidth="117.0" text="Arrows:" />
+      <Label fx:id="Player_6_Role" layoutX="45.0" layoutY="318.0" prefHeight="30.0" prefWidth="117.0" text="Role:" />
+      <Label fx:id="InfoBox" alignment="TOP_LEFT" contentDisplay="CENTER" layoutX="861.0" layoutY="6.0" prefHeight="903.0" prefWidth="443.0" text="TextBox:" wrapText="true" />
+      <Label fx:id="Arrows_Pile" layoutX="287.0" layoutY="584.0" prefHeight="59.0" prefWidth="318.0" text="Arrows Left in Pile: " />
+      <Button fx:id="End_Turn" layoutX="302.0" layoutY="532.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="99.0" text="End Turn" />
+      <Button fx:id="Reroll_Dice" layoutX="491.0" layoutY="532.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="99.0" text="Reroll Dice" />
+      <Label layoutX="491.0" layoutY="502.0" prefHeight="30.0" prefWidth="99.0" text="Rerolls Left: " />
+      <ImageView fx:id="Dice_1_Image" fitHeight="59.0" fitWidth="63.0" layoutX="72.0" layoutY="416.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="Dice_2_Image" fitHeight="59.0" fitWidth="63.0" layoutX="232.0" layoutY="416.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="Dice_3_Image" fitHeight="59.0" fitWidth="63.0" layoutX="415.0" layoutY="416.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="Dice_4_Image" fitHeight="59.0" fitWidth="63.0" layoutX="568.0" layoutY="416.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="Dice_5_Image" fitHeight="59.0" fitWidth="63.0" layoutX="727.0" layoutY="416.0" pickOnBounds="true" preserveRatio="true" />
+   </children>
+</Pane>

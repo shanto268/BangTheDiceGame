@@ -5,58 +5,164 @@
 
 package bangdicegame;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
-/*
- *new functionality needed: 
+/**
+ * Houses all AI player information and simulates their turns
  */
 
 public class AI {
 	//Behavior defining parameters
+        /**
+         * value equivalent to their willingness to trick other players
+         */
 	private final double willingToTrick;
+        /**
+         * value equivalent to their aggressiveness
+         */
 	private final double Aggressiveness;
+        /**
+         * value equivalent to their likelihood to play safe
+         */
 	private final double Safetiness;
+        /**
+         * value equivalent to their likelihood to be nice
+         */
 	private final double Niceness;
+        /**
+         * value equivalent to their likelihood to keep dice
+         */
 	private final double willingToKeepDice;
+        /**
+         * value equivalent to their likelihood to keep health
+         */
 	private final double willingToKeepHealth;
+        /**
+         * value equivalent to their likelihood to keep shots
+         */
 	private final double willingToKeepShots;
+        /**
+         * value equivalent to their likelihood to keep arrows
+         */
 	private final double willingToKeepArrow;
+        /**
+         * value equivalent to their likelihood to keep gatling
+         */
 	private final double willingToKeepGatling;
+        /**
+         * value equivalent to their likelihood to be a skeptic
+         */
 	private final double SkepticProbability;
+        /**
+         * value equivalent to their likelihood to keep normal dice
+         */
 	private final double willingToKeepNormalDice;
+        /**
+         * value equivalent to their likelihood to keep coward dice
+         */
 	private final double willingToKeepCowardDice;
+        /**
+         * value equivalent to their likelihood to keep broken arrow
+         */
 	private final double willingToKeepBrokenArrow;
+        /**
+         * value equivalent to their likelihood to keep a fight roll
+         */
 	private final double willingToKeepFight;
-	private final double willingToKeepWhiskey;
+        /**
+         * value equivalent to their likelihood to keep a bullet roll
+         */
 	private final double willingToKeepBullet;
 
+        /**
+         * AI name
+         */
 	private final String name;
-	private final String role;     
+        /**
+         * AI role
+         */
+	private final String role;  
+        /**
+         * array list of their target roles based on player role
+         */
 	private ArrayList<String> targetRole;
+        /**
+         * array list of dice results for each roll
+         */
 	private ArrayList<String> diceResults;
+        /**
+         * array list for kept dice after each roll
+         */
 	private ArrayList<String> keptDice;
+        /**
+         * the amount of health they have
+         */
 	private int health;
+        /**
+         * how much health will be subtracted
+         */
 	private final int subtractHealth = 5;
-	private final int thresholdHealth;  
+        /**
+         * threshold health for decision making
+         */
+	private final int thresholdHealth; 
+        /**
+         * position in player order array
+         */
 	private int position;
+        /**
+         * total number of players
+         */
 	private final int totalPlayers;
+        /**
+         * total number of players alive
+         */
 	private int playersAlive;
+        /**
+         * max amount of dice rerolls
+         */
 	private int maxRolls = 3;
+        /**
+         * number of players started with
+         */
 	private int startedWith;
-    private GameFunctions game; //cdma added
-	
-	private ArrayList<Double> ProbabilityVector;
-	public Character [] playerOrder;
-	public Character currentPlayer;
-	public ArrowPile arrowPile;
-	public int remainingArrows;
+        /**
+         * gameFunctions object
+         */
+        private GameFunctions game;
+
+    /**
+     *  array of current player order
+     */
+    public Character [] playerOrder;
+
+    /**
+     *  current player whose turn it is
+     */
+    public Character currentPlayer;
+
+    /**
+     * arrowPile object
+     */
+    public ArrowPile arrowPile;
+
+    /**
+     *  number of arrows remaining in pile
+     */
+    public int remainingArrows;
 	
 //=================  Constructor =====================================
-	@SuppressWarnings("unchecked")
-	public AI(GameFunctions game, int i, ArrowPile arrowPile) {
-	//this.ProbabilityVector = createProbabilityVector(numPlayers);
+
+    /**
+     * constructor for AI
+     *
+     * @param game gameFunctions object
+     * @param i position in array
+     * @param arrowPile arrowPile object
+     */
+    @SuppressWarnings("unchecked")
+    public AI(GameFunctions game, int i, ArrowPile arrowPile) {
         this.SkepticProbability = getProbability(0.0,0.4);
         this.Aggressiveness = getProbability(0.0,0.4);
         this.Safetiness = getProbability(0.0,0.4);
@@ -72,9 +178,7 @@ public class AI {
         this.willingToKeepShots = getProbability(0.5,1.0);
         this.willingToKeepFight = getProbability(0.0,0.4);
         this.willingToKeepBrokenArrow = getProbability(0.5,1.0);
-        this.willingToKeepWhiskey = getProbability(0.5,1.0);
         this.willingToKeepBullet = getProbability(0.5,1.0);
-
         
         this.startedWith = game.numOfPlayers;
         this.playerOrder = game.playerOrder;
@@ -89,26 +193,42 @@ public class AI {
         this.arrowPile = arrowPile;
         this.remainingArrows = this.arrowPile.remaining;
         this.game = game;
-     }
+        }
 	
 //==================  Getters =======================================	
-	public void getPlayer() {
-            System.out.println("AI " + this.position + " is " + this.currentPlayer);
-	}
+
+    /**
+     * outputs player name and current position
+     */
+    public void getPlayer() {
+        System.out.println("AI " + this.position + " is " + this.currentPlayer);
+    }
 	
-	public void getPlayerName() {
+    /**
+     * outputs player name
+     */
+    public void getPlayerName() {
             System.out.println("AI " + this.position + " is " + this.currentPlayer.name);
 	}
 	
-	public void getPlayerHealth() {
+    /**
+     * outputs player health
+     */
+    public void getPlayerHealth() {
             System.out.println("AI " + this.position + " is " + this.currentPlayer.lifePoints);
 	}
 	
-	public void getPlayerRole() {
+    /**
+     * outputs player role
+     */
+    public void getPlayerRole() {
             System.out.println("AI " + this.position + " is " + this.currentPlayer.role);
 	}
 	
-	public void getPlayerBehavior() {
+    /**
+     * outputs willingness for different tasks based on probability
+     */
+    public void getPlayerBehavior() {
             System.out.println("AI " + this.position);
             System.out.println("Willing to trick: " + this.willingToTrick);
             System.out.println("Willing to keep dice: " + this.willingToKeepDice);
@@ -123,17 +243,26 @@ public class AI {
 
 	}
 
-	public void trackProbabilityVector() {
+    /**
+     *  outputs probability vector values
+     */
+    public void trackProbabilityVector() {
             for (int i=0;i<this.totalPlayers;i++) {
 		System.out.println(this.playerOrder[i].name + " P Vector is " + this.playerOrder[i].ProbabilityVector);
             }
 	}
 	
-	public void getPlayerProbabilityVector() {
+    /**
+     *  outputs proabilty vector values
+     */
+    public void getPlayerProbabilityVector() {
             System.out.println("AI " + this.role + " P(vector) " + this.currentPlayer.ProbabilityVector);
 	}
 	
-	public void getGuessRole(){
+    /**
+     *  outputs guessed role of AI player
+     */
+    public void getGuessRole(){
             for (int i=0;i<this.totalPlayers;i++){
                 if ( i!=this.position ) { 
                     System.out.println("guessed role of " + this.playerOrder[i].role + " is " + this.playerOrder[i].aiGuessRole);
@@ -142,6 +271,15 @@ public class AI {
 	}
 	
 	/*Probability Generator*/
+
+    /**
+     * determines probability with min and max
+     *
+     * @param minnum minimum number for probability
+     * @param maxnum maximum number for probability
+     * @return probability
+     */
+
 	public double getProbability(double minnum, double maxnum) {
 	    Random rand = new Random();
 	    return rand.nextFloat() * (maxnum - minnum) + minnum;
@@ -149,6 +287,12 @@ public class AI {
 	
 	/* 1) _____Method to track which players shot sheriff______*/
 	//returns array of position of players that shot sheriff
+
+    /**
+     * calculates who has shot the sheriff
+     *
+     * @return positions of sheriff shooters
+     */
 	public ArrayList<Integer> SheriffShooters(){
             ArrayList<Integer> positionOfSheriffShooters = new ArrayList<Integer>();
             for (int i=0;i<this.totalPlayers;i++) {
@@ -161,6 +305,12 @@ public class AI {
 	
 	/* 2) _____Method to track which players gave beers to sheriff______*/
 	//returns array of position of players that helped sheriff
+
+    /**
+     * determines who has helped the sheriff
+     *
+     * @return the positions of sheriff helpers
+     */
 	public ArrayList<Integer> SheriffHelpers(){
             ArrayList<Integer> positionOfSheriffHelpers = new ArrayList<>();
             for (int i=0;i<this.totalPlayers;i++) {
@@ -170,7 +320,12 @@ public class AI {
             return positionOfSheriffHelpers;
 	}
 	
-	public boolean EveryoneIsAlive() {
+    /**
+     * determines if everyone is alive
+     *
+     * @return true if everyone is alive
+     */
+    public boolean EveryoneIsAlive() {
             int i;
             int temp = 0;
                 
@@ -179,14 +334,7 @@ public class AI {
                     temp++;
                 }
             }
-                /*
-		for (Character element : this.playerOrder) {
-		//	System.out.println(element);
-			if (element != null)
-				i++;
-		}
-                */
-	//	System.out.println("players Alive " + i);
+            
             this.playersAlive = temp;
             if (this.playersAlive==this.startedWith) 
 		return true;
@@ -196,6 +344,10 @@ public class AI {
 	
 	/* 3) _____Method to update Probability vector______*/
 	//vector format: [S,R,O,D]
+
+    /**
+     *  updates all of the probability vectors as the game progresses 
+     */
 	public void updateProbabilityVector() {
             if (EveryoneIsAlive()) {
                 for (int i=0;i<this.totalPlayers;i++) {
@@ -298,7 +450,10 @@ public class AI {
 		} //end of conditional	
 	}//end of method
 	
-	public void assignOpponents(){
+    /**
+     *  assigns opponents for each AI based on their starting role
+     */
+    public void assignOpponents(){
 		//Assign enemy to AI
 		if (this.role == "Sheriff") {
 			this.targetRole.add("Outlaw");
@@ -323,7 +478,10 @@ public class AI {
 		}
 	}
 	
-	public void guessRoles() {
+    /**
+     *  guesses the role of an AI player
+     */
+    public void guessRoles() {
 		if (EveryoneIsAlive()) {
 			for (int i=0;i<this.totalPlayers;i++){
 				if ( i!=this.position ) { //not the present AI
@@ -374,7 +532,12 @@ public class AI {
 		}
 	}
 	
-	public boolean keepBeer() {
+    /**
+     * determines if an AI will keep a beer roll
+     *
+     * @return true if beer is being kept
+     */
+    public boolean keepBeer() {
 		if (this.currentPlayer.lifePoints < this.thresholdHealth)
 			return true;
 		else if (Math.random() <= this.willingToKeepHealth)
@@ -383,7 +546,12 @@ public class AI {
 			return false;
 	}
 	
-	public boolean keepShot1() {
+    /**
+     * determines if an AI will keep a bull's eye 1
+     *
+     * @return true if bull's eye 1 will be kept
+     */
+    public boolean keepShot1() {
 		int toLeft = Math.floorMod(this.position-1, this.totalPlayers);
 		int toRight = Math.floorMod(this.position+1, this.totalPlayers);
 		
@@ -395,7 +563,12 @@ public class AI {
 			return false;
 	}
 	
-	public boolean keepShot2() {
+    /**
+     * determines if an AI will keep a bull's eye 2
+     *
+     * @return true if bull's eye 2 will be kept
+     */
+    public boolean keepShot2() {
 		int toLeft = Math.floorMod(this.position-2, this.totalPlayers);
 		int toRight = Math.floorMod(this.position+2, this.totalPlayers);
 		
@@ -407,7 +580,13 @@ public class AI {
 			return false;
 	}
 
-	public boolean keepGatling(int numGatling) {
+    /**
+     * determines if an AI will keep a gatling roll
+     *
+     * @param numGatling number of gatlings rolled so far
+     * @return true if gatling will be kept
+     */
+    public boolean keepGatling(int numGatling) {
 		if (numGatling == 1) {
 			if (Math.random() <= this.willingToKeepGatling)
 				return true;
@@ -430,7 +609,12 @@ public class AI {
 			return false;
 	}
 	
-	public boolean keepArrow() {
+    /**
+     * determines if AI will keep an arrow roll
+     *
+     * @return true if arrow will be kept
+     */
+    public boolean keepArrow() {
 		//arrow-> keep with willing probability
 		if (Math.random() <= this.willingToKeepArrow)
 			return true;
@@ -438,11 +622,15 @@ public class AI {
 			return false;
 	}
 	
-	public void resolveBeers() { //cannot give beer if max life 
+    /**
+     * resolves beer rolls depending on AI roll, their enemies, and the guessed roles of other players
+     */
+    public void resolveBeers() { //cannot give beer if max life 
 		boolean sheriffHelper = false;
 		boolean sheriffShooter = false;
 		boolean helped = false;
 		
+                //if statements to decide on who to help based on interactions with sheriffs
 		for (int i=0;i<this.totalPlayers;i++) {
 			if (this.playerOrder[i].numShotSheriff>0)
 				sheriffShooter = true;
@@ -460,7 +648,7 @@ public class AI {
 			return;
 		}
 		
-		
+		//all possible options for who the AI will serve the beer to
 		if (sheriffShooter && !helped) {
 			if (this.currentPlayer.role=="Outlaw") {
 				//help who shot the sheriff if role=outlaw
@@ -573,39 +761,13 @@ public class AI {
 		
 	}
 	
-	public void resolveBullsEye1() {
-		Random r = new Random();
+    /**
+     *  shoots randomly when a bull's eye 1 is rolled
+     */
+    public void shootRandomly1() {
+		Random r = new Random(); //random int
 		int chance = r.nextInt(2); //0 or 1
-		if (chance == 1) {
-			System.out.println(this.currentPlayer.name + " shot " + this.game.get_next_player().name + " who is one position"
-					+ " to the right." );
-                        this.game.get_next_player().lose_life(game, arrowPile, false);
-		}
-		else {
-			System.out.println(this.currentPlayer.name + " shot " + this.game.get_previous_player().name + " who is one position"
-					+ " to the left." );
-                        this.game.get_previous_player().lose_life(game, arrowPile, false);
-		}
-	}
-	
-	public void resolveBullsEye2() {
-		Random r = new Random();
-		int chance = r.nextInt(2); //0 or 1
-		if (chance == 1) {
-			System.out.println(this.currentPlayer.name + " shot " + this.game.get_two_away_player(this.game.get_current_player()).name + " who is two positions"
-					+ " to the right." );
-                        this.game.get_two_away_player(this.game.get_current_player()).lose_life(game, arrowPile, false);
-		}
-		else {
-			System.out.println(this.currentPlayer.name + " shot " + this.game.get_two_before_player(this.game.get_current_player()).name + " who is two positions"
-					+ " to the left." );
-                        this.game.get_two_before_player(this.game.get_current_player()).lose_life(game, arrowPile, false);
-		}
-	}
-	
-	public void shootRandomly1() {
-		Random r = new Random();
-		int chance = r.nextInt(2); //0 or 1
+                //makes chosen player lose a life point based on random selection
 		if (chance == 1) {
                         int j = Math.floorMod(this.position-1, this.totalPlayers);
 			if (this.playerOrder[j].aiGuessRole=="Sheriff")
@@ -624,9 +786,13 @@ public class AI {
 		}
 	}
 	
-	public void shootRandomly2() {
-		Random r = new Random();
+    /**
+     * shoots randomly when a bull's eye 2 is rolled
+     */
+    public void shootRandomly2() {
+		Random r = new Random(); //random int
 		int chance = r.nextInt(2); //0 or 1
+                //makes chosen player lose a life point based on random selection
 		if (chance == 1) {
 			System.out.println(this.currentPlayer.name + " shot " + this.game.get_two_away_player(this.game.get_current_player()).name + " who is two positions"
 					+ " to the right." );
@@ -639,8 +805,18 @@ public class AI {
 		}
 	}
 	
-	public void resolveKeptDice(ArrayList<String> keptDice,int numGatling){
-		System.out.println("Resolving the 5 kept dices!");
+    /**
+     * resolves all of the kept dice after rerolling is finished
+     *
+     * @param keptDice array list of kept dice
+     * @param numGatling number of gatlings rolled
+     */
+    public void resolveKeptDice(ArrayList<String> keptDice,int numGatling){
+                int diceToRoll = 5;
+                if (this.game.get_current_player().role == "Zombie"){
+                    diceToRoll = 3;
+                }
+		System.out.println("Resolving the " + diceToRoll + " kept dices!");
 		//Gatlings
                 numGatling = 0;
                 for (int i=0; i < keptDice.size(); i++){
@@ -695,10 +871,14 @@ public class AI {
                  
 	}
 	
-	public void resolveShot2() {
+    /**
+     *  resolves bull's eye 2 rolls
+     */
+    public void resolveShot2() {
 		int toLeft = Math.floorMod(this.position-2, this.totalPlayers);
 		int toRight = Math.floorMod(this.position+2, this.totalPlayers);
 		
+                //if the AI has a target, shoots them
 		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)) {
 			if (this.playerOrder[toLeft].aiGuessRole=="Sheriff")
 				this.currentPlayer.numShotSheriff++;
@@ -713,14 +893,19 @@ public class AI {
 					+ " to the right." );
                         this.game.get_two_away_player(this.game.get_current_player()).lose_life(game, arrowPile, false);
 		}
+                //otherwise shoots randomly
 		else 
 			shootRandomly2();
 	}
 	
-	public void resolveShot1() {		
+    /**
+     * resolves bull's eye 1 rolls
+     */
+    public void resolveShot1() {		
 		int toLeft = Math.floorMod(this.position-1, this.totalPlayers);
 		int toRight = Math.floorMod(this.position+1, this.totalPlayers);
 		
+                //if the AI has a target, shoots them
 		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)) {
 			if (this.playerOrder[toLeft].aiGuessRole=="Sheriff")
 				this.currentPlayer.numShotSheriff++;
@@ -735,11 +920,17 @@ public class AI {
 					+ " to the right." );
                         this.game.get_next_player().lose_life(game, arrowPile, false);
 		}
+                //otherwise shoots randomly
 		else 
 			shootRandomly1();
 	}
 		
-	public void resolveGatling(int numGatling) {
+    /**
+     * resolves gatling dice if they have rolled 3 or more
+     *
+     * @param numGatling number of gatlings rolled
+     */
+    public void resolveGatling(int numGatling) {
 		if(numGatling>= 3) {
 			for(int i=0;i<this.totalPlayers;i++) {
                             if(i!=this.position && !this.playerOrder[i].isDead){
@@ -754,26 +945,34 @@ public class AI {
 	}
 	
 	//decision to keep dice -> "A", "D", "S1", "S2", "B", "G"
+
+    /**
+     * determines if dice will be kept and what actions needs to be taken
+     *
+     * @param diceResults arraylist of results of dice from being rolled
+     */
 	public void keepDice(ArrayList<String> diceResults) {
 		this.keptDice = new ArrayList<String>();
 		int maxRolls = this.maxRolls; 
 		int numDynamites = 0;
 		int numGatling = 0;
+                int diceToRoll = 5;
+                if (this.game.get_current_player().role == "Zombie"){
+                    diceToRoll = 3;
+                }
 		System.out.println("Dices rolled: " + diceResults);
 		
                 if (!game.game_over && !game.get_current_player().isDead){
                     for(int i=0;i<diceResults.size();i++){
 			//resolve all arrows
 			if (diceResults.get(i)=="A" && !this.game.game_over) {
-                            //NEW CODE
                             if (game.get_current_player().arrows >= 3 && this.arrowPile.chiefArrow != 0){
                                 System.out.println(this.name + "rolled an arrow and has taken the chief's arrow.");
                                 game.get_current_player().gain_arrow();
                                 game.get_current_player().gain_arrow();
-                                game.get_current_player().cheifArrow = true;
+                                game.get_current_player().chiefArrow = true;
                                 this.arrowPile.chiefArrow = 0;
                             }
-                            //END OF NEW CODE
                             else{
                                 System.out.println(this.name + " rolled an arrow. " + this.name + " must pick up an arrow before continuing.");
                                 this.arrowPile.remove_arrow(this.game);
@@ -823,13 +1022,13 @@ public class AI {
 				keepDices(i, numGatling, diceResults);
 			}//end of for loop
 			System.out.println(this.name+" kept the following dice " + this.keptDice); 
-			if (this.keptDice.size()==5) {
+			if (this.keptDice.size()==diceToRoll) {
                             //resolve the dices
                             resolveKeptDice(this.keptDice, numGatling);
 			}
 			else {
 				while (numRolls!=maxRolls) {
-                                    int diceLeft = 5-this.keptDice.size();
+                                    int diceLeft = diceToRoll-this.keptDice.size();
                                     System.out.println(this.currentPlayer.name + " re-rolled " + diceLeft + " dice(s).");
                                     //get diceLeft number of dice
                                     AIDice d2 = new AIDice();
@@ -846,7 +1045,7 @@ public class AI {
 					keepDices(i, numGatling, newDice);
                                     }
                                     System.out.println(this.currentPlayer.name + " rolled " + (numRolls+1) + " times this round!");
-                                    if ( (this.keptDice.size() == 5))
+                                    if ( (this.keptDice.size() == diceToRoll))
 					numRolls = maxRolls;
                                     else
                                         numRolls++;
@@ -858,7 +1057,14 @@ public class AI {
                 }
 	}//end of method
 	
-	public void keepDices(int i, int numGatling, ArrayList<String> diceResults) {
+    /**
+     * determines if dice will be kept and what actions needs to be taken
+     *
+     * @param i position of dice
+     * @param numGatling  number of gatlings rolled
+     * @param diceResults array of dice results
+     */
+    public void keepDices(int i, int numGatling, ArrayList<String> diceResults) {
 		if ((diceResults.get(i)=="B") && keepBeer()) {
 			System.out.println(this.currentPlayer.name + " kept the beer." );
 			this.keptDice.add(diceResults.get(i));
@@ -920,37 +1126,73 @@ public class AI {
 
 	}
 	
-	public boolean keepBullet() {
+    /**
+     * determines if AI will keep bullet roll
+     *
+     * @return true if bullet dice will be kept
+     */
+    public boolean keepBullet() {
 		if (Math.random() <= this.willingToKeepBullet)
 			return true;
 		else
 			return false;
 	}
 	
-	public boolean keepDoubleShot1() {
+    /**
+     * determines if AI will keep double shot 1
+     *
+     * @return true if double shot 1 will be kept
+     */
+    public boolean keepDoubleShot1() {
 		return keepShot1();
 	}
 	
-	public boolean keepDoubleShot2() {
+    /**
+     * determines if AI will keep double shot 2
+     *
+     * @return true if double shot 2 will be kept
+     */
+    public boolean keepDoubleShot2() {
 		return keepShot2();
 	}
 	
-	public boolean keepDoubleGatling(int numGatling) {
+    /**
+     * determines if AI will keep double gatling
+     *
+     * @param numGatling number of gatlings rolled so far
+     * @return true if double gatling will be kept
+     */
+    public boolean keepDoubleGatling(int numGatling) {
 		return keepGatling(numGatling);
 	}
 	
-	public boolean keepDoubleBeer() {
+    /**
+     * determines if AI will keep double beer
+     *
+     * @return true if double beer will be kept
+     */
+    public boolean keepDoubleBeer() {
 		return keepBeer();
 	}
 	
-	public boolean keepBrokenArrow() {
+    /**
+     * determines if AI will keep broken arrow
+     *
+     * @return true if broken arrow will be kept
+     */
+    public boolean keepBrokenArrow() {
 		if (Math.random() <= this.willingToKeepBrokenArrow)
 			return true;
 		else
 			return false;
 	}
 	
-	public boolean keepWhiskey() {
+    /**
+     * determines if AI will keep whiskey roll
+     *
+     * @return true if whiskey will be kept
+     */
+    public boolean keepWhiskey() {
 		Random r = new Random();
 		int rlife = r.nextInt(3); //0,1,2
 		if (this.currentPlayer.lifePoints < this.thresholdHealth+rlife)
@@ -959,15 +1201,22 @@ public class AI {
 			return false;
 	}
 	
-	public boolean keepFight() {
+    /**
+     * determines if AI will keep fight roll
+     *
+     * @return true if fight will be kept
+     */
+    public boolean keepFight() {
 		if (Math.random() <= this.willingToKeepFight)
 			return true;
 		else
 			return false;
 	}
 
-	
-	public void DoubleShootRandomly1() {
+    /**
+     * resolves the double bulls eye 1 by shooting randomly
+     */
+    public void DoubleShootRandomly1() {
 		Random r = new Random();
 		int chance = r.nextInt(2); //0 or 1
 		if (chance == 1) {
@@ -990,7 +1239,10 @@ public class AI {
 		}
 	}
 	
-	public void DoubleShootRandomly2() {
+    /**
+     *  resolves the double bulls eye 2 by shooting randomly
+     */
+    public void DoubleShootRandomly2() {
 		Random r = new Random();
 		int chance = r.nextInt(2); //0 or 1
 		if (chance == 1) {
@@ -1007,15 +1259,22 @@ public class AI {
 		}
 	}
 	
-	public void resolveBullet() {
+    /**
+     *  resolves a bullet when rolled
+     */
+    public void resolveBullet() {
 		System.out.println(this.name + " rolled a Bullet. " + this.name + " lost one life point.");
 		this.currentPlayer.lose_life(this.game, this.arrowPile, true);
 	}
 	
-	public void resolveDoubleShot1() {
+    /**
+     *  resolves a double bulls eye 1
+     */
+    public void resolveDoubleShot1() {
 		int toLeft = Math.floorMod(this.position-1, this.totalPlayers);
 		int toRight = Math.floorMod(this.position+1, this.totalPlayers);
 		
+                //if player has a target, shoot them
 		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)) {
 			if (this.playerOrder[toLeft].aiGuessRole=="Sheriff")
 				this.currentPlayer.numShotSheriff++;
@@ -1032,14 +1291,19 @@ public class AI {
                         this.game.get_next_player().lose_life(game, arrowPile, false);
                         this.game.get_next_player().lose_life(game, arrowPile, false);
 		}
+                //otherwise shoots randomly
 		else 
 			DoubleShootRandomly1();
 	}
 	
-	public void resolveDoubleShot2() {
+    /**
+     *  resolves a double bulls eye 2
+     */
+    public void resolveDoubleShot2() {
 		int toLeft = Math.floorMod(this.position-2, this.totalPlayers);
 		int toRight = Math.floorMod(this.position+2, this.totalPlayers);
 		
+                //if player has a target, shoots them
 		if (this.targetRole.contains(this.playerOrder[toLeft].aiGuessRole)) {
 			if (this.playerOrder[toLeft].aiGuessRole=="Sheriff")
 				this.currentPlayer.numShotSheriff++;
@@ -1056,159 +1320,23 @@ public class AI {
                         this.game.get_two_away_player(this.game.get_current_player()).lose_life(game, arrowPile, false);
                         this.game.get_two_away_player(this.game.get_current_player()).lose_life(game, arrowPile, false);
 		}
+                //otherwise shoots randomly
 		else 
 			DoubleShootRandomly2();
 	}
 	
-	public void resolveDoubleBeer() { //random
+    /**
+     *  resolves double beer roll
+     */
+    public void resolveDoubleBeer() { //random
 		resolveBeers();
 		resolveBeers();
 	}
 	
-	public void resolveDoubleBeer1() { //2 to itself or other 
-		boolean sheriffHelper = false;
-		boolean sheriffShooter = false;
-		boolean helped = false;
-		
-		for (int i=0;i<this.totalPlayers;i++) {
-			if (this.playerOrder[i].numShotSheriff>0)
-				sheriffShooter = true;
-			}
-		
-		for (int i=0;i<this.totalPlayers;i++) {
-			if (this.playerOrder[i].numHelpSheriff>0)
-				sheriffHelper = true;
-			}
-		
-		if (this.currentPlayer.lifePoints <= this.thresholdHealth) {
-			this.currentPlayer.gain_life();
-			this.currentPlayer.gain_life();
-			System.out.println(this.name + " drank the beer!" );
-			helped = true;
-			return;
-		}
-		
-		
-		if (sheriffShooter && !helped) {
-			if (this.currentPlayer.role=="Outlaw") {
-				//help who shot the sheriff if role=outlaw
-				for (int i=0;i<this.totalPlayers;i++) {
-					if (this.playerOrder[i].numShotSheriff>0 && !this.playerOrder[i].isDead) {
-						this.playerOrder[i].gain_life();
-						this.playerOrder[i].gain_life();
-						System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
-						helped = true;
-						return;
-					}
-				}
-			}
-			
-			else if (this.currentPlayer.role=="Renegade") {
-				 //help sheriff is role=renegade or someone else at random if everyone is alive
-				 //else help who shot sheriff
-					if (EveryoneIsAlive()) {
-						for (int i=0;i<this.totalPlayers;i++) {
-							if (this.playerOrder[i].role=="Sheriff" && !this.playerOrder[i].isDead) {
-								this.playerOrder[i].gain_life();
-								this.playerOrder[i].gain_life();
-								this.currentPlayer.numHelpSheriff++;
-								System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
-								helped = true;
-								return;
-							}
-						}	
-					}
-					else {
-						for (int i=0;i<this.totalPlayers;i++) {
-							if (this.playerOrder[i].numShotSheriff>0 && !this.playerOrder[i].isDead) {
-								this.playerOrder[i].gain_life();
-								this.playerOrder[i].gain_life();
-								System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
-								helped = true;
-								return;
-							}
-						}
-					}
-				}	
-		
-		}
-		
-		else if (!sheriffShooter && !helped) {
-				//randomly give help
-                                while (!helped){
-                                    int maxi = 0;
-                                    for (int i=0;i<this.totalPlayers;i++) {
-					if (this.playerOrder[i] != null)
-                                            maxi++;
-                                    }
-                                    int rand = (int)(Math.random()*(maxi));
-                                    if (!this.playerOrder[rand].isDead){
-                                        if (this.playerOrder[rand].role=="Sheriff")
-                                            this.currentPlayer.numHelpSheriff++;
-            				this.playerOrder[rand].gain_life();
-            				this.playerOrder[rand].gain_life();
-                			System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
-                        		helped = true;
-                                	return;
-                                    }
-                                }
-                }
-              
-		if (sheriffHelper && !helped) {
-			 if (this.currentPlayer.role=="Sheriff") {
-				//help who gave you health if role=sheriff 
-				for (int i=0;i<this.totalPlayers;i++) {
-					if (this.playerOrder[i].numHelpSheriff>0 && !this.playerOrder[i].isDead) {
-						this.playerOrder[i].gain_life();
-						this.playerOrder[i].gain_life();
-						System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
-						helped = true;
-						return;
-					}
-				}
-			}
-		}
-		
-		else if (!sheriffHelper && !helped) {
-			//randomly give help	
-			while (!helped){
-                            int maxi = 0;
-                            for (int i=0;i<this.totalPlayers;i++) {
-                                if (this.playerOrder[i] != null)
-                                    maxi++;
-                            }
-                            int rand = (int)(Math.random()*(maxi));
-                            if (!this.playerOrder[rand].isDead){
-                                if (this.playerOrder[rand].role=="Sheriff")
-                                    this.currentPlayer.numHelpSheriff++;
-                                this.playerOrder[rand].gain_life();
-                                this.playerOrder[rand].gain_life();
-                		System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
-                        	helped = true;
-                                return;
-                            }
-                        }
-                }
-		
-		if (this.currentPlayer.role=="Deputy" && !helped) {
-			//help sheriff is role=deputy
-			for (int i=0;i<this.totalPlayers;i++) {
-				if (this.playerOrder[i].role=="Sheriff" && !this.playerOrder[i].isDead) {
-					this.playerOrder[i].gain_life();
-					this.playerOrder[i].gain_life();
-					this.currentPlayer.numHelpSheriff++;
-					System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
-					helped = true;
-					return;
-				}
-			}
-		}
-		
-		
-		
-	}
-	
-	public void resolveBrokenArrow() {  
+    /**
+     * resolves a broken arrow roll
+     */
+    public void resolveBrokenArrow() {  
 		Random r = new Random();
 		int pplwithArrows = 0;
 		int rArrows = r.nextInt(4); //0,1,2,3
@@ -1232,12 +1360,18 @@ public class AI {
 		}
 	}
 
-	public void resolveWhiskey() {
+    /**
+     *  resolves a whiskey roll
+     */
+    public void resolveWhiskey() {
 		this.currentPlayer.gain_life();
 		System.out.println(this.name + " drank the whiskey!" );
 	}
 	
-	public void resolveFight() {
+    /**
+     *  resolves a fight roll
+     */
+    public void resolveFight() {
 		int pplAlive = 0;
 		Random r = new Random();
 		int rIndex = 0;
@@ -1255,7 +1389,13 @@ public class AI {
 		duel(this.currentPlayer, this.playerOrder[rIndex]);
 	}
 	
-	public void duel(Character self, Character opponent) {
+    /**
+     * initiates a duel between two players
+     *
+     * @param self current player
+     * @param opponent player chosen to duel
+     */
+    public void duel(Character self, Character opponent) {
 		AIDice oppoDice = new AIDice();
 		//opponent rolls the duel dice
 		//if not fight
@@ -1271,32 +1411,28 @@ public class AI {
 			System.out.println("Since, " + opponent.name + " rolled Fight. It is " + self.name + "'s turn to roll the dice.");
 			duel(opponent, self);
 		}
-	}
-	
-	public void resolveDoubleGatling(int numGatling) {
-		if(numGatling>= 3) {
-			for(int i=0;i<this.totalPlayers;i++) {
-                            if(i!=this.position && !this.playerOrder[i].isDead){
-				this.playerOrder[i].lose_life(this.game, this.arrowPile, false);
-                            }
-                            else if (i == this.position){
-                                this.arrowPile.remaining = this.arrowPile.remaining + this.playerOrder[i].arrows;
-				this.playerOrder[i].arrows=0;
-                            }
-			}
-		}
-	}
-	
+	}	
 	
 	/* 4) _____Dice Interactions______*/
+
+    /**
+     * lets the AI player roll the dice
+     */
+
 	public void rollDice() {
 		assignOpponents();
 		updateProbabilityVector();
 		guessRoles();
+                int diceToRoll = 5;
+                
+                //only rolls 3 dice if a zombie
+                if (this.game.get_current_player().role == "Zombie"){
+                    diceToRoll = 3;
+                }
 		if (!this.game.expansions) {
 			AIDice d = new AIDice();
-			System.out.println(this.currentPlayer.name+ " has decided to not use either of the Coward's or Loudmouth's dice");
-			this.diceResults = d.rollThemDice(5);
+			//System.out.println(this.currentPlayer.name+ " has decided to not use either of the Coward's or Loudmouth's dice");
+			this.diceResults = d.rollThemDice(diceToRoll);
 			keepDice(this.diceResults);
 			return;
 		}
@@ -1304,20 +1440,20 @@ public class AI {
 			AIDice d = new AIDice();
 			if (Math.random() <= this.willingToKeepNormalDice) {
 				System.out.println(this.currentPlayer.name+ " has decided to use the regular dies");
-				this.diceResults = d.rollDiceExpansion(5, 'R');
+				this.diceResults = d.rollDiceExpansion(diceToRoll, 'R');
 				keepDiceExpansion(this.diceResults, 'R');
 				return;
 			}
 			
 			else if (Math.random() <= this.willingToKeepCowardDice) {
 				System.out.println(this.currentPlayer.name+ " has decided to use the Coward's dice");
-				this.diceResults = d.rollDiceExpansion(5, 'C');
+				this.diceResults = d.rollDiceExpansion(diceToRoll, 'C');
 				keepDiceExpansion(this.diceResults, 'C');
 				return;
 			}
 			else {
 				System.out.println(this.currentPlayer.name+ " has decided to use the Loudmouth's dice");
-				this.diceResults = d.rollDiceExpansion(5, 'L');
+				this.diceResults = d.rollDiceExpansion(diceToRoll, 'L');
 				keepDiceExpansion(this.diceResults, 'L');
 				return;
 			}
@@ -1331,8 +1467,15 @@ public class AI {
 		//re-shuffling correct die
 		//numGatling number
 	
-	
-	public ArrayList<Integer> determineDiceType(ArrayList<String> keptDice, char DiceType, int diceLeft){
+    /**
+     * determines the type of the dice kept
+     *
+     * @param keptDice arraylist of kept dice
+     * @param DiceType char to represent dice type
+     * @param diceLeft dice left to work with
+     * @return array list of dice to roll
+     */
+    public ArrayList<Integer> determineDiceType(ArrayList<String> keptDice, char DiceType, int diceLeft){
 		ArrayList<Integer> numDiceToRoll = new ArrayList<Integer>();
 		int numKeptDice = keptDice.size();
 		int numR = 0;
@@ -1488,8 +1631,15 @@ public class AI {
 		return numDiceToRoll;
 	}
 	
-	
-	public ArrayList<String> reRoll(ArrayList<String> keptDice, char diceUsed, int numNeeded){
+    /**
+     * allows rerolls of dice
+     *
+     * @param keptDice arraylist of dice that are kept
+     * @param diceUsed type of dice used
+     * @param numNeeded number needed
+     * @return results of dice rolled
+     */
+    public ArrayList<String> reRoll(ArrayList<String> keptDice, char diceUsed, int numNeeded){
 		ArrayList<String> results = new ArrayList<String>();
 		int numD = 0;
 
@@ -1524,12 +1674,22 @@ public class AI {
 		return results;
 	}
 	
-	public void keepDiceExpansion(ArrayList<String> diceResults, char diceUsed) {
+    /**
+     * determines what dice will be kept from expansion
+     *
+     * @param diceResults arraylist of dice results
+     * @param diceUsed type of dice used
+     */
+    public void keepDiceExpansion(ArrayList<String> diceResults, char diceUsed) {
 		this.keptDice = new ArrayList<String>();
 		ArrayList<Integer> diceChoice = new ArrayList<Integer>();
 		int maxRolls = this.maxRolls; 
 		int numDynamites = 0;
 		int numGatling = 0;
+                int diceToRoll = 5;
+                if (this.game.get_current_player().role == "Zombie"){
+                    diceToRoll = 3;
+                }
 		System.out.println("Dices rolled: " + diceResults);
 		//Resolving order
 		//Arrows, Bullet, Dynamite, Others
@@ -1542,7 +1702,7 @@ public class AI {
                                 System.out.println(this.name + "rolled an arrow and has taken the chief's arrow.");
                                 game.get_current_player().gain_arrow();
                                 game.get_current_player().gain_arrow();
-                                game.get_current_player().cheifArrow = true;
+                                game.get_current_player().chiefArrow = true;
                                 this.arrowPile.chiefArrow = 0;
                             }
                             //END OF NEW CODE
@@ -1635,7 +1795,7 @@ public class AI {
 				keepDices(i, numGatling, diceResults);
 			}//end of for loop
 			System.out.println(this.name+" kept the following dice " + this.keptDice); 
-			if (this.keptDice.size()==5) {
+			if (this.keptDice.size()==diceToRoll) {
                             //resolve the dices
                             resolveKeptDice(this.keptDice, numGatling);
 			}
@@ -1643,7 +1803,7 @@ public class AI {
 				while (numRolls!=maxRolls) {
 		
 									//determine how many dice needs to be re rolled
-                                    int diceLeft = 5-this.keptDice.size();
+                                    int diceLeft = diceToRoll-this.keptDice.size();
                                     int regular = 0;
                                     int saloon = 0;
                                     int duel = 0;
@@ -1652,50 +1812,6 @@ public class AI {
                                     
                                     System.out.println(this.currentPlayer.name + " re-rolled " + diceLeft + " dice(s).");
                                     newDice.addAll(reRoll(this.keptDice, diceUsed, diceLeft));
-                                    
-                                    /*
-                                    //get diceLeft number of dice
-                                    
-									//determine which type of dice they are
-                                    diceChoice = determineDiceType(this.keptDice, diceUsed, diceLeft);
-									//re roll that specific type
-                                    regular  = diceChoice.get(0);
-                                    saloon  = diceChoice.get(1);
-                                    duel  = diceChoice.get(2);
-                                    
-                                    System.out.println("R: " + regular + "S: " + saloon + "D: " + duel);
-                                    
- 
-
-                                    if (diceUsed=='R') {
-                                        ArrayList<String> RDice = d2.rollThemDice(regular);
-                                        ArrayList<String> DDice = d2.rollThemDuelDice(duel);
-                                        newDice.addAll(RDice);
-                                        newDice.addAll(DDice);
-
-                                    }
-                                    
-                                    else if (diceUsed=='L') {
-                                        ArrayList<String> RDice = d2.rollThemDice(regular);
-                                        ArrayList<String> DDice = d2.rollThemDuelDice(saloon);                                        
-                                    	ArrayList<String> SDice = d2.rollThemLoudMouthDice(duel);
-                                        newDice.addAll(RDice);
-                                        newDice.addAll(DDice);
-                                        newDice.addAll(SDice);
-
-                                    }
-                                    else if (diceUsed=='C') {
-                                        ArrayList<String> RDice = d2.rollThemDice(regular);
-                                        ArrayList<String> DDice = d2.rollThemDuelDice(saloon);                                    
-                                    	ArrayList<String> SDice = d2.rollThemCowardDice(duel);
-                                        newDice.addAll(RDice);
-                                        newDice.addAll(DDice);
-                                        newDice.addAll(SDice);
-
-                                    }
-                                    newDice.removeIf( face -> face.equals("Empty"));  
-                                    */
-                                    
                                     
                                     System.out.println("Newly rolled dices " + newDice);
                                                                     
@@ -1713,7 +1829,7 @@ public class AI {
 					keepDices(i, numGatling, newDice);
                                     }
                                     System.out.println(this.currentPlayer.name + " rolled " + (numRolls+1) + " times this round!");
-                                    if ( (this.keptDice.size() == 5))
+                                    if ( (this.keptDice.size() == diceToRoll))
 					numRolls = maxRolls;
                                     else
                                         numRolls++;
@@ -1725,31 +1841,17 @@ public class AI {
                 }
 	}//end of method
 
-	
-
-	
-	public void turn() {
+    /**
+     *  outputs player name of current turn
+     */
+    public void turn() {
 		System.out.println("It is "+this.currentPlayer.name+"'s turn and he/she will now roll the dice.");
 	}
 	
-	
-	public int playersAlive() {
-		int total = 0;
-		for (int i=0;i<this.startedWith;i++) {
-			if (this.playerOrder[i]!=null)
-				if (this.playerOrder[i].lifePoints>0)
-					total++;
-				else if (this.playerOrder[i].lifePoints<=0 && this.playerOrder[i].role!="Sheriff") {
-					System.out.println(this.playerOrder[i].name + " has died!");
-					System.out.println(this.playerOrder[i].name + " was the " + this.playerOrder[i].role);
-					this.playerOrder[i]=null;
-				}	
-		}
-		return total;
-	}
-	
-	
-	public void test() {
+    /**
+     * testing certain AI functions
+     */
+    public void test() {
 		assignOpponents();
 	//role is allocated by matching the max probability to the roles
 		guessRoles();

@@ -8,16 +8,74 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
+ * Deals with functions of the game, such as getting next player and determining win conditions
+ */
+
+
+/*
  *purpose:
  *lets user control a player
  *must communicate with table
  */
 public class GameFunctions {
+
+    /**
+     * array showing order of player turns
+     */
     public Character [] playerOrder;
-    public int currentPlayer, numOfPlayers, numAlivePlayers, boneyardTotal;
-    public Boolean game_over, realPlayerDead, expansions, outbreak;
+
+    /**
+     * player whose turn it is
+     */
+    public int currentPlayer,
+
+    /**
+     * total number of players
+     */
+    numOfPlayers,
+
+    /**
+     * number of players alive
+     */
+    numAlivePlayers,
+
+    /**
+     * total amount drawn from boneyard cards
+     */
+    boneyardTotal;
+
+    /**
+     * true if game over, false otherwise
+     */
+    public Boolean game_over,
+
+    /**
+     * if the real player is dead = true, false otherwise
+     */
+    realPlayerDead,
+
+    /**
+     * true if expansions are enabled
+     */
+    expansions,
+
+    /**
+     * true if there is a zombie outbreak
+     */
+    outbreak;
+    
+    /**
+     * holds the deck for the boneyard cards
+     */
     int boneyardDeck [];
     
+    /**
+     * initializes gameFuncions
+     *
+     * @param players array of players in their turn order
+     * @param totalPlayers total number of players
+     * @param expansions true if expansions are enabled
+     */
     public GameFunctions (Character [] players, int totalPlayers, Boolean expansions){
         int [] deck = {0,0,1,1,1,1,1,1,2,2,2};
         this.playerOrder = players;
@@ -32,15 +90,27 @@ public class GameFunctions {
         this.outbreak = false;
     }
   
+    /**
+     *  goes to next player turn
+     */
     public void next_turn (){
         this.currentPlayer = (this.currentPlayer + 1)%(this.numOfPlayers);
     }
     
+    /**
+     * gets what character is currently playing
+     *
+     * @return character whose current turn it is
+     */
     public Character get_current_player (){
         return this.playerOrder[this.currentPlayer];
     }
-    
-    //gets player 1 to the right
+
+    /**
+     * gets (alive) player 1 to the right
+     *
+     * @return character object
+     */
     public Character get_next_player (){
         int temp;
         temp = (this.currentPlayer + 1)%this.numOfPlayers;
@@ -59,8 +129,12 @@ public class GameFunctions {
         
         return this.playerOrder[temp];
     }
-    
-    //gets player 1 to the left
+
+    /**
+     * gets (alive) player 1 to the left
+     *
+     * @return character object
+     */
     public Character get_previous_player (){
         int temp;
         temp = (this.currentPlayer - 1)%this.numOfPlayers;
@@ -79,8 +153,13 @@ public class GameFunctions {
         
         return this.playerOrder[temp];
     }
-    
-    //gets player 2 to the right
+
+    /**
+     * gets (alive) player two to the right
+     *
+     * @param currentPlayer player who is current playing
+     * @return character object
+     */
     public Character get_two_away_player (Character currentPlayer){
         int temp;
         temp = (this.currentPlayer + 2)%this.numOfPlayers;
@@ -106,8 +185,13 @@ public class GameFunctions {
             return this.get_next_player();
         }
     }
-    
-    //gets player 2 to the left
+
+    /**
+     * gets (alive) player who is two to the left
+     *
+     * @param currentPlayer player who is currently playing
+     * @return character object
+     */
     public Character get_two_before_player (Character currentPlayer){
         int temp;
         temp = (this.currentPlayer - 2)%this.numOfPlayers;
@@ -134,11 +218,18 @@ public class GameFunctions {
         }
     }
     
+    /**
+     * runs the real life player's turn
+     *
+     * @param game gameFunctions object
+     * @param allDice all dice in array
+     * @param arrowPile arrowPile object
+     */
     public static void player_turn(GameFunctions game, Dice allDice[], ArrowPile arrowPile){
-        int i;
-        boolean dynamiteExecuted, gatlingExecuted;
-        int numBullsEye1, numBullsEye2, numBeer, numGatling, numFight, numWhiskey, rollsRemaining, diceToRoll;
-        String diceSelection;
+        int i; //counter
+        boolean dynamiteExecuted, gatlingExecuted; //booleans to determine if dynamite and gatling dice have been dealt with
+        int numBullsEye1, numBullsEye2, numBeer, numGatling, numFight, numWhiskey, rollsRemaining, diceToRoll; //number of each type of dice rolled, number of rolls remaining, and number of dice to roll
+        String diceSelection; //dice selected to reroll
         
         Scanner input = new Scanner(System.in);
         
@@ -150,11 +241,13 @@ public class GameFunctions {
         rollsRemaining = 3;
         numBullsEye1 = numBullsEye2 = numBeer = numGatling = numFight = numWhiskey = 0;
         
+        //sets two dice to duel dice if playing with expansions
         if (game.expansions){
             allDice[3].type = "duel";
             allDice[4].type = "duel";
         }
         
+        //if a zombie, can only roll 3 dice
         if ("Zombie".equals(game.get_current_player().role) && !game.get_current_player().isDead){
             diceToRoll = 3;
         }
@@ -164,7 +257,8 @@ public class GameFunctions {
             rollsRemaining = 4;
         }
         
-        if ("Jose Delgado".equals(game.get_current_player().name) && !game.outbreak){
+        //special characters get to roll 6th dice
+        if ("Jose Delgado".equals(game.get_current_player().name) && game.expansions){
             System.out.print("Jose Delgado, would you like to use the loudmouth dice as your 6th dice? (Y/N): ");
             diceSelection = input.nextLine().toLowerCase();
             
@@ -189,7 +283,8 @@ public class GameFunctions {
             }
         }
         
-        else if ("Tequila Joe".equals(game.get_current_player().name) && !game.outbreak){
+        //special characters get to roll 6th dice
+        else if ("Tequila Joe".equals(game.get_current_player().name) && game.expansions){
             System.out.print("Tequila Joe, would you like to use the coward dice as your 6th dice? (Y/N): ");
             diceSelection = input.nextLine().toLowerCase();
             
@@ -215,7 +310,8 @@ public class GameFunctions {
             }
         }
         
-        else if (!game.outbreak){
+        //if the player has 5 dice, they can choose to turn 1 into a special dice
+        else if (!"Zombie".equals(game.get_current_player().role) && game.expansions){
             System.out.print("Would you like to use the 'loudmouth' dice, 'coward' dice, or 'neither'?: ");
             diceSelection = input.nextLine();
             diceSelection = diceSelection.toLowerCase();
@@ -247,7 +343,7 @@ public class GameFunctions {
             if (!game.game_over && game.get_current_player().lifePoints > 0){
                 if ("Arrow".equals(allDice[i].roll)){
                     System.out.println("You rolled an arrow. You must pick up an arrow before continuing.");
-                    Dice.arrow_roll(game.get_current_player(), arrowPile, game);
+                    Dice.arrow_roll(arrowPile, game);
                 }
                 if ("Broken Arrow".equals(allDice[i].roll)){
                     Dice.broken_arrow_roll(game, arrowPile);
@@ -363,7 +459,8 @@ public class GameFunctions {
                 }
             }
         }
-           
+        
+        //Suzy Lafayette special ability
         if ("Suzy Lafayette".equals(game.get_current_player().name)){
             if (numBullsEye1 == 0 && numBullsEye2 == 0){
                 game.get_current_player().gain_life();
@@ -371,6 +468,7 @@ public class GameFunctions {
             }
         }
         
+        //executes all of the dice rolls
         while (numWhiskey > 0){
             game.get_current_player().gain_life();
             numWhiskey -=1;
@@ -404,9 +502,15 @@ public class GameFunctions {
         System.out.println();   
     }
     
+    /**
+     * shuffles boneyard cards
+     *
+     * @param deck array containing all of the remaining boneyard cards
+     * @return the array shuffled
+     */
     public static int [] shuffle_boneyard_deck (int [] deck){
-        int temp1, temp2;
-        Random rand = new Random();
+        int temp1, temp2; //temp variables for switching array item's places
+        Random rand = new Random(); //random number
         int random;
         for (int i = 0; i < 11; i++){
             random = rand.nextInt(11);
@@ -419,6 +523,11 @@ public class GameFunctions {
         return deck;
     }
     
+    /**
+     * draws 1 boneyard card from the deck
+     *
+     * @param game gameFunctions object
+     */
     public void draw_boneyard_card (GameFunctions game){
         int i = 0;
         int j;
@@ -442,39 +551,50 @@ public class GameFunctions {
         
     }
     
+    /**
+     * initiates a zombie outbreak
+     *
+     * @param game gameFunctions object
+     */
     public static void zombie_outbreak (GameFunctions game){
-        int i;
+        int i; //counter
         game.outbreak = true;
         boolean zombieMaster = false;
         
         System.out.println("A zombie outbreak has begun. All dead players have come back to life!");
         
+        //sets dead players to a zombie, gives them back life points, and sets isDead to false
         for (i = 0; i < game.numOfPlayers; i++){
             if (game.playerOrder[i].isDead){
                 game.playerOrder[i].lifePoints = game.numAlivePlayers;
                 game.playerOrder[i].role = "Zombie";
                 game.playerOrder[i].isDead = false;
             }
+            //sets closest renegade, if alive, to zombieMaster
+            else if ("Renegade".equals(game.playerOrder[i].role) && !zombieMaster){
+                game.playerOrder[i].role = "Zombie Master";
+                System.out.println(game.playerOrder[i].name + " has turned into the zombie master.");
+                zombieMaster = true;
+            }
+            //sets alive players role to survivor
             else {
                 game.playerOrder[i].role = "Survivor";
             }
         }
         
-        for (i = 0; i < game.numOfPlayers; i++){
-            if ("Renegade".equals(game.playerOrder[i].role) && !zombieMaster){
-                game.playerOrder[i].role = "Zombie Master";
-                System.out.println(game.playerOrder[i].name + " has turned into the zombie master.");
-                zombieMaster = true;
-            }
-        }
-        
         game.realPlayerDead = false;
-        game.numAlivePlayers = game.numOfPlayers;
+        game.numAlivePlayers = game.numOfPlayers; //resets number of alive players
     }
     
+    /**
+     * eliminates a player from the game
+     *
+     * @param player current player
+     * @param arrowPile arrowPile object
+     * @param killedByPlayer boolean for if they were killd by a player
+     */
     public void eliminate_player (Character player, ArrowPile arrowPile, Boolean killedByPlayer){
-        int i;
-        int j;
+        int i; //counter
         
         if (player == this.playerOrder[0]){
             this.realPlayerDead = true;
@@ -482,36 +602,17 @@ public class GameFunctions {
         
         player.isDead = true;
         
+        //puts all arrows back into pile
         while(player.arrows > 0){
             arrowPile.add_arrow(player);
         }
         
         this.numAlivePlayers -= 1;
         
-        //NEW CODE
-        
-        /*
-        for (i = 0; i < this.numOfPlayers; i++){
-            if (this.playerOrder[i] == player){
-                for (j = i; j < this.numOfPlayers - 1; j++){
-                    this.playerOrder[j] = this.playerOrder[j+1];
-                }
-            }
-        }
-        
-        
-        this.currentPlayer = (this.currentPlayer-1)%this.numOfPlayers;
-        if (currentPlayer < 0){
-            currentPlayer = this.numOfPlayers + currentPlayer;
-        }
-        
-        this.playerOrder[this.numOfPlayers] = null;
-        
-        this.numOfPlayers -= 1;
-        */
-        
+        //determines if game is over
         this.game_over = this.determine_game_over(this, player, killedByPlayer);
         
+        //Vulture same special ability
         if (!this.game_over){
             for (i = 0; i < this.numOfPlayers; i++){
                 if ("Vulture Sam".equals(this.playerOrder[i].name) && !this.playerOrder[i].isDead && !"Zombie".equals(this.playerOrder[i].role)){
@@ -523,33 +624,39 @@ public class GameFunctions {
         }
     }
     
-  
+    /**
+     * determines if the player dying sets off any win condiitons
+     *
+     * @param game gameFunctions object
+     * @param deadPlayer character object for player who died
+     * @param killedByPlayer //boolean for if player was killed by another player
+     * @return true if game is over
+     */
     public boolean determine_game_over (GameFunctions game, Character deadPlayer, Boolean killedByPlayer){
-        int sheriffAlive = 0;
+        int sheriffAlive = 0; //counter for each role
         int outlawAlive = 0;
         int renegadeAlive = 0;
         int zombieAlive = 0;
         int survivorAlive = 0;
-        int i;
+        int i; //counter
         
+        //if there is not a zombie outbreak
         if (!game.outbreak){
             for (i = 0; i < game.numOfPlayers; i++){
+                //counts how many of each role is alive
                 if (!game.playerOrder[i].isDead){
                     if ("Sheriff".equals(game.playerOrder[i].role)){
-                        System.out.println("A Sheriff is alive, which is: " + game.playerOrder[i].name + " line 342: GameFunctions");
                         sheriffAlive += 1;
                     }
                     else if ("Outlaw".equals(game.playerOrder[i].role)){
-                        System.out.println("An outlaw is alive, which is: " + game.playerOrder[i].name + " line 342: GameFunctions");
                         outlawAlive += 1;
                     }
                     else if ("Renegade".equals(game.playerOrder[i].role)){
-                        System.out.println("A renegade is alive, which is: " + game.playerOrder[i].name + " line 342: GameFunctions");
                         renegadeAlive += 1;
                     }
                 }
             }
-        
+            //checks all win conditions
             if ((sheriffAlive == 1) && (outlawAlive == 0) && (renegadeAlive == 0)){
                 System.out.println("All renegades and outlaws are dead, so the sheriff and deputies win.");
                 return true;
@@ -573,8 +680,10 @@ public class GameFunctions {
             }
         }
         
+        //if there is a zombie outbreak
         else {
             for (i = 0; i < game.numOfPlayers; i++){
+                //counts how many of each role is alive
                 if (!game.playerOrder[i].isDead){
                     if ("Zombie".equals(game.playerOrder[i].role) || "Zombie Master".equals(game.playerOrder[i].role)){
                         zombieAlive += 1;
@@ -584,6 +693,7 @@ public class GameFunctions {
                     }
                 }
             }
+            //checks win conditions
             if (zombieAlive == game.numAlivePlayers){
                 System.out.println("The zombies have killed all of the survivors, so they win.");
                 return true;

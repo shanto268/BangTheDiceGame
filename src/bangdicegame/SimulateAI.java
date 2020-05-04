@@ -7,6 +7,11 @@ package bangdicegame;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Initializes the AI turn, probabilities, and goes through AI turn
+ */
+
+
 /*
  * Purpose: 
  * arranges all players in an array 
@@ -15,10 +20,29 @@ import java.util.Arrays;
  */
 
 public class SimulateAI {
+
+    /**
+     *  array of players in playing order
+     */
     public Character [] playerOrder;
+
+    /**
+     *  arrowPile object
+     */
     public ArrowPile arrowPile;
+    
+    /**
+     * total amount of players in game
+     */
     int totalPlayers;
     		
+    /**
+     * initiates simulation of AI
+     *
+     * @param players array of players
+     * @param totalPlayers total number of players
+     * @param arrowPile arrowPile object
+     */
     public SimulateAI (Character [] players, int totalPlayers, ArrowPile arrowPile){
         this.playerOrder = players;
         this.totalPlayers = totalPlayers;
@@ -29,7 +53,14 @@ public class SimulateAI {
         
     }
 
-	public void AITurn(GameFunctions game, int i, ArrowPile arrowPile) {
+    /**
+     * runs an AI turn
+     *
+     * @param game GameFunctions object
+     * @param i position in array
+     * @param arrowPile arrowPile object
+     */
+    public void AITurn(GameFunctions game, int i, ArrowPile arrowPile) {
             AI aiPlayer = new AI(game, i, arrowPile);
             aiPlayer.turn();
             aiPlayer.rollDice();
@@ -57,106 +88,14 @@ public class SimulateAI {
 		*process winner!
  	* 
     */
-	
-	public void revealResults() {
-		for (int i=0;i<this.totalPlayers;i++) {
-			if (this.playerOrder[i].isAi)
-				System.out.println(this.playerOrder[i].name + " was the " + this.playerOrder[i].role + " and was an AI.");
-			else
-				System.out.println(this.playerOrder[i].name + " was the " + this.playerOrder[i].role + " and was the player");
-		}
-	}
-	
-	public void congrats(int result) {
-		//if results = 0-> winner outlaw or renegade
-		boolean aiWon = false;
-		boolean userWon = false;
-		boolean outlawWon = false;
-		boolean renegadeWon = false;	
-		if (result==0) {
-			for (int i=0;i<this.totalPlayers;i++) {
-				if (this.playerOrder[i].role=="Outlaw") {
-					outlawWon = true;
-					if (this.playerOrder[i].isAi)
-						aiWon = true;
-					else if (!this.playerOrder[i].isAi)
-						userWon = true;
-				}
-				else {
-					if (this.playerOrder[i].role=="Renegade") {
-						renegadeWon = true;
-						if (this.playerOrder[i].isAi)
-							aiWon = true;
-						else if (!this.playerOrder[i].isAi)
-							userWon = true;
-						
-					}
-				}		
-			}//for loop ends
-			if (outlawWon) {
-				if (aiWon && userWon)
-					System.out.println("Congratulations!! Both the Player and AI have won as Outlaws!");
-				else if (aiWon && !userWon)
-					System.out.println("You have lost the game and the AI have won as Outlaws!");
-				else if (!aiWon && userWon)
-					System.out.println("Congratulations!! You have won the game as an Outlaw!");
-			}
-			else if (renegadeWon){
-				if (aiWon && userWon)
-					System.out.println("Congratulations!! Both the Player and AI have won as Renegades!");
-				else if (aiWon && !userWon)
-					System.out.println("You have lost the game and the AI have won as Renagade!");
-				else if (!aiWon && userWon)
-					System.out.println("Congratulations!! You have won the game as an Renagade!");
-			}
-			else
-				System.out.println("Well this is embarasing! I need to check the congrats method logic");
-			
-		} //end of results 0
-
-		else if (result==1) {
-			//if results = 1->winner sheriff and deputy
-	    	//determine if sheriff or deputy is ai or human
-			for (int i=0;i<this.totalPlayers;i++) {
-				if ((this.playerOrder[i].role=="Sheriff") || (this.playerOrder[i].role=="Deputy")) {
-					if (this.playerOrder[i].isAi)
-						aiWon=true;
-					else if (!this.playerOrder[i].isAi)
-						userWon=true;
-				}	
-			}//end of for loop
-			if (aiWon && userWon)
-				System.out.println("Congratulations!! Both the Player and AI have won as Sheriff and Deputy!");
-			else if (aiWon && !userWon)
-				System.out.println("You have lost the game and the AI have won as Sheriff and Deputy!");
-			else if (!aiWon && userWon)
-				System.out.println("Congratulations!! You have won the game!");			
-		}
-	} //end of results 1
-	
-	public int GameOver(int numOutlaw, int numRenegade) { //0 -> sheriff dead, 1-> outlaw and renegade dead, 2->gamecontinues
-		int deadOutlaw = 0;
-		int deadRenegade = 0;
 		
-		for (int i=0;i<this.totalPlayers;i++) {
-			if (this.playerOrder[i].role=="Sheriff")
-				if (this.playerOrder[i].lifePoints <= 0)
-					return 0; //sheriff dead
-			else if (this.playerOrder[i].role=="Outlaw")
-				if (this.playerOrder[i].lifePoints <= 0)
-					deadOutlaw++;
-			else if (this.playerOrder[i].role=="Renegade")
-				if (this.playerOrder[i].lifePoints <= 0)
-					deadRenegade++;
-		}
-		if (deadOutlaw==numOutlaw && deadRenegade==numRenegade)
-			return 1;
-		else
-			return 2;
-	}	
-	
-	
-	public static ArrayList<Double> createProbabilityVector(int numPlayers) {
+    /**
+     * creates starting probability vector for role, based on how many players there are
+     *
+     * @param numPlayers number of players in game
+     * @return a probability vector
+     */
+    public static ArrayList<Double> createProbabilityVector(int numPlayers) {
 		ArrayList<Double>  vector = new ArrayList<Double>();
 		//[sheriff,renegade,outlaws,deputy]
 		switch(numPlayers) {

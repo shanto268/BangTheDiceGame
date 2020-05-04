@@ -10,6 +10,11 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
+ * Builds each character with their attributes, and takes care of character based actions
+ */
+
+
+/*
  *Changes made by SAS:
  *included isAi boolean in attributes and constructor
  *included shotSheriff
@@ -18,16 +23,78 @@ import java.util.Scanner;
  */
 
 public class Character {
-    public int lifePoints, arrows, maxLife, numShotSheriff, numHelpSheriff;
-    public String name, role, aiGuessRole;
-    public boolean isAi, cheifArrow, isDead;
+
+    /**
+     *  how many life points the character has
+     */
+    public int lifePoints,
+
+    /**
+     *  how many arrows the character has
+     */
+    arrows,
+
+    /**
+     *  the maximum amount of life the character can have
+     */
+    maxLife,
+
+    /**
+     *  the amount of times the player shot the sheriff intentionally (not gatling)
+     */
+    numShotSheriff,
+
+    /**
+     *  the amount of times the player healed the sheriff
+     */
+    numHelpSheriff;
+
+    /**
+     *  the characters name
+     */
+    public String name,
+
+    /**
+     *  the characters role
+     */
+    role,
+
+    /**
+     *  the role that the AI has guessed, based on actions against sheriff and probability
+     */
+    aiGuessRole;
+
+    /**
+     *  true if AI, false if real player
+     */
+    public boolean isAi,
+
+    /**
+     *  true if the player has the chief arrow, false if not
+     */
+    chiefArrow,
+
+    /**
+     * true if dead, false otherwise
+     */
+    isDead;
+
+    /**
+     * probability vector used in determining AI actions
+     */
     public ArrayList<Double> ProbabilityVector;
     
+    /**
+     * Creates each character
+     *
+     * @param selection from a randomized array, makes sure player assignment is random
+     * @param isAI set AI variable accordingly
+     */
     public Character(int selection, boolean isAI){
         this.arrows = 0;
         this.role = "";
         this.isAi = isAI;
-        this.cheifArrow = false;
+        this.chiefArrow = false;
         this.isDead = false;
         this.numShotSheriff = 0;
         this.numHelpSheriff = 0;
@@ -108,12 +175,14 @@ public class Character {
        }
     }
     
-    public void setname(String name) {
-    	this.name = name;
-    }
-    
+    /**
+     * makes sure that the character assignment is random for each new game
+     *
+     * @param randomSelection takes array of numbers 1-14 to be shuffled
+     * @return  array that has been shuffled
+     */
     public static int [] shuffle_character (int [] randomSelection){
-        Random rand = new Random();
+        Random rand = new Random(); //random number for shuffling
         int random;
         for (int i = 0; i < 14; i++){
             random = rand.nextInt(14);
@@ -125,8 +194,15 @@ public class Character {
         return randomSelection;
     }
     
+    /**
+     * makes sure the roles used for each game are shuffled
+     *
+     * @param roles takes array of roles, length dependent on how many players
+     * @param num equal to how many roles there are to shuffle
+     * @return the array shuffled
+     */
     public static String [] shuffle_roles (String [] roles, int num){
-        Random rand = new Random();
+        Random rand = new Random(); //random number for shuffling
         int random;
         for (int i = 0; i <= num; i++){
             random = rand.nextInt(num);
@@ -139,6 +215,12 @@ public class Character {
         return roles;
     }
     
+    /**
+     * obtains the roles needed for the game to run by the rules
+     *
+     * @param num the amount of players there are
+     * @return a string with the appropriate roles for the amount of players
+     */
     public static String [] select_role (int num){
         switch (num){
             case 3:
@@ -164,18 +246,32 @@ public class Character {
         }  
     }
     
+    /**
+     * sets character's role
+     *
+     * @param role a string corresponding to the character's assigned role
+     */
     public void set_role (String role){
         this.role = role;
     }
     
+    /**
+     *  adds 1 to player's arrow count
+     */
     public void gain_arrow (){
         this.arrows += 1;
     }
     
+    /**
+     *  subtracts 1 from player's arrow count
+     */
     public void lose_arrow (){
         this.arrows -= 1;
     }
     
+    /**
+     *  adds 1 to players life if they are not max health and not a zombie
+     */
     public void gain_life (){
         if ("Zombie".equals(this.role)){
             System.out.println(this.name + " is a zombie and cannot be healed.");
@@ -188,24 +284,18 @@ public class Character {
             System.out.println(this.name + " has full life points, so they could not gain another life point.");
         }
     }
-    
-    //for ai
-    /*
-    public void lose_life() {
-        if (this.lifePoints == 0){
-            System.out.println("\n-----\nERROR, LOSE_LIFE(): " + this.name + "\n-----\n");
-        }
-    	this.lifePoints --;
-    }
-    
-    //for ai
-    public void lose_life(int numArrows) {
-    	this.lifePoints = this.lifePoints - numArrows;
-    }
-    */
+
+    /**
+     * subtracts a life point from a character, and eliminates the player if they reach 0
+     *
+     * @param game game object
+     * @param arrowPile arrowPile object
+     * @param arrowOrDynamite true if killed by arrow or dynamite, false otherwise
+     */
+
     
     public void lose_life(GameFunctions game, ArrowPile arrowPile, Boolean arrowOrDynamite){
-        String choice;
+        String choice; //choice for special abilities
         
         Scanner input = new Scanner(System.in);
         
@@ -213,6 +303,7 @@ public class Character {
             System.out.println("\n-----\nERROR, LOSE_LIFE(): " + this.name + "\n-----\n");
         }
         else{
+            //Bart Cassidy special ability - can gain arrow instead of losing life from another player
             if ("Bart Cassidy".equals(this.name) && !arrowOrDynamite && !this.isAi){
                 if (arrowPile.remaining > 1){
                     System.out.print("Bart Cassidy, would you like to lose a 'life point' or take an 'arrow'? : ");
@@ -235,7 +326,8 @@ public class Character {
                 }
             }
             this.lifePoints --;
-        
+            
+            //Pedro Ramirez special ability - Discards arrow if he loses life
             if ("Pedro Ramirez".equals(this.name)){
                 if (this.arrows > 0){
                     arrowPile.add_arrow(this);
@@ -243,6 +335,7 @@ public class Character {
                 }
             }
         
+            //If the player is now dead, eliminates them from playing
             if (this.lifePoints < 1){
                 System.out.println(this.name + " has run out of life points and has lost the game.");
                 System.out.println("Their role was " + this.role);
