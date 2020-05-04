@@ -13,3 +13,6 @@ Composition:
 
 Method Overloading/Overriding:
     I have not used any method overloading/overriding in these files. However, I have used them in the Dice.java class which Cierra should report
+
+Unit Testing:
+    I still don't know what this means lol.
