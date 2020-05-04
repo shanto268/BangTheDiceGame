@@ -69,7 +69,7 @@ To resolve the die, the AI employs the following algorithm.
 
 
 ## To Do List
-- [ ] Successful debugging of command line version of the game
+- [x] Successful debugging of command line version of the game
 - [ ] GUI implementation
 - [ ] Project Video/Presentation 
 
