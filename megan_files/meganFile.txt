@@ -8,8 +8,8 @@ Interfaces:
     I have not used any inheritence in these files.
 
 Composition:
-    The AI class cannot exist without the SimulateAI class.
-    The AIDice class cannot exist without the AI class, hence is also dependent on SimulateAI class
+    The AI class cannot exist without the SimulateAI class. (picture: ai.png)
+    The AIDice class cannot exist without the AI class, hence is also dependent on SimulateAI class (pictures: all dice*.png)
 
 Method Overloading/Overriding:
     I have not used any method overloading/overriding in these files. However, I have used them in the Dice.java class which Cierra should report
