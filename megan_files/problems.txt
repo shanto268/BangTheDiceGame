@@ -1,0 +1,15 @@
+Initial Problems:
+1) I had problems setting up the AI classes initially because when I started working the entire program was based around taking inputs from the user to work and hence all the classes that I needed to work were not compatible. I guess I could have used method overloading to make the same classes work with my code or I could have used inheritance to get same functionality compatible with the AI class. However, I found it best/easier/faster to just implement them seperately.
+
+2) I had troubles implementing/updating the Probability State Vectors that is absolutely fundamental to the AI. It wasn't any technical problem but just a challenging programming one. 
+
+3) I also had problems with having the AI work simulatenously with the Human but with help from Cierra, we fixed this.
+
+Bugs:
+1) Since, the character class was built using the static arrays we had issues when players died and got a lot of NullPointer Exceptions.
+2) AI with negative lifePoints were playing the game.
+3) AI could keep more than 5 dices in some cases with more than one dynamite rolls
+4) The dynamics of Arrows in the game were not resolved accurately in some test cases 
+
+Note:
+All these problems has been resolved and all the bugs has been taken care of.
