@@ -66,7 +66,7 @@ To resolve the die, the AI employs the following algorithm.
 * using a similar approach for the bull's eyes 1 and 2
 * depending on the number of Gatling adjust the probability of keeping the gatling (i.e. the willingness to keep gatling increases if there is 2 or more gatlings (constrained to 3))
 
-
+The AI Logic is discussed in greater details in the AILogic.txt file.
 
 ## To Do List
 - [x] Successful debugging of command line version of the game

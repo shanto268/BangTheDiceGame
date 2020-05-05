@@ -1,0 +1,44 @@
+Each AI is instantiated with certain probabilites that reflect their behavior in the game play. These probabilities are determined randomly making sure that no two AI or gameplay will be alike. Each AI, is also allocated target(s) based on their role for example, it the AI is sheriff the target is outlaws and renegades. The target role for a renegade AI is updated during the gameplay as initially its target role is deputy and outlaw and then after one of they die, it is the sheriff.
+
+The main concept of how the AI makes its decision is based on a concept called state vectors. In our program, the state vector of each AI represents the probability of each AI beign a certain role. The probability state vector is as follows: [Probability of being a Sheriff, Probability of being a Renegade,  Probability of being an Outlaw,  Probability of being a Deputy].
+
+This state vector is initialized according to the initial distribution of players and are updated throughout the gameplay when players die and roles are revealed. For example, in a game with 4 players, the initial probability state vector of all players are [1/5, 1/5, 2/5, 1/5]. Whenever the sheriff reveals its role, its state vector becomes [1, 0, 0, 0] and all the other players' state becomes [0, 1/5, 2/5, 1/5].
+
+So, in short the following is how an AI does its turn:
+
+1) Each AI has certain behavior parameters that determine its game play
+    1)a) Depending on their role, target roles are assigned.
+2) On each turn, the AI rolls the dice probabilistically (a certain probability to use the regular, loudmouth, coward and duel dice if expansion pack is used)
+3) On each roll, the AI keeps certain dice with certain probabilities that resemeble its behavior
+    3)a) on top of this stochastic preference, the AI also takes into account the following when it makes the decision to keep certain dice faces.
+        3)a)i) its health, its target role health, its target role's position away from itself and the number of gatlings that have been rolled.
+    3)b) The AI also stochastically determines how many rolls to make on a certain turn which is also dependent the type of faces rolled.
+4) The dice are resolved in the following order: Dynamites, Arrows, Broken Arrow, all beers and whiskey, all types of bulls eye, gatling, duel
+5) After the dices are kept, they are resolved as follows.
+    a) Beer: if the health of the AI is less than a certain threshold, drink the beer itself. Else, give the beer to the sheriff if deputy (or renegade when everyone is alive) and if outlaw give beer to whoever is also shooting at sheriff. if sheriff, help you 
+    b) Double Beer: same logic as beer
+    c) Whiskey: has to drink it itself
+    d) Bulls Eye 1: if there is a player 1 unit away from AI and that player shot the sheriff -> shoot that player if the current AI role is deputy, sheriff (or renegade when everyone is alive). Else, if outlaw shoot if that person helped the sheriff with beer.
+    e) Bulls Eye 2: same logic as Bulls Eye 1
+    f) Double Bulls Eye 1: same logic as Bulls Eye 1
+    g) Double Bulls Eye 2: same logic as Bulls Eye 1
+    h) Gatling: normal gatling logic. the probability of keeping a gatling increases when more than one gatling is drawn. this increase in probability is also stochastic
+    i) Double Gatling: similar logic as gatling
+    j) Arrow: normal arrow logic.
+    k) Broken Arrow: broken arrow kept if the AI has more than a certain number of arrows, else passed to someone who the AI wants to help (i.e. if AI is outlaw, help who helped you with a certain probability)
+    l) Duel: normal rules or duel. chooses a target role with a higher probability given that the AI chooses to keep the dice.
+    m) Dynamite: normal rules are applied
+5)a) There is a certain probability that the AI will make a random turn to trick other players sometimes.
+6) Update the State Probability Vector for all other AI's based on the current AI's turn
+    6) a) the update is done as follows:
+        if helped sheriff (everyone is alive)
+        [P(S), P(O)-skepticProbability,, P(R)+skepticProbability, P(D)+skepticProbability]
+        if shot sheriff
+        [P(S), P(O)+skepticProbability, P(R)-skepticProbability, P(D)-skepticProbability,]
+        if someone died, and role is revealed
+        the state vector is updated based on the new number of players. This too is determined stochastically, as some AI are programmed to be stubborn and not take into account this new piece of information
+        after someone (not sheriff) died and a player who previously helped sheriff now starts shooting
+        [P(S), P(O)-skepticProbability,, P(R)+*skepticProbability, P(D)-skepticProbability]
+7)  a)The statevector probability is always normalized.
+    b)The maximum element in this state vector represents the guessedAI role of the character. For example, for a certain player had the following vector: [0, 0.2, 0.65, 0.15] then the guessed role for that player is renegade as the 3rd element in the vector represents the probability of being a renegade.
+7) The turn is passed to the next AI
