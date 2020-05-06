@@ -106,6 +106,8 @@ The AI Logic is discussed in greater details in the AILogic.txt file.
 ![UMLcrc](crc0.png)
 
 ## GUI Plan
+
 We plan to make our program have a GUI over the summer.
+
 ![UMLgui](gui.png)
 
