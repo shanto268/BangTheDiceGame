@@ -73,6 +73,7 @@ The AI Logic is discussed in greater details in the AILogic.txt file.
 - [x] Successful debugging of command line version of the game
 - [ ] GUI implementation
 - [x] Project Video/Presentation 
+- [x] Integration of Expansion Pack
 
 ## Active Issues
 - [x] Chief arrow handling in AI logic 
@@ -84,8 +85,10 @@ The AI Logic is discussed in greater details in the AILogic.txt file.
 
 # Documentation
 
+## Screenshots of GamePlay
+
 ## JavaDoc Html File
-[javaDov file](BangDiceJavaDoc.html)
+[javaDoc file](BangDiceJavaDoc.html)
 
 ## UML Use Case Diagrams
 ![UMLUSD](BangClassDiagram.PNG)
@@ -103,5 +106,6 @@ The AI Logic is discussed in greater details in the AILogic.txt file.
 ![UMLcrc](crc0.png)
 
 ## GUI Plan
+We plan to make our program have a GUI over the summer.
 ![UMLgui](gui.png)
 
