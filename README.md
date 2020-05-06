@@ -85,7 +85,7 @@ The AI Logic is discussed in greater details in the AILogic.txt file.
 # Documentation
 
 ## JavaDoc Html File
-[jac](BangDiceJavaDoc.html)
+[javaDov file](BangDiceJavaDoc.html)
 
 ## UML Use Case Diagrams
 ![UMLUSD](BangClassDiagram.PNG)
