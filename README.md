@@ -95,10 +95,9 @@ The AI Logic is discussed in greater details in the AILogic.txt file.
 ![UMLUSD](BangClassDiagram.PNG)
 
 ## UML Class Diagrams
-![UMLUSD](UML_class_diagrams_1.png)
-
 ![UMLUSD1](UML_class_diagrams_2.png)
 
+![UMLUSD](UML_class_diagrams_1.png)
 ![UMLUSD2](UML_class_diagrams_3.png)
 
 ![UMLUS2D2](UML_class_diagrams_4.png)
