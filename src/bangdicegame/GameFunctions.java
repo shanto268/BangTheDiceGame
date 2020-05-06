@@ -658,21 +658,29 @@ public class GameFunctions {
             }
             //checks all win conditions
             if ((sheriffAlive == 1) && (outlawAlive == 0) && (renegadeAlive == 0)){
+                System.out.println("\n--------------------------------------------------------------------");
                 System.out.println("All renegades and outlaws are dead, so the sheriff and deputies win.");
+                System.out.println("--------------------------------------------------------------------");
                 return true;
             }
             else if (sheriffAlive == 0){
                 if ((game.numOfPlayers == 1) && (renegadeAlive == 1)){
+                    System.out.println("\n------------------------------------------------");
                     System.out.println("The renegade is the last one alive, so they win.");
+                    System.out.println("------------------------------------------------");
                     return true;
                 }
                 else {
+                    System.out.println("\n----------------------------------------");
                     System.out.println("The sheriff is dead, so the outlaws win.");
+                    System.out.println("----------------------------------------");
                     return true;
                 }
             }
             else if (game.numOfPlayers == 0){
+                System.out.println("\n-----------------------------------------");
                 System.out.println("All players are dead, so the outlaws win.");
+                System.out.println("-----------------------------------------");
                 return true;
             }
             else {
@@ -695,11 +703,15 @@ public class GameFunctions {
             }
             //checks win conditions
             if (zombieAlive == game.numAlivePlayers){
+                System.out.println("\n----------------------------------------------------------");
                 System.out.println("The zombies have killed all of the survivors, so they win.");
+                System.out.println("----------------------------------------------------------");
                 return true;
             }
             else if (survivorAlive == game.numAlivePlayers){
+                System.out.println("\n----------------------------------------------------------");
                 System.out.println("The survivors have killed all of the zombies, so they win.");
+                System.out.println("----------------------------------------------------------");
                 return true;
             }
             else{

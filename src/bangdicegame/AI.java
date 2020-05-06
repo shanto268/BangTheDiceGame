@@ -654,8 +654,8 @@ public class AI {
 				//help who shot the sheriff if role=outlaw
 				for (int i=0;i<this.totalPlayers;i++) {
 					if (this.playerOrder[i].numShotSheriff>0 && !this.playerOrder[i].isDead) {
+                                                System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 						this.playerOrder[i].gain_life();
-						System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 						helped = true;
 						return;
 					}
@@ -668,9 +668,9 @@ public class AI {
 					if (EveryoneIsAlive()) {
 						for (int i=0;i<this.totalPlayers;i++) {
 							if (this.playerOrder[i].role=="Sheriff" && !this.playerOrder[i].isDead) {
+                                                                System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 								this.playerOrder[i].gain_life();
 								this.currentPlayer.numHelpSheriff++;
-								System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
 								helped = true;
 								return;
 							}
@@ -679,8 +679,8 @@ public class AI {
 					else {
 						for (int i=0;i<this.totalPlayers;i++) {
 							if (this.playerOrder[i].numShotSheriff>0 && !this.playerOrder[i].isDead) {
-								this.playerOrder[i].gain_life();
-								System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
+                                                                System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
+                                                                this.playerOrder[i].gain_life();
 								helped = true;
 								return;
 							}
@@ -702,8 +702,8 @@ public class AI {
                                     if (!this.playerOrder[rand].isDead){
                                         if (this.playerOrder[rand].role=="Sheriff")
                                             this.currentPlayer.numHelpSheriff++;
+                                        System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
             				this.playerOrder[rand].gain_life();
-                			System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
                         		helped = true;
                                 	return;
                                     }
@@ -715,8 +715,8 @@ public class AI {
 				//help who gave you health if role=sheriff 
 				for (int i=0;i<this.totalPlayers;i++) {
 					if (this.playerOrder[i].numHelpSheriff>0 && !this.playerOrder[i].isDead) {
-						this.playerOrder[i].gain_life();
 						System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
+                                                this.playerOrder[i].gain_life();
 						helped = true;
 						return;
 					}
@@ -736,8 +736,8 @@ public class AI {
                             if (!this.playerOrder[rand].isDead){
                                 if (this.playerOrder[rand].role=="Sheriff")
                                     this.currentPlayer.numHelpSheriff++;
+                                System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
                                 this.playerOrder[rand].gain_life();
-                		System.out.println(this.name + " gave the beer to " + this.playerOrder[rand].name);
                         	helped = true;
                                 return;
                             }
@@ -748,9 +748,9 @@ public class AI {
 			//help sheriff is role=deputy
 			for (int i=0;i<this.totalPlayers;i++) {
 				if (this.playerOrder[i].role=="Sheriff" && !this.playerOrder[i].isDead) {
-					this.playerOrder[i].gain_life();
-					this.currentPlayer.numHelpSheriff++;
 					System.out.println(this.name + " gave the beer to " + this.playerOrder[i].name);
+                                        this.playerOrder[i].gain_life();
+					this.currentPlayer.numHelpSheriff++;
 					helped = true;
 					return;
 				}
@@ -816,7 +816,7 @@ public class AI {
                 if (this.game.get_current_player().role == "Zombie"){
                     diceToRoll = 3;
                 }
-		System.out.println("Resolving the " + diceToRoll + " kept dices!");
+		System.out.println("\n\nResolving the " + diceToRoll + " kept dices!\n");
 		//Gatlings
                 numGatling = 0;
                 for (int i=0; i < keptDice.size(); i++){
@@ -856,11 +856,13 @@ public class AI {
 			}
 			
 			else if (keptDice.get(i)=="G" && !this.game.game_over) {
-				resolveGatling(numGatling); 
+				resolveGatling(numGatling);
+                                numGatling -= 3;
 			}
 			
 			else if (keptDice.get(i)=="DG" && !this.game.game_over) {
-				resolveGatling(numGatling); 
+				resolveGatling(numGatling);
+                                numGatling -= 3;
 			}
 			
 			else if (keptDice.get(i)=="F" && !this.game.game_over) {
@@ -977,7 +979,7 @@ public class AI {
                                 System.out.println(this.name + " rolled an arrow. " + this.name + " must pick up an arrow before continuing.");
                                 this.arrowPile.remove_arrow(this.game);
                                 System.out.println(this.name + " has " + this.currentPlayer.arrows + " arrow(s).");
-                                System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
+                                //System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
                             }
 			}
 			else if (diceResults.get(i)=="D" && !this.game.game_over) {
@@ -991,7 +993,7 @@ public class AI {
 			}
                     }
 		
-                    System.out.println(this.name + " rolled " + numGatling + " Gatling(s). " + this.name +   " rolled " + numDynamites + " Dynamite(s).");
+                    //System.out.println(this.name + " rolled " + numGatling + " Gatling(s). " + this.name +   " rolled " + numDynamites + " Dynamite(s).");
                     //more than 3 dynamites
                     if (numDynamites>=3) {
 			System.out.println("Since, " + this.name + " rolled " + numDynamites + " dynamites. " + this.name + "'s turn is over.");
@@ -1710,7 +1712,7 @@ public class AI {
                                 System.out.println(this.name + " rolled an arrow. " + this.name + " must pick up an arrow before continuing.");
                                 this.arrowPile.remove_arrow(this.game);
                                 System.out.println(this.name + " has " + this.currentPlayer.arrows + " arrow(s).");
-                                System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
+                                //System.out.println("ArrowPile has " + this.arrowPile.remaining + " remaining.");
                             }
 			}
 			
@@ -1740,7 +1742,7 @@ public class AI {
 			
                     }
 		
-                    System.out.println(this.name + " rolled " + numGatling + " Gatling(s). " + this.name +   " rolled " + numDynamites + " Dynamite(s).");
+                    //System.out.println(this.name + " rolled " + numGatling + " Gatling(s). " + this.name +   " rolled " + numDynamites + " Dynamite(s).");
                     //more than 3 dynamites
                     if (numDynamites>=3) {
 			System.out.println("Since, " + this.name + " rolled " + numDynamites + " dynamites. " + this.name + "'s turn is over.");
@@ -1845,7 +1847,7 @@ public class AI {
      *  outputs player name of current turn
      */
     public void turn() {
-		System.out.println("It is "+this.currentPlayer.name+"'s turn and he/she will now roll the dice.");
+		System.out.println("It is "+this.currentPlayer.name+"'s turn and he/she will now roll the dice.\n");
 	}
 	
     /**

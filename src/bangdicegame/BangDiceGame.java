@@ -93,10 +93,6 @@ public class BangDiceGame {
                 players[i].maxLife += 2;
             }
             
-            System.out.println("Player " + i + " name is: " + players[i].name);
-            System.out.println("Player " + i + " role is: " + players[i].role);
-            System.out.println("Player " + i + " is an AI? " + players[i].isAi);
-            System.out.println();
             aiPlayers -= 1;
             i += 1;
         }
@@ -124,6 +120,9 @@ public class BangDiceGame {
                 i++;
             }
         }
+        
+        System.out.println(players[i].name + " is the sheriff and will be going first!");
+        System.out.println("\n------------------------------------------------------");
         
         SimulateAI AI = new SimulateAI(players, totalPlayers, arrowPile);
        	
@@ -169,16 +168,19 @@ public class BangDiceGame {
             
             //Shows standing of life points and arrows at end of round
             for (i = 0; i < Game.numOfPlayers; i++){
-                System.out.println(players[i].name + " has " + players[i].lifePoints + " life and " + players[i].arrows + " arrow(s)");
+                System.out.println("\t" + players[i].name + " has " + players[i].lifePoints + " life and " + players[i].arrows + " arrow(s)");
             }
+            
+            System.out.println("\n\tThe arrow pile has " + arrowPile.remaining + " arrows remaining!");
             
             //goes to next turn
             Game.next_turn();
             
-            System.out.println("\n*** Press enter to progress to the next turn. ***");
+            System.out.println("\n\n*** Press enter to progress to the next turn. ***");
             input.nextLine();
             
-            System.out.println("\n--------------------------------------------------\n");
+            System.out.println("\n=============================================================================");
+            System.out.println("=============================================================================\n");
         }
     }
 }

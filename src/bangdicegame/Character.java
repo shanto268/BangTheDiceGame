@@ -306,7 +306,7 @@ public class Character {
             //Bart Cassidy special ability - can gain arrow instead of losing life from another player
             if ("Bart Cassidy".equals(this.name) && !arrowOrDynamite && !this.isAi){
                 if (arrowPile.remaining > 1){
-                    System.out.print("Bart Cassidy, would you like to lose a 'life point' or take an 'arrow'? : ");
+                    System.out.print("\nBart Cassidy, would you like to lose a 'life point' or take an 'arrow'? : ");
                     choice = input.nextLine();
                     
                     choice = choice.toLowerCase();
@@ -337,8 +337,8 @@ public class Character {
         
             //If the player is now dead, eliminates them from playing
             if (this.lifePoints < 1){
-                System.out.println(this.name + " has run out of life points and has lost the game.");
-                System.out.println("Their role was " + this.role);
+                System.out.println("\n" + this.name + " has run out of life points and has lost the game.");
+                System.out.println("Their role was " + this.role + "\n");
                 game.eliminate_player(this, arrowPile, !arrowOrDynamite);
             }
         }
