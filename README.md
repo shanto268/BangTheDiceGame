@@ -15,7 +15,7 @@ Cierra Ditmore: Character, Dice,  and Game Functions Classes
 **Sadman Ahmed Shanto:** Development of AI logic and gameplay simulation. 
 
 ## Project Presentation Slide
-[presentation powerpoint](project4.pptx)
+[presentation powerpoint](project_4_presentation.pptx)
 
 ## Project Presentation Video
 
@@ -103,9 +103,11 @@ The AI Logic is discussed in greater details in the AILogic.txt file.
 ![UMLUS2D2](UML_class_diagrams_4.png)
 
 ## CRC Cards
-![UMLcc](crc.png)
+![UMLcc](CRC_Cards_1-3_1.png)
 
-![UMLcrc](crc0.png)
+![UMLcrc](CRC_Cards_1-3_2.png)
+
+![UMxLcrc](CRC_Cards_1-3_3.png)
 
 ## GUI Plan
 
