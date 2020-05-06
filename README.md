@@ -80,11 +80,12 @@ The AI Logic is discussed in greater details in the AILogic.txt file.
 - [x] AI playing with negative lifePoints
 - [x] AI could keep more than 5 dices in some cases with more than one dynamite rolls
 
-<div class="text-red mb-2">
-    Note: All bugs have been taken care of!
-</div>
+**Note:** All bugs have been taken care of!
 
 # Documentation
+
+## JavaDoc Html File
+[jac](BangDiceJavaDoc.html)
 
 ## UML Use Case Diagrams
 ![UMLUSD](BangClassDiagram.PNG)
