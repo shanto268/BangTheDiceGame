@@ -1,0 +1,27 @@
+The probability state vector is as follows:
+    
+    [ P(Sheriff), P(Renegade), P(Outlaw), P(deputy)]
+
+For a game with 5 players:
+    [1/5, 1/5, 2/5, 1/5]
+
+After Sheriff is revealed:
+    Sheriff: [1, 0, 0, 0]
+    All others: [0, 1/4, 2/4, 1/4]
+
+Guessed role:
+    maximum element of state vector.
+
+The update process:
+    After each turn:
+        if helped sheriff (everyone is alive)
+            [P(S), P(O)-skepticProbability, P(R)+skepticProbability, P(D)+skepticProbability]
+        if shot sheriff
+            [P(S), P(O)+skepticProbability, P(R)-skepticProbability, P(D)-skepticProbability,]
+        if someone died, and role is revealed.
+             the state vector is updated based on the new number of players.
+        after someone (not sheriff) died
+            a player who previously helped sheriff now starts shooting
+        [P(S), P(O)-skepticProbability, P(R) + k*skepticProbability, P(D)-skepticProbability]
+
+State vector always remains normalized.

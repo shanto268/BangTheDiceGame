@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+// [ P(Sheriff), P(Renegade), P(Outlaw), P(deputy)]
+// [1/5, 1/5, 2/5, 1/5]
+// [1, 0, 0, 0]
+// [0, 1/5, 2/5, 1/5]
+
 /**
  * Houses all AI player information and simulates their turns
  */
@@ -1463,11 +1468,6 @@ public class AI {
 	//	trackProbabilityVector();
 	}
 	
-	//keepDiceExpansion
-		//make sure order is correct
-		//same structure as keepDice with new additions
-		//re-shuffling correct die
-		//numGatling number
 	
     /**
      * determines the type of the dice kept

@@ -7,15 +7,16 @@ This repository is for an OOP project that we had for our OOP course. We had to 
 The program allows the user to play the game on the command line against the AI.
 
 ## Assignments
-Johnathan Gressick: GUI
 
-Meghan Engert: UML Use Case Diagrams, UML Class Diagrams, CRC Cards, Arrow Pile Class
+Meghan Engert: UML Use Case Diagrams, UML Class Diagrams, CRC Cards, Arrow Pile Class and BangDiceGame class
 
-Cierra Ditmore: Character and Game Functions Classes
+Cierra Ditmore: Character, Dice,  and Game Functions Classes
 
 **Sadman Ahmed Shanto:** Development of AI logic and gameplay simulation. 
 
-Garrett Olsen: Main Class along with getting everything to work well together.
+## Project Presentation Slide
+
+## Project Presentation Video
 
 ### AI logic
 Each AI upon construction is allocated certain behavior parameters that dictate their playing style.
@@ -71,15 +72,22 @@ The AI Logic is discussed in greater details in the AILogic.txt file.
 ## To Do List
 - [x] Successful debugging of command line version of the game
 - [ ] GUI implementation
-- [ ] Project Video/Presentation 
+- [x] Project Video/Presentation 
 
 ## Active Issues
 - [x] Chief arrow handling in AI logic 
+- [x] NullPointer Exceptions
+- [x] AI playing with negative lifePoints
+- [x] AI could keep more than 5 dices in some cases with more than one dynamite rolls
+
+<div class="text-red mb-2">
+    Note: All bugs have been taken care of!
+</div>
 
 # Documentation
 
 ## UML Use Case Diagrams
-![UMLUSD](use_case.png)
+![UMLUSD](BangClassDiagram.PNG)
 
 ## UML Class Diagrams
 ![UMLUSD](class.png)

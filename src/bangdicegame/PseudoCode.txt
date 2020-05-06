@@ -1,0 +1,34 @@
+The AI pseudocode is as follows:
+
+1) Upon instantiation assign behavioral parameters (done stochastically)
+2) Understand who target role is based on self role (deterministic)
+3) Assign Probability State Vector to all other players
+4) Guess their roles 
+5) Decide which dice to role if expansion pack is used (done stochastically)
+6) Decide on which dice to keep (AI behavior, self health points, proximity to target roles, number of certain dice face rolled) 
+7) Determine how many times to roll the dice (AI behavior and type of dices rolled)
+8) Evaluate kept dice in the following order:
+    ->Dynamites, Arrows, Broken Arrow, all beers and whiskey, all types of bulls eye, gatling, duel
+9) Resolve the dice with the following logic: 
+    a) Beer: if the health of the AI is less than a certain threshold, drink the beer itself. Else, give the beer to the sheriff if deputy (or renegade when everyone is alive) and if outlaw give beer to whoever is also shooting at sheriff. if sheriff, help whoever helped it
+    b) Double Beer: same logic as beer
+    c) Whiskey: has to drink it itself
+    d) Bulls Eye 1: if there is a player 1 unit away from AI and that player shot the sheriff -> shoot that player if the current AI role is deputy, sheriff (or renegade when everyone is alive). Else, if outlaw shoot if that person helped the sheriff with beer. Sheriff would shoot whoever shot it.
+    e) Bulls Eye 2: same logic as Bulls Eye 1
+    f) Double Bulls Eye 1: same logic as Bulls Eye 1
+    g) Double Bulls Eye 2: same logic as Bulls Eye 1
+    h) Gatling: normal gatling logic. the probability of keeping a gatling increases when more than one gatling is drawn. this increase in probability is also stochastic
+    i) Double Gatling: similar logic as gatling
+    j) Arrow: normal arrow logic.
+    k) Broken Arrow: broken arrow kept if the AI has more than a certain number of arrows, else passed to someone who the AI wants to help (i.e. if AI is outlaw, help who helped you with a certain probability)
+    l) Duel: normal rules or duel. chooses a target role with a higher probability given that the AI chooses to keep the dice.
+    m) Dynamite: normal rules are applied
+
+9)a) There is a certain probability that the AI will make a random turn to trick other players and the AIs sometimes.
+9)b) Check if game is over or not.
+10) The turn of the AI ends
+11) All other AI updates their Probability State Vectors based on this AI's turn
+12) The turn is passed on to the next AI
+
+
+
