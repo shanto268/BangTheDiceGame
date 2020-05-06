@@ -18,6 +18,10 @@ Cierra Ditmore: Character, Dice,  and Game Functions Classes
 [presentation powerpoint](project_4_presentation.pptx)
 
 ## Project Presentation Video
+[presentation](https://www.youtube.com/watch?v=AS29JGoWais&t=73s)
+
+## Gameplay Video
+[gameplay](https://www.youtube.com/watch?v=NP2MkpuRWxs&t=3s)
 
 ### AI logic
 Each AI upon construction is allocated certain behavior parameters that dictate their playing style.
