@@ -90,8 +90,6 @@ The AI Logic is discussed in greater details in the AILogic.txt file.
 
 # Documentation
 
-## Screenshots of GamePlay
-
 ## JavaDoc Html File
 [javaDoc file](BangDiceJavaDoc.html)
 
